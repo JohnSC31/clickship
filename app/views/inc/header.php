@@ -25,4 +25,23 @@
 
 </head>
 <body id="<?php echo $data['ID'];?>" data-url="<?php echo URL_PATH; ?>">
+
+<header class="web_header">
+    <div class="fixed_bar">
+        <div class="container">
+            <div class="logo">
+                <img src="public/img/LogoBlack.png" alt="CLICKSHIP Logo">
+            </div>
+            <nav class="navigation">
+                <ul>
+                    <li><a href="javascript:void(0);" class="btn btn_yellow" btnAction="link:signup"><i class="fa-solid fa-user-plus"></i> <span class="hide_medium"> Registro </span></a></li>
+                    <li><a href="javascript:void(0);" class="btn btn_blue" btnAction="modal:login"><i class="fa-solid fa-right-to-bracket"></i> <span class="hide_medium">Iniciar Sesión</span></a></li>
+                </ul>
+            </nav>
+        </div>
+        
+    </div>
+    <div class="bar_space"></div>
+
+</header>
  
