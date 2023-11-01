@@ -334,3 +334,38 @@ footer div.rights{
     padding-top: 2rem;
 }
 
+/*////////////////////// -------------------------- HOME --------------------------------------------- ///////////////////////*/
+/*//////////////////////  SEARCH PRODUCTS  ///////////////////////*/
+section.search_product{
+    background-color: var(--grey);
+    padding: 5rem 0;
+
+}
+section.search_product div.container{
+    display: flex;
+    justify-content: center;
+}
+section.search_product div.search_bar{
+    border-radius: var(--radius);
+    border: 2px solid;
+    border-color: var(--blue);
+    background-color: var(--white);
+    width: 50%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 1rem;
+}
+section.search_product div.search_bar input{
+    font-size: 2rem;
+    font-weight: bold;
+    border: none;
+    background-color: transparent;
+    flex-grow: 1;
+}
+section.search_product div.search_bar a{
+    color: var(--blue);
+}
+
+/*//////////////////////  PRODUCT LIST  ///////////////////////*/
+
