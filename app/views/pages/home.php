@@ -13,7 +13,7 @@
 
 <section class="product_list container" id="product_list">
     <?php for($i = 0; $i <8; $i++){ ?>
-    <div class="product">
+    <div class="product_item">
         <div class="img_product" style="background-image: url(<?php echo URL_PATH; ?>public/img/product.jpeg)"></div>
         <div class="product_detail">
             <p>Nombre de producto</p>

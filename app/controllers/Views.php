@@ -62,8 +62,11 @@
         }
 
         // CARGA DE PRODCUTO
-        public function product($productId){
+        public function product($idProduct = NULL){
+            if(is_null($idProduct)) exit(header('Location:'.URL_PATH. 'home'));
+
             $data = $this->getPageData('product','Producto de CLICKSHIP');
+            $data['idProduct'] = $idProduct;
             $this->loadView('pages/product', $data); // se carga la vista necesaria
         }
     }
