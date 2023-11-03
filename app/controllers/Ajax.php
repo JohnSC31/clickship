@@ -4,7 +4,7 @@
 	    die('Invalid Request');
     }
 
-    require_once 'Db.php';
+    require_once '../lib/Db.php';
 
 
     class Ajax {
@@ -43,6 +43,11 @@
         // Metodo de prueba
         private function foo($data){
             $this->ajaxRequestResult(true, $data['message']);
+        }
+
+        // Metodo para la carga de los modals
+        private function loadModal($data){
+            require_once '../views/modals/'. $data['modal'] . '.php';
         }
 
 

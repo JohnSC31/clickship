@@ -29,13 +29,15 @@
 <header class="web_header">
     <div class="fixed_bar">
         <div class="container">
-            <div class="logo">
-                <img src="public/img/LogoBlack.png" alt="CLICKSHIP Logo">
-            </div>
+            <a href="home">
+                <div class="logo">
+                    <img src="public/img/LogoBlack.png" alt="CLICKSHIP Logo">
+                </div>
+            </a>
             <nav class="navigation">
                 <ul>
-                    <li><a href="javascript:void(0);" class="btn btn_yellow" btnAction="link:signup"><i class="fa-solid fa-user-plus"></i> <span class="hide_medium"> Registro </span></a></li>
-                    <li><a href="javascript:void(0);" class="btn btn_blue" btnAction="modal:login"><i class="fa-solid fa-right-to-bracket"></i> <span class="hide_medium">Iniciar Sesión</span></a></li>
+                    <li><a href="signup" class="btn btn_yellow"><i class="fa-solid fa-user-plus"></i> <span class="hide_medium"> Registro </span></a></li>
+                    <li><a href="javascript:void(0);" class="btn btn_blue" data-modal="login"><i class="fa-solid fa-right-to-bracket"></i> <span class="hide_medium">Iniciar Sesión</span></a></li>
                 </ul>
             </nav>
         </div>
@@ -44,4 +46,8 @@
     <div class="bar_space"></div>
 
 </header>
+
+<div class="notification_container" id="notification_container"></div>
+
+<div class="modal_container" id="modal_container"></div>
  
