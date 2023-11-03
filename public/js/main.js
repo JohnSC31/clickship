@@ -1,4 +1,6 @@
 // VARIABLES GLOBALES
+const URL_PATH = $('body').attr('data-url').replace(/[\\]/gi,'/');
+const AJAX_URL = URL_PATH + 'app/controllers/Ajax.php';
 
 (function () {
     "use strict";
@@ -31,7 +33,7 @@ function openModal(e){
   }
 
   $.ajax({
-    url: 'app/controllers/Ajax.php',
+    url: AJAX_URL,
     type:'POST',
     dataType:'html',
     data: myData
@@ -59,7 +61,7 @@ function closeModal(e){
 async function ajaxRequest(formData){
     return new Promise(resolve => {
       $.ajax({
-        url:'app/controllers/Ajax.php',
+        url:AJAX_URL,
         type:'POST',
         processData: false,
         contentType: false,

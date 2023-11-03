@@ -29,14 +29,14 @@
 <header class="web_header">
     <div class="fixed_bar">
         <div class="container">
-            <a href="home">
+            <a href="<?php echo URL_PATH; ?>home">
                 <div class="logo">
-                    <img src="public/img/LogoBlack.png" alt="CLICKSHIP Logo">
+                    <img src="<?php echo URL_PATH; ?>public/img/LogoBlack.png" alt="CLICKSHIP Logo">
                 </div>
             </a>
             <nav class="navigation">
                 <ul>
-                    <li><a href="signup" class="btn btn_yellow"><i class="fa-solid fa-user-plus"></i> <span class="hide_medium"> Registro </span></a></li>
+                    <li><a href="<?php echo URL_PATH; ?>signup" class="btn btn_yellow"><i class="fa-solid fa-user-plus"></i> <span class="hide_medium"> Registro </span></a></li>
                     <li><a href="javascript:void(0);" class="btn btn_blue" data-modal="login"><i class="fa-solid fa-right-to-bracket"></i> <span class="hide_medium">Iniciar Sesión</span></a></li>
                 </ul>
             </nav>

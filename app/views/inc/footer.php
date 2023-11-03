@@ -3,7 +3,7 @@
     <div class="container">
         <div class="footer_content">
             <div class="footer_logo">
-                <img src="public/img/LogoWhite.png" alt="CLICKSHIP Logo">
+                <img src="<?php echo URL_PATH; ?>public/img/LogoWhite.png" alt="CLICKSHIP Logo">
             </div>
             <nav class="social_media_nav">
                 <ul>

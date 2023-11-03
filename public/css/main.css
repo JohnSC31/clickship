@@ -460,7 +460,7 @@ section.product_list{
     justify-content: space-between;
 }
 
-section.product_list .product{
+.product_item{
     background-color: var(--grey);
     border-radius: var(--radius);
     overflow: hidden;
@@ -469,51 +469,52 @@ section.product_list .product{
     margin: 1rem 0;
     cursor: pointer;
 }
-section.product_list .product:hover{
+.product_item:hover{
    border-color: var(--black);
 }
 
 /*  -----------RESPONSIVE DESIGN PRODUCT----------------*/
 @media only screen and (max-width: 1120px) {
-    section.product_list .product{
+    .product_item{
       flex: 0 0 calc(33.3% - 1rem);
     }
 }
 @media only screen and (max-width: 768px) {
-    section.product_list .product{
+    .product_item{
       flex: 0 0 calc(50% - 1rem);
     }
 }
 @media only screen and (max-width: 568px) {
-    section.product_list .product{
+    .product_item{
       flex: 0 0 calc(60% - 1rem);
     }
+    
     section.product_list{
-      justify-content: center;
+        justify-content: center;
     }
 }
 @media only screen and (max-width: 420px) {
-    section.product_list .product{
+    .product_item{
         flex: 0 0 calc(90%);
     }
 }
 
-section.product_list .product .img_product{
+.product_item .img_product{
     height: 15rem;
     background-color: #fff;
     background-position: center center;
     background-size: cover;
 }
 
-section.product_list .product .product_detail{
+.product_item .product_detail{
     padding: 1.5rem;
     font-weight: bold;
 }
 
-section.product_list .product .product_detail .price{
+.product_item .product_detail .price{
     color: var(--blue);
 }
-section.product_list .product .product_action{
+.product_item .product_action{
     display: flex;
     justify-content: center;
 }
@@ -622,6 +623,12 @@ div.profile_dashboard{
     margin: 2rem 0;
     height: 60vh;
 }
+@media only screen and (max-width: 768px) {
+    div.profile_dashboard{
+        flex-direction: column;
+        height: auto;
+    }
+}
 div.profile_dashboard div.user{
     flex: 0 0 calc(25% - .5rem);
 
@@ -665,6 +672,11 @@ div.profile_dashboard div.orders_container{
     padding: 1rem;
     overflow-y: scroll;
 }
+@media only screen and (max-width: 768px) {
+    div.profile_dashboard div.orders_container{
+        margin-top: 2rem;
+    }
+}
 div.orders_container div.order{
     display: flex;
     justify-content: space-between;
@@ -674,4 +686,16 @@ div.orders_container div.order{
     padding: .5rem 1rem;
 }
 /*////////////////////// -------------------------- PRODUCT  --------------------------------------------- ///////////////////////*/
-
+body#product .product_container{
+    display: flex;
+    justify-content: center;
+    padding: 5rem 0;
+}
+body#product .product_item{
+    width: 30%;
+    cursor:default;
+}
+body#product .product_item:hover{
+    border-color: var(--grey);
+}
+/*////////////////////// -------------------------- CHECKOUT  --------------------------------------------- ///////////////////////*/
