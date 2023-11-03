@@ -217,7 +217,7 @@ p,a{
     .hide_large{
       display: none;
     }
-  }
+}
 
 /* ////////// ------------------- BOTTOMS SYLES ------------------------ /////// */
 .btn{
@@ -233,7 +233,7 @@ p,a{
     border-color: transparent;
 }
 
-/* YELLOW BOTTOM */
+/* YELLOW BUTTOM */
 .btn_yellow{
     color: var(--white);
     background-color: var(--yellow);
@@ -244,7 +244,7 @@ p,a{
     border-color: var(--yellow);
 }
 
-/* YELLOW BLUE */
+/* BLUE BUTTOM*/
 .btn_blue{
     color: var(--white);
     background-color: var(--blue);
@@ -254,6 +254,79 @@ p,a{
     background-color: var(--white);
     border-color: var(--blue);
 }
+
+/* WHITE BUTTOM */
+.btn_white{
+    color: var(--blue);
+    background-color: var(--white);
+}
+.btn_white:hover{
+    color: var(--white);
+    background-color: var(--blue);
+    border-color: var(--white);
+}
+
+/* ------------------ GENERAL FORMS STYLES ------------------------------ */
+form .field{
+    padding-top: 1.5rem;
+}
+form .field label{
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+}
+
+form .field input,
+form .field select,
+form .field textarea{
+    padding: .5rem;
+    font-size: 1.5rem;
+    border-radius: var(--radius);
+    background-color: transparent;
+    width: 100%;
+    border: none;
+}
+
+form .submit{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 0 1rem 0;
+}
+
+/* ///////////////////------------------------CSS MODAL------------------------///////////// */
+div.modal_container{
+    /* Debe ir display: none; */
+    display: none;
+    position: fixed; /* Stay in place */
+    z-index: 4; /* Sit on top */
+    /*Location of the box */
+    /* padding: 5rem 0;  */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /*Enable scroll if needed */
+    /*Black w/ opacity */
+    background-color: rgba(0,0,0,0.4);
+    justify-content: center;
+  }
+  div.modal_container div.modal{
+    background-color: #fff;
+    border-radius: var(--radius);
+    margin: 5rem auto;
+  }
+  /* Header del modal */
+  div.modal div.modal_header{
+    display: flex;
+    justify-content: end;
+    padding: 0 1rem;
+  }
+  div.modal div.modal_header a.close_modal{
+    color: var(--black);
+    font-size: 2.5rem;
+    font-weight: bold;
+    cursor: pointer;
+  }
 
 /*////////////////////// -------------------------- HEADER --------------------------------------------- ///////////////////////*/
 header.web_header .fixed_bar{
@@ -267,8 +340,6 @@ header.web_header .fixed_bar{
     z-index: 3;
     /* Sombra */
     border-bottom: 1px solid var(--grey);
-
-    /*  */
 }
 header.web_header .fixed_bar .container{
     display: flex;
@@ -279,6 +350,11 @@ header.web_header .fixed_bar .container{
 header.web_header .logo{
     width: 20rem;
 }
+@media only screen and (max-width: 420px) {
+    header.web_header .logo{
+        width: 15rem;
+    }
+}
 header.web_header .navigation ul{
     display: flex;
 }
@@ -288,7 +364,7 @@ header.web_header .navigation ul li{
 
 /* para que nada quede debajo del header */
 header.web_header .bar_space{
-    height: 6rem;
+    height: 5.5rem;
 }
 
 /*////////////////////// -------------------------- FOOTER --------------------------------------------- ///////////////////////*/
@@ -309,7 +385,7 @@ footer div.footer_logo{
     footer div.footer_logo{
         width: 20rem;
     }
-  }
+}
 footer nav.social_media_nav ul{
     display: flex;
     align-items: center;
@@ -338,7 +414,11 @@ footer div.rights{
 /*//////////////////////  SEARCH PRODUCTS  ///////////////////////*/
 section.search_product{
     background-color: var(--grey);
-    padding: 5rem 0;
+    padding: 10rem 0;
+    background-color: #fff;
+    background-position: center center;
+    background-size: cover;
+    background-image: url('../img/home-img.png');
 
 }
 section.search_product div.container{
@@ -352,20 +432,246 @@ section.search_product div.search_bar{
     background-color: var(--white);
     width: 50%;
     display: flex;
-    justify-content: space-between;
+    /* justify-content: space-between; */
     align-items: center;
     padding: 0 1rem;
+}
+@media only screen and (max-width: 420px) {
+    section.search_product div.search_bar{
+        width: 80%;
+    }
 }
 section.search_product div.search_bar input{
     font-size: 2rem;
     font-weight: bold;
     border: none;
     background-color: transparent;
-    flex-grow: 1;
+    width: calc(100% - 1.5rem);
 }
 section.search_product div.search_bar a{
     color: var(--blue);
 }
 
 /*//////////////////////  PRODUCT LIST  ///////////////////////*/
+section.product_list{
+    padding: 2rem 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+section.product_list .product{
+    background-color: var(--grey);
+    border-radius: var(--radius);
+    overflow: hidden;
+    flex: 0 0 calc(25% - 1rem);
+    border: 1px solid var(--grey);
+    margin: 1rem 0;
+    cursor: pointer;
+}
+section.product_list .product:hover{
+   border-color: var(--black);
+}
+
+/*  -----------RESPONSIVE DESIGN PRODUCT----------------*/
+@media only screen and (max-width: 1120px) {
+    section.product_list .product{
+      flex: 0 0 calc(33.3% - 1rem);
+    }
+}
+@media only screen and (max-width: 768px) {
+    section.product_list .product{
+      flex: 0 0 calc(50% - 1rem);
+    }
+}
+@media only screen and (max-width: 568px) {
+    section.product_list .product{
+      flex: 0 0 calc(60% - 1rem);
+    }
+    section.product_list{
+      justify-content: center;
+    }
+}
+@media only screen and (max-width: 420px) {
+    section.product_list .product{
+        flex: 0 0 calc(90%);
+    }
+}
+
+section.product_list .product .img_product{
+    height: 15rem;
+    background-color: #fff;
+    background-position: center center;
+    background-size: cover;
+}
+
+section.product_list .product .product_detail{
+    padding: 1.5rem;
+    font-weight: bold;
+}
+
+section.product_list .product .product_detail .price{
+    color: var(--blue);
+}
+section.product_list .product .product_action{
+    display: flex;
+    justify-content: center;
+}
+
+/*////////////////////// -------------------------- SIGNUP --------------------------------------------- ///////////////////////*/
+section.signup{
+   padding: 3rem 0;
+   background-color: var(--blue);
+   height: 90vh;
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+}
+section.signup h1{
+    color: var(--white);
+}
+
+div.signup_form {
+    background-color: var(--white);
+    border-radius: var(--radius);
+    padding: 2rem;
+    width: 30%;
+}
+div.signup_form form .field label{
+    color: var(--blue);
+}
+div.signup_form form .field input{
+   border: 2px solid var(--blue)
+}
+
+/*  -----------RESPONSIVE SIGNUP FORM----------------*/
+@media only screen and (max-width: 1120px) {
+    div.signup_form{
+      width: 40%;
+    }
+}
+@media only screen and (max-width: 768px) {
+    div.signup_form{
+        width: 50%;
+    }
+}
+@media only screen and (max-width: 568px) {
+    div.signup_form{
+        width: 80%;
+    }
+}
+@media only screen and (max-width: 420px) {
+    div.signup_form{
+        width: 95%;
+    }
+}
+
+/*////////////////////// -------------------------- LOGIN --------------------------------------------- ///////////////////////*/
+div.modal_login{
+    width: 30%;
+    padding: 3rem;
+    background-color: var(--blue)!important;
+}
+  /* color para el modal login que es azul */
+  div.modal_login div.modal_header a.close_modal{ 
+    color: var(--white)!important;
+  }
+@media only screen and (max-width: 1120px) {
+    div.modal_login{
+      width: 40%;
+    }
+}
+@media only screen and (max-width: 768px) {
+    div.modal_login{
+        width: 50%;
+    }
+}
+@media only screen and (max-width: 568px) {
+    div.modal_login{
+        width: 80%;
+    }
+}
+@media only screen and (max-width: 420px) {
+    div.modal_login{
+        width: 95%;
+    }
+}
+div.modal_login h2{
+    text-align: center;
+    color: var(--white);
+}
+div.modal_login form .field label{
+    color: var(--white);
+}
+div.modal_login form .field input{
+   border: 2px solid var(--white);
+}
+div.modal_login p.register{
+    color: var(--white);
+}
+div.modal_login p.register a{
+    color: var(--yellow);
+    font-weight: bold;
+}
+
+/*////////////////////// -------------------------- PROFILE --------------------------------------------- ///////////////////////*/
+div.profile_dashboard{
+    display: flex;
+    align-items: top;
+    justify-content: space-between;
+    margin: 2rem 0;
+    height: 60vh;
+}
+div.profile_dashboard div.user{
+    flex: 0 0 calc(25% - .5rem);
+
+    border-radius: var(--radius);
+    background-color: var(--yellow);
+    padding: 1rem;
+}
+
+div.profile_dashboard div.user div.picture_container{
+    padding: 2rem 0;
+    display: flex;
+    justify-content: center;
+}
+div.profile_dashboard div.user div.picture{
+    height: 10rem;
+    width: 10rem;
+    border-radius: 50%;
+    background-color: var(--grey);
+    padding: .5rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+div.profile_dashboard div.picture i{
+    color: var(--yellow);
+    font-size: 5rem;
+}
+div.profile_dashboard div.profile_form_container label{
+    color: var(--grey);
+}
+div.profile_dashboard div.profile_form_container input{
+    color: var(--black);
+    background-color: var(--grey)!important;
+}
+/* LISTA DE ORDENES */
+div.profile_dashboard div.orders_container{
+    border-radius: var(--radius);
+    border: 1px solid var(--yellow);
+    flex: 0 0 calc(75% - .5rem);
+    padding: 1rem;
+    overflow-y: scroll;
+}
+div.orders_container div.order{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+    border-bottom: 1px solid var(--grey);
+    padding: .5rem 1rem;
+}
+/*////////////////////// -------------------------- PRODUCT  --------------------------------------------- ///////////////////////*/
 
