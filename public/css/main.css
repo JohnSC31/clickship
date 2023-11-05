@@ -699,3 +699,117 @@ body#product .product_item:hover{
     border-color: var(--grey);
 }
 /*////////////////////// -------------------------- CHECKOUT  --------------------------------------------- ///////////////////////*/
+div.checkout_container{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: 3rem 0;
+}
+@media only screen and (max-width: 700px ) {
+    div.checkout_container{
+        flex-direction: column-reverse;
+    }
+}
+
+div.checkout_container div.bill_container{
+   flex: 0 0 calc(60% - 1rem);
+   /* background-color: rebeccapurple; */
+   display: flex;
+   flex-direction: column;
+   justify-content: space-between;
+}
+/* detalle de factura */
+div.bill_container div.bill_detail_container{
+    border: 1px solid var(--blue);
+    border-radius: var(--radius);
+    padding: 1rem 2rem;
+}
+div.bill_detail_container div.bill_detail,
+div.bill_detail_container div.bill_detail > div{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+}
+div.bill_detail_container div.bill_detail{
+    border-bottom: 1px solid var(--blue);
+    padding: 1rem 0;
+}
+
+div.bill_detail_container div.bill_detail:last-child{
+    border-bottom: none;
+}
+div.bill_detail button{
+    cursor: pointer;
+    border-radius: 50%;
+    width: 2.5rem;
+    height: 2.5rem;
+    margin: 0 .5rem;
+    border: 1px solid transparent;
+    color: white;
+}
+
+div.bill_detail button.btn_minus_product{
+    background-color: var(--yellow);
+}
+div.bill_detail button.btn_minus_product:hover{
+    background-color: var(--white);
+    color: var(--yellow);
+    border: 1px solid var(--yellow);
+}
+
+div.bill_detail button.btn_add_product{
+    background-color: var(--blue);
+}
+div.bill_detail button.btn_add_product:hover{
+    background-color: var(--white);
+    color: var(--blue);
+    border: 1px solid var(--blue);
+}
+
+div.bill_detail button.btn_detele_product{
+    background-color: var(--red);
+}
+div.bill_detail button.btn_detele_product:hover{
+    background-color: var(--white);
+    color: var(--red);
+    border: 1px solid var(--red);
+}
+
+/* total de factura */
+div.bill_container div.bill_total{
+    border: 1px solid var(--blue);
+    border-radius: var(--radius);
+    padding: 1rem;
+    margin-top: 1rem;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+div.bill_container div.bill_total h4{
+    color: var(--blue);
+    font-weight: bold;
+}
+
+
+/* Formulario de pago */
+div.checkout_container div.payment{
+    flex: 0 0 calc(40% - 1rem);
+    background-color: var(--blue);
+    border-radius: var(--radius);
+    padding: 1rem;
+}
+@media only screen and (max-width: 700px ) {
+    div.checkout_container div.payment{
+        margin-bottom: 2rem;
+    }
+}
+
+div.payment form#checkout_form .field label{
+    color: var(--white);
+}
+div.payment form#checkout_form .field input{
+   background-color: var(--white);
+}
