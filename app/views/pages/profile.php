@@ -1,7 +1,7 @@
 
 
 <div class="container">
-    <h1>Pefil</h1>
+    <h1>Perfil</h1>
     <div class="profile_dashboard">
 
         <div class="user">
