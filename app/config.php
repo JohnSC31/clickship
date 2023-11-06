@@ -13,6 +13,7 @@
     //Ejemplo: http://localhost/website/
     //define('URL_PATH', 'https://asedocr.com/'); 
     define('URL_PATH', 'http://localhost/clickship/');
+    define('URL_ADMIN_PATH', 'http://localhost/clickship/admin/');
 
     define('WEB_NAME', 'CLICKSHIP');
 
