@@ -11,6 +11,13 @@ const AJAX_URL = URL_PATH + 'app/controllers/Ajax.php';
       // APERTURA DE LOS MODALS
       $("body").on("click", "[data-modal]", openModal);
       $("body").on("click", "[close-modal]", closeModal);
+
+      // NAVEGACION DE ADMINISTRACION
+      $("body").on("click", "[data-admin-nav]", function(e){
+        e.stopPropagation();
+        adminNavigation(e.currentTarget);
+      });
+      
     
   
     }); // end DOMContentLoaded
@@ -53,6 +60,23 @@ function closeModal(e){
   // if($('div.notification')) $('div.notification').remove();
 }
 
+///////////// **************************************************************************************************** ///////////////
+///////////// ********************************************** ADMIN AREA ****************************************** ///////////////
+///////////// **************************************************************************************************** ///////////////
+
+// Funcionalidad de navegacion para el area de administracion
+function adminNavigation(option){
+  // style para el hover del menu
+  if(!$(option).hasClass("active")){
+    // se quita el active de todos y se coloca al actual
+    $("ul#admin_nav li").removeClass("active");
+    $(option).addClass("active")
+  }
+  // se ocultan todos los div
+  $('div#dashboard_container > div').css('display', 'none');
+  // se muestra el div correspondiente
+  $('div#dashboard_container div.'+ $(option).attr("data-admin-nav") + '_container').css('display', 'flex');
+}
 
 
 ///////////// ************************ AJAX BACKEND CONN ************************ ///////////////
