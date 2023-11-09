@@ -50,6 +50,40 @@
             require_once '../views/modals/'. $data['modal'] . '.php';
         }
 
+        // REGISTRO DEL CLIENTE
+        private function clientSignup($client){
+
+            // REALIZAR LA INSERCCION EN LA BASE DE DATOS
+
+            // INICIAR LA SESION DEL CLIENTE
+            $this->ajaxRequestResult(true, "Se registra". $client['name']);
+        }
+
+        // INICIO DE SESION DEL CLIENTE
+        private function clientLogin($client){
+            
+            // se validan las credenciales
+            // obtener el nombre, apellidos e email para el perfil
+
+            // se inicia sesion y el carrito
+            $clientSession = array(
+                'SESSION' => TRUE,
+                'CID' => "idClient",
+                'CART' => array() // arreglo para el carrito
+            );
+
+            $_SESSION['CLIENT'] = $clientSession;
+
+            if(isset($_SESSION['USER'])){
+                $this->ajaxRequestResult(true, "Inicia sesion ". $client['email']);
+            }else{
+                $this->ajaxRequestResult(false, "Error al iniciar sesion");
+            }
+
+
+            
+        }
+       
 
     }
 
