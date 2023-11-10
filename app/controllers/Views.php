@@ -34,35 +34,44 @@
             return $data;
         }
 
+        // VALIDAR LA SESION DEL USUARIO PARA EL ACCESO A LA PAGINA
+        private function validUserSession($destiny){
+
+            if(!isset($_SESSION['CLIENT']['SESSION'])) header('Location:'.URL_PATH.$destiny);
+        }
+
 
         // METODOS PARA CARGAR LAS VISTAS
 
         // CARGA DEL HOME
         public function home(){
-            $data = $this->getPageData('home','Encuentra todos tus productos en CLICKSHIP');
+            $data = $this->getPageData('home','Home');
             $this->loadView('pages/home', $data); // se carga la vista necesaria
         }
 
         // CARGA DEL SIGNUP
         public function signup(){
-            $data = $this->getPageData('signup','Registro de Usuario');
+            $data = $this->getPageData('signup','Registro');
             $this->loadView('pages/signup', $data); // se carga la vista necesaria
         }
 
         // CARGA DEL CHECKOUT
         public function checkout(){
+            $this->validUserSession('signup');
             $data = $this->getPageData('checkout','Carrito de compra');
             $this->loadView('pages/checkout', $data); // se carga la vista necesaria
         }
 
         // CARGA DEL PRODUCT
         public function product(){
+            // $this->validUserSession('signup');
             $data = $this->getPageData('product','Producto');
             $this->loadView('pages/product', $data); // se carga la vista necesaria
         }
 
         // CARGA DEL PERFIL 
         public function profile(){
+            $this->validUserSession('signup');
             $data = $this->getPageData('profile','Perfil');
             $this->loadView('pages/profile', $data); // se carga la vista necesaria
         }

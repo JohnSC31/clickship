@@ -17,12 +17,29 @@ const AJAX_URL = URL_PATH + 'app/controllers/Ajax.php';
       $("body").on("submit", "form#signup_form", clientSignupForm);
       // Inicio de seion
       $("body").on("submit", "form#login_form", clientLoginForm);
+      // cerrar seion
+      $("body").on("click", "[data-logout]", clientLogout);
+      
+
+      // CLICK DE LOS PRODUCTOS
+      $("body").on("click", "[data-item]", productPage);
+      
+      // AGREGAR PRODUCTO
+      $("body").on("click", "[data-cart]", function(e){
+        e.stopPropagation();
+        clientCart(e.currentTarget);
+      });
 
       // NAVEGACION DE ADMINISTRACION
       $("body").on("click", "[data-admin-nav]", function(e){
         e.stopPropagation();
         adminNavigation(e.currentTarget);
       });
+
+      // PAGINA DE CHECKOUT
+      if($("body").attr('id') === 'checkout'){
+        loadClientCart();
+      }
       
     
   
@@ -201,8 +218,73 @@ async function clientLoginForm(e){
 
 }
 
+async function clientLogout(e){
+  e.preventDefault();
 
-// 
+  const logoutFormData = new FormData();
+  logoutFormData.append('ajaxMethod', "clientLogout");  
+
+  result = await ajaxRequest(logoutFormData);
+  showNotification(result.Message, result.Success, false);
+
+  if(result.Success){
+    setTimeout(()=>{
+      window.location.href = URL_PATH + 'home';
+    }, 1500)
+  }
+}
+
+
+// CLICK DE LOS PRODUCTOS PARA VERLO EN LA PAGINA
+function productPage(e){
+  e.preventDefault();
+  console.log("click");
+  const idProduct = $(this).attr('data-item');
+  window.location.href = URL_PATH + 'product/' + idProduct;
+}
+
+// funcion para cargar el carrito
+async function loadClientCart(){
+  const loadCartFormData = new FormData();
+
+  loadCartFormData.append('ajaxMethod', 'loadClientCart');
+  ajaxHTMLRequest(loadCartFormData, "#cart_container");
+  getTotalClientCart();
+}
+
+// funcion para cargar el carrito
+async function getTotalClientCart(){
+  const loadCartFormData = new FormData();
+
+  loadCartFormData.append('ajaxMethod', 'getTotalClientCart');
+  ajaxHTMLRequest(loadCartFormData, "#total_bill");
+  
+}
+
+// ACCIONES PARA EL CARRITO DE COMPRA
+async function clientCart(button){
+  const cartFormData = new FormData();
+
+  if($(button).attr('data-cart') === 'add'){
+    // se agrega un producto al carrito
+    cartFormData.append('id', $(button).attr('data-id'));
+    cartFormData.append('name', $(button).attr('data-name'));
+    cartFormData.append('price', $(button).attr('data-price'));
+  }else{
+    // para aumenta y disminuir y para eliminar
+    cartFormData.append('id', $(button).attr('data-id'));
+  }
+
+  cartFormData.append('ajaxMethod', "clientCart");
+  cartFormData.append('action', $(button).attr('data-cart')); // accion en el carrito 
+
+  result = await ajaxRequest(cartFormData);
+  showNotification(result.Message, result.Success, true);
+
+  if($("body").attr("id") === 'checkout'){
+    loadClientCart();
+  }
+}
 
 
 ///////////// **************************************************************************************************** ///////////////
@@ -240,6 +322,22 @@ async function ajaxRequest(formData){
         resolve(JSON.parse(data));
       });
     });
-  }
+}
+
+// FUNCION QUE REALIZA LA CONECCION CON EL BACKEND Y RETORNA UN HTML
+// Debe haber un campo en el form data indicando el metodo a utilizar en el ajax controller llamado 'ajaxMethod'
+// html container indica el contenedor en el cual va ser insertado el html es un string indicando el id
+async function ajaxHTMLRequest(formData, html_container){
+  $.ajax({
+    url: AJAX_URL,
+    type:'POST',
+    processData: false,
+    contentType: false,
+    dataType:'html',
+    data: formData
+  }).done(function(data){
+    $(html_container).html(data);
+  });
+}
 
   
