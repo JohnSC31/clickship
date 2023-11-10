@@ -219,6 +219,15 @@ p,a{
     }
 }
 
+.disabled{
+    pointer-events: none!important;
+    cursor: default!important;
+    color: var(--darkGrey)!important;
+    background-color: var(--lightGrey)!important;
+    border: 1px solid var(--darkGrey)!important;
+    user-select: none!important;
+}
+
 /* ////////// ------------------- BOTTOMS SYLES ------------------------ /////// */
 .btn{
     text-decoration: none;
@@ -700,6 +709,12 @@ div.profile_dashboard div.profile_form_container input{
     color: var(--black);
     background-color: var(--grey)!important;
 }
+
+div.profile_dashboard div.logout_container{
+    padding: .5rem 0;
+    display: flex;
+    justify-content: center;
+}
 /* LISTA DE ORDENES */
 div.profile_dashboard div.orders_container{
     border-radius: var(--radius);
@@ -810,6 +825,11 @@ div.bill_detail button.btn_detele_product:hover{
     background-color: var(--white);
     color: var(--red);
     border: 1px solid var(--red);
+}
+
+div.bill_detail_container div.no_items_cart p{
+    text-align: center;
+    color: var(--blue);
 }
 
 /* total de factura */

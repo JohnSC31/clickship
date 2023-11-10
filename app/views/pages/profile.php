@@ -1,5 +1,4 @@
 
-
 <div class="container">
     <h1>Perfil</h1>
     <div class="profile_dashboard">
@@ -25,6 +24,9 @@
                         <input type="text" name="lastnames" id="lastnames" value="Sanchez">
                     </div>
                 </form>
+                <div class="logout_container">
+                    <button class="btn btn_yellow" data-logout="true">Cerrar Sesion</button>
+                </div>
             </div>
         </div>
         <div class="orders_container">

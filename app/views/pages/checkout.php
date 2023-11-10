@@ -6,13 +6,13 @@
 
     <div class="checkout_container">
         <div class="bill_container">
-            <div class="bill_detail_container">
-                <?php for($i = 0; $i < 6; $i++) { ?>
+            <div class="bill_detail_container" id="cart_container">
+                <?php for($i = 0; $i < 0; $i++) { ?>
                     <div class="bill_detail">
                         <div class="detail_product">
                             <button class="btn_minus_product"><i class="fa-solid fa-minus"></i></button>
                             <p class="numProduct" id="numProduct">3</p>
-                            <button class="btn_add_product"><i class="fa-solid fa-plus"></i></button>
+                            <button class="btn_add_product" data-cart="plus" data><i class="fa-solid fa-plus"></i></button>
                             <p>Nombre producto</p>
                         </div>
                         <div class="price_product_detail">

@@ -36,8 +36,14 @@
             </a>
             <nav class="navigation">
                 <ul>
-                    <li><a href="<?php echo URL_PATH; ?>signup" class="btn btn_yellow"><i class="fa-solid fa-user-plus"></i> <span class="hide_medium"> Registro </span></a></li>
-                    <li><a href="javascript:void(0);" class="btn btn_blue" data-modal="login"><i class="fa-solid fa-right-to-bracket"></i> <span class="hide_medium">Iniciar Sesión</span></a></li>
+                    <?php if(!isset($_SESSION['CLIENT']['SESSION'])){ ?>
+                        <li><a href="<?php echo URL_PATH; ?>signup" class="btn btn_yellow"><i class="fa-solid fa-user-plus"></i> <span class="hide_medium"> Registro </span></a></li>
+                        <li><a href="javascript:void(0);" class="btn btn_blue" data-modal="login"><i class="fa-solid fa-right-to-bracket"></i> <span class="hide_medium">Iniciar Sesión</span></a></li>
+                    <?php } else { ?>
+                        <li><a href="<?php echo URL_PATH; ?>profile" class="btn btn_yellow"><i class="fa-solid fa-user"></i> <span class="hide_medium"> Perfil </span></a></li>
+                        <li><a href="<?php echo URL_PATH; ?>checkout" class="btn btn_blue"><i class="fa-solid fa-cart-shopping"></i> <span class="hide_medium"> Carrito </span></a></li>
+
+                    <?php } ?>
                 </ul>
             </nav>
         </div>
