@@ -216,7 +216,17 @@
                 </div>
             <?php } 
         }
-       
+        
+        // METODO PARA CREAR UNA ORDEN DEL CLIENTE CON LO QUE TIENE EN EL CARRITO
+        private function clientMakeOrder($order){
+            // obtiene los detalles de la orden
+            // se crea la order
+            // se le agregan los productos
+            // sacar todos los productos del carrito de compras
+            
+            // retorna el mensaje
+            $this->ajaxRequestResult(true, "Se ha realizado la orden");
+        }
 
     }
 

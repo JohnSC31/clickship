@@ -19,6 +19,7 @@ const AJAX_URL = URL_PATH + 'app/controllers/Ajax.php';
       $("body").on("submit", "form#login_form", clientLoginForm);
       // cerrar seion
       $("body").on("click", "[data-logout]", clientLogout);
+
       
 
       // CLICK DE LOS PRODUCTOS
@@ -49,6 +50,7 @@ const AJAX_URL = URL_PATH + 'app/controllers/Ajax.php';
       // PAGINA DE CHECKOUT
       if($("body").attr('id') === 'checkout'){
         loadClientCart();
+        $("body").on("submit", "form#order_form", makeOrder);
       }
       
     
@@ -313,9 +315,79 @@ async function loadProducts(){
   }
   
   filtersProduct.append('ajaxMethod', "loadProducts");  
-  
+
   ajaxHTMLRequest(filtersProduct, "#product_list");
 
+}
+
+// FUNCION PARA CREAR UNA ORDEN DEL CLIENTE
+async function makeOrder(e){
+  e.preventDefault();
+
+  const input_cardNum = $('input#carNumber');
+  const input_expireDate = $('input#expireDate');
+  const input_cvc = $('input#cvc');
+  const input_shippingAddress = $('input#shippingAddress');
+
+
+  // validacion de los datos
+  if(!validInput(input_cardNum.val(), false, "Ingrese numero de tarjeta")) return false;
+  if(!validInput(input_expireDate.val(), false, "Ingrese una fecha de vencimiento")) return false;
+  if(!validInput(input_cvc.val(), false, "Ingrese un numero de seguridad")) return false;
+  
+  // validacion de la direccion
+  if(!validInput(input_shippingAddress.val(), false, "Ingrese una direccion de entrega")) return false;
+  
+  // se obtiene la geolocalizacion
+  const orderShippingLocation = await getGeoLocation(input_shippingAddress.val());
+  if(!orderShippingLocation){ 
+    showNotification('Direccion invalida', false); 
+    return false;
+  }
+  // formdata
+  const orderFormData = new FormData();
+
+  orderFormData.append('cardNum', input_cardNum.val());
+  orderFormData.append('expireDate', input_expireDate.val());
+  orderFormData.append('cvc', input_cvc.val());
+  orderFormData.append('location', orderShippingLocation);
+  orderFormData.append('ajaxMethod', 'clientMakeOrder');
+
+  result = await ajaxRequest(orderFormData);
+
+  showNotification(result.Message, result.Success, true);
+  
+  if(result.Success){
+    setTimeout(()=>{
+      window.location.href = URL_PATH + 'profile';
+    }, 1500)
+  }
+}
+
+
+function getGeoLocation(address){
+
+  return new Promise(resolve => {
+    $.ajax({
+      url:'https://maps.googleapis.com/maps/api/geocode/json',
+      type:'GET',
+      data: {
+        sensor : false,
+        address : address,
+        key : 'AIzaSyBX8-UhEanXF3-oc2HB4LA5He-QdBjRVa0'
+      }
+    }).done(function(data){
+
+      if(data.results.length > 0){
+        resolve(JSON.stringify(data.results[0].geometry.location));
+      }else{
+        resolve(false);
+      }
+      
+    });
+  });
+
+  
 }
 
 ///////////// **************************************************************************************************** ///////////////

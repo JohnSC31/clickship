@@ -295,6 +295,25 @@ form .field textarea{
     border: none;
 }
 
+form .col_2{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+form .col_2 .field{
+    width: calc(50% - .5rem);
+}
+
+@media only screen and (max-width: 768px ) {
+    form .col_2{
+        flex-direction: column;
+    }
+    form .col_2 .field{
+        width: 100%;
+    }
+}
+
 form .submit{
     display: flex;
     align-items: center;
@@ -768,6 +787,7 @@ div.checkout_container{
     flex-wrap: wrap;
     justify-content: space-between;
     padding: 3rem 0;
+    min-height: 65vh;
 }
 @media only screen and (max-width: 700px ) {
     div.checkout_container{
@@ -876,10 +896,11 @@ div.checkout_container div.payment{
     }
 }
 
-div.payment form#checkout_form .field label{
+div.payment form#order_form .field label{
     color: var(--white);
 }
-div.payment form#checkout_form .field input{
+div.payment form#order_form .field input,
+div.payment form#order_form .field select{
    background-color: var(--white);
 }
 
