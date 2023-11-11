@@ -16,7 +16,10 @@
 
     <!-- NORMALIZE -->
     <link rel="stylesheet" href="<?php echo URL_PATH; ?>public/css/normalize.css">
-    <link rel="stylesheet" href="<?php echo URL_PATH; ?>public/css/main.css">
+    <!-- CSS de la zona cliente para user sus atributos  -->
+    <link rel="stylesheet" href="<?php echo URL_PATH; ?>public/css/main.css"> 
+    <!-- CSS exclusivo del admin area -->
+    <link rel="stylesheet" href="<?php echo URL_ADMIN_PATH; ?>public/css/main.css">
 
     <!-- Link para Font Awesome -->
     <link rel="stylesheet" href="<?php echo URL_PATH; ?>public/css/fontawesome-free-6.2.1-web/css/all.min.css">
@@ -25,4 +28,8 @@
 
 </head>
 <body id="<?php echo $data['ID'];?>" data-url="<?php echo URL_ADMIN_PATH; ?>">
+
+    <div class="notification_container" id="notification_container"></div>
+
+    <div class="modal_container" id="modal_container"></div>
  
