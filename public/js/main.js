@@ -36,6 +36,16 @@ const AJAX_URL = URL_PATH + 'app/controllers/Ajax.php';
         adminNavigation(e.currentTarget);
       });
 
+      // PAGINA HOME O INICIO
+      if($("body").attr('id') === 'home'){
+        loadProducts(); // se cargan los productos
+
+        // carga al ingresar en el input
+        $("input#product_search").on("change", loadProducts);
+        // carga productos al cambiar el select
+        $("select#select_categorie").on("change", loadProducts);
+      }
+
       // PAGINA DE CHECKOUT
       if($("body").attr('id') === 'checkout'){
         loadClientCart();
@@ -286,6 +296,27 @@ async function clientCart(button){
   }
 }
 
+
+// FUNCION DE BUSQUEDA Y FILTROS PARA CARGAR LOS PRODUCTOS
+async function loadProducts(){
+
+  const input_search_product = $('input#product_search');
+  const select_categorie = $('select#select_categorie');
+
+  const filtersProduct = new FormData();
+  if($(input_search_product).val() !== ""){
+    filtersProduct.append('search', input_search_product.val());
+  }
+
+  if($(select_categorie).val() !== ""){
+    filtersProduct.append('idCategorie', select_categorie.val());
+  }
+  
+  filtersProduct.append('ajaxMethod', "loadProducts");  
+  
+  ajaxHTMLRequest(filtersProduct, "#product_list");
+
+}
 
 ///////////// **************************************************************************************************** ///////////////
 ///////////// ********************************************** ADMIN AREA ****************************************** ///////////////

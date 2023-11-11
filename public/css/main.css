@@ -496,6 +496,18 @@ section.search_product div.search_bar input{
 section.search_product div.search_bar a{
     color: var(--blue);
 }
+ /* seccion de filtros */
+ section.filters p{
+   font-weight: bold;
+   font-size: 2rem;
+}
+section.filters div.filters_container select{
+    padding: .5rem;
+    font-size: 1.5rem;
+    border-radius: var(--radius);
+    background-color: transparent;
+    border: 1px solid var(--blue);
+}
 
 /*//////////////////////  PRODUCT LIST  ///////////////////////*/
 section.product_list{
@@ -651,6 +663,7 @@ div.modal_login form .field label{
 }
 div.modal_login form .field input{
    border: 2px solid var(--white);
+   color: var(--white);
 }
 div.modal_login p.register{
     color: var(--white);
