@@ -19,6 +19,7 @@ const AJAX_URL = URL_PATH + 'app/controllers/Ajax.php';
       $("body").on("submit", "form#login_form", clientLoginForm);
       // cerrar seion
       $("body").on("click", "[data-logout]", clientLogout);
+
       
 
       // CLICK DE LOS PRODUCTOS
@@ -30,15 +31,20 @@ const AJAX_URL = URL_PATH + 'app/controllers/Ajax.php';
         clientCart(e.currentTarget);
       });
 
-      // NAVEGACION DE ADMINISTRACION
-      $("body").on("click", "[data-admin-nav]", function(e){
-        e.stopPropagation();
-        adminNavigation(e.currentTarget);
-      });
+      // PAGINA HOME O INICIO
+      if($("body").attr('id') === 'home'){
+        loadProducts(); // se cargan los productos
+
+        // carga al ingresar en el input
+        $("input#product_search").on("change", loadProducts);
+        // carga productos al cambiar el select
+        $("select#select_categorie").on("change", loadProducts);
+      }
 
       // PAGINA DE CHECKOUT
       if($("body").attr('id') === 'checkout'){
         loadClientCart();
+        $("body").on("submit", "form#order_form", makeOrder);
       }
       
     
@@ -287,24 +293,96 @@ async function clientCart(button){
 }
 
 
-///////////// **************************************************************************************************** ///////////////
-///////////// ********************************************** ADMIN AREA ****************************************** ///////////////
-///////////// **************************************************************************************************** ///////////////
+// FUNCION DE BUSQUEDA Y FILTROS PARA CARGAR LOS PRODUCTOS
+async function loadProducts(){
 
-// Funcionalidad de navegacion para el area de administracion
-function adminNavigation(option){
-  // style para el hover del menu
-  if(!$(option).hasClass("active")){
-    // se quita el active de todos y se coloca al actual
-    $("ul#admin_nav li").removeClass("active");
-    $(option).addClass("active")
+  const input_search_product = $('input#product_search');
+  const select_categorie = $('select#select_categorie');
+
+  const filtersProduct = new FormData();
+  if($(input_search_product).val() !== ""){
+    filtersProduct.append('search', input_search_product.val());
   }
-  // se ocultan todos los div
-  $('div#dashboard_container > div').css('display', 'none');
-  // se muestra el div correspondiente
-  $('div#dashboard_container div.'+ $(option).attr("data-admin-nav") + '_container').css('display', 'flex');
+
+  if($(select_categorie).val() !== ""){
+    filtersProduct.append('idCategorie', select_categorie.val());
+  }
+  
+  filtersProduct.append('ajaxMethod', "loadProducts");  
+
+  ajaxHTMLRequest(filtersProduct, "#product_list");
+
 }
 
+// FUNCION PARA CREAR UNA ORDEN DEL CLIENTE
+async function makeOrder(e){
+  e.preventDefault();
+
+  const input_cardNum = $('input#carNumber');
+  const input_expireDate = $('input#expireDate');
+  const input_cvc = $('input#cvc');
+  const input_shippingAddress = $('input#shippingAddress');
+
+
+  // validacion de los datos
+  if(!validInput(input_cardNum.val(), false, "Ingrese numero de tarjeta")) return false;
+  if(!validInput(input_expireDate.val(), false, "Ingrese una fecha de vencimiento")) return false;
+  if(!validInput(input_cvc.val(), false, "Ingrese un numero de seguridad")) return false;
+  
+  // validacion de la direccion
+  if(!validInput(input_shippingAddress.val(), false, "Ingrese una direccion de entrega")) return false;
+  
+  // se obtiene la geolocalizacion
+  const orderShippingLocation = await getGeoLocation(input_shippingAddress.val());
+  if(!orderShippingLocation){ 
+    showNotification('Direccion invalida', false); 
+    return false;
+  }
+  // formdata
+  const orderFormData = new FormData();
+
+  orderFormData.append('cardNum', input_cardNum.val());
+  orderFormData.append('expireDate', input_expireDate.val());
+  orderFormData.append('cvc', input_cvc.val());
+  orderFormData.append('location', orderShippingLocation);
+  orderFormData.append('ajaxMethod', 'clientMakeOrder');
+
+  result = await ajaxRequest(orderFormData);
+
+  showNotification(result.Message, result.Success, true);
+  
+  if(result.Success){
+    setTimeout(()=>{
+      window.location.href = URL_PATH + 'profile';
+    }, 1500)
+  }
+}
+
+
+function getGeoLocation(address){
+
+  return new Promise(resolve => {
+    $.ajax({
+      url:'https://maps.googleapis.com/maps/api/geocode/json',
+      type:'GET',
+      data: {
+        sensor : false,
+        address : address,
+        key : 'AIzaSyBX8-UhEanXF3-oc2HB4LA5He-QdBjRVa0'
+      }
+    }).done(function(data){
+
+      if(data.results.length > 0){
+        resolve(JSON.stringify(data.results[0].geometry.location));
+      }else{
+        resolve(false);
+      }
+      
+    });
+  });
+
+  
+}
 
 ///////////// ************************ AJAX BACKEND CONN ************************ ///////////////
 // FUNCION QUE REALIZA LA CONECCION CON EL BACKEND
