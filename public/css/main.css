@@ -338,18 +338,20 @@ div.modal_container{
     background-color: rgba(0,0,0,0.4);
     justify-content: center;
 }
-div.modal_container div.modal{
+div.modal_container .myModal{
     background-color: #fff;
     border-radius: var(--radius);
     margin: 5rem auto;
+    display: block;
 }
+  
 /* Header del modal */
-div.modal div.modal_header{
+div.myModal div.modal_header{
     display: flex;
     justify-content: end;
     padding: 0 1rem;
 }
-div.modal div.modal_header a.close_modal{
+div.myModal div.modal_header a.close_modal{
     color: var(--black);
     font-size: 2.5rem;
     font-weight: bold;

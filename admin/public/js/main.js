@@ -7,11 +7,22 @@ const AJAX_URL = URL_PATH + 'app/controllers/Ajax.php';
   
     document.addEventListener('DOMContentLoaded', function (){
       // Despues de cargar todo el DOM se ejecuta el codigo
+
+      // APERTURA DE LOS MODALS
+      $("body").on("click", "[data-modal]", openModal);
+      $("body").on("click", "[close-modal]", closeModal);
+
       // NAVEGACION DE ADMINISTRACION
       $("body").on("click", "[data-admin-nav]", function(e){
         e.stopPropagation();
         adminNavigation(e.currentTarget);
       });
+
+      // INICIALIZACION DE LA DATA TABLES
+      initDataTable('sells', 'loadDataTableSells');
+
+      initDataTable('inventory', 'loadDataTableSells');
+      
   
     }); // end DOMContentLoaded
   
@@ -38,6 +49,7 @@ function openModal(e){
     dataType:'html',
     data: myData
   }).done(function(data){
+    console.log(data);
     $('div#modal_container').html(data);
     $('div#modal_container').css('display', 'block'); // estaba en flex
     $('body').css('overflow', 'hidden');
@@ -126,6 +138,45 @@ function validEmail(input_value){
 ///////////// ********************************************** ADMIN AREA ****************************************** ///////////////
 ///////////// **************************************************************************************************** ///////////////
 
+
+// FUNCION PARA LA INICIALIZACION DE LAS DATATABLES
+// ///////////////////////----------------------AJAX TABLE LOADES/ CARGADOR PARA LAS TABLAS AJAX ---------------------////////////////////////////
+function initDataTable(table, ajaxMethod){
+  const columns = getDataTableColumns(table);
+  $("#"+table+"-table").DataTable({
+    "responsive": true,
+    "autoWidth": false,
+    "processing": true,
+    "serverSide": true,
+    "ajax":{
+      url: AJAX_URL,
+      type:"POST",
+      data: {ajaxMethod: ajaxMethod, table:table}
+    },
+    "columns": columns
+  });
+}
+
+// FUNCION PARA OBTENER LAS COLUMNAS DE LAS DATATABLES
+function getDataTableColumns(table){
+  var columns = new Array();
+  //COLS PARA VENTAS
+  if(table === 'sells') columns = [{data: 'idSell'}, {data: 'clientName'}, {data: 'status'}, {data: 'store'}];
+
+  // COLS PARA INVENTARIO
+  if(table === 'inventory') columns = [{data: 'idSell'}, {data: 'clientName'}, {data: 'status'}, {data: 'store'}];
+
+  //PARA LAS ACCIONES
+  columns.push({data: 'actions', "orderable": false });
+
+  return columns;
+}
+
+//RECARGAR LAS DATA TABLES
+function refreshDataTables(table){
+  $("#"+table+"-table").DataTable().ajax.reload();
+}
+
 // Funcionalidad de navegacion para el area de administracion
 function adminNavigation(option){
   // style para el hover del menu
@@ -137,8 +188,11 @@ function adminNavigation(option){
   // se ocultan todos los div
   $('div#dashboard_container > div').css('display', 'none');
   // se muestra el div correspondiente
-  $('div#dashboard_container div.'+ $(option).attr("data-admin-nav") + '_container').css('display', 'flex');
+  $('div#dashboard_container div.'+ $(option).attr("data-admin-nav") + '_container').css('display', 'block');
 }
+
+
+
 
 
 ///////////// ************************ AJAX BACKEND CONN ************************ ///////////////

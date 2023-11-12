@@ -60,12 +60,21 @@ div.dashboard_container{
     overflow: scroll;
 }
 
+/* ------------------------------- DATATABLES ------------------------------------ */
+div.datatable-container{
+    padding: 1rem;
+    border: 1px solid var(--grey);
+    border-radius: var(--radius); 
+}
+div.datatable-container table{
+    font-size: 1.8rem;
+}
 
 /* ------------------------------- VENTAS ------------------------------------ */
 div.sells_container{
-    display: flex;
+    /* display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: center; */
 }
 div.sell_report_container{
     background-color: var(--blue);
@@ -78,4 +87,26 @@ div.sell_report_container{
 div.sell_report_container .field input,
 div.sell_report_container .field select{
     background-color: var(--white);
+}
+
+/* ------------------------------- INVENTARIO ------------------------------------ */
+div.add_product_from_container{
+    padding: .5rem;
+    background-color: var(--blue);
+    border-radius: var(--radius);
+}
+form#add_product label{
+    color: var(--white);
+}
+form#add_product .field input,
+form#add_product select,
+form#add_product textarea{
+    color: var(--black);
+    font-weight: bold;
+    background-color: var(--white);
+}
+
+/* data table de inventario */
+div.table-inventory-container{
+    margin-top: 2rem;
 }
