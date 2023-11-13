@@ -19,9 +19,17 @@ const AJAX_URL = URL_PATH + 'app/controllers/Ajax.php';
       });
 
       // INICIALIZACION DE LA DATA TABLES
+      // SECCION DE VENTAS
       initDataTable('sells', 'loadDataTableSells');
 
-      initDataTable('inventory', 'loadDataTableSells');
+      // SECCION DE INVENTARIO
+      initDataTable('inventory', 'loadDataTableInventory');
+      $("body").on("submit", "form#add_product", addProduct);
+      $("body").on("click", "[data-delete-product]", deleteProduct);
+
+      // SECCION DE RECURSOS HUMANOS
+
+      // SECCION DE SERVICIO AL CLIENTE
       
   
     }); // end DOMContentLoaded
@@ -35,7 +43,7 @@ const AJAX_URL = URL_PATH + 'app/controllers/Ajax.php';
 function openModal(e){
   e.preventDefault();
   const modalName = $(this).attr('data-modal');
-  const modalData = $(this).attr('data-modal-data') !== undefined ? $(this).attr('data-modal-data') : '{}';
+  const modalData = $(this).attr('data-modal-data') !== undefined ? JSON.parse($(this).attr('data-modal-data')) : {};
 
   const myData = {
     'ajaxMethod': 'loadModal',
@@ -49,7 +57,7 @@ function openModal(e){
     dataType:'html',
     data: myData
   }).done(function(data){
-    console.log(data);
+    // console.log(data);
     $('div#modal_container').html(data);
     $('div#modal_container').css('display', 'block'); // estaba en flex
     $('body').css('overflow', 'hidden');
@@ -164,7 +172,7 @@ function getDataTableColumns(table){
   if(table === 'sells') columns = [{data: 'idSell'}, {data: 'clientName'}, {data: 'status'}, {data: 'store'}];
 
   // COLS PARA INVENTARIO
-  if(table === 'inventory') columns = [{data: 'idSell'}, {data: 'clientName'}, {data: 'status'}, {data: 'store'}];
+  if(table === 'inventory') columns = [{data: 'id'}, {data: 'name'}, {data: 'categorie'}, {data: 'price'}, {data: 'amount'}];
 
   //PARA LAS ACCIONES
   columns.push({data: 'actions', "orderable": false });
@@ -191,6 +199,54 @@ function adminNavigation(option){
   $('div#dashboard_container div.'+ $(option).attr("data-admin-nav") + '_container').css('display', 'block');
 }
 
+//-------------------------------------------------- SECCION DE VENTAS---------------------------------------------------------
+
+
+// -------------------------------------------------- SECCION DE INVENTARIO ---------------------------------------------------
+async function addProduct(e){
+  e.preventDefault();
+
+  // optienen los campos del formulario
+  const input_name = $('input#name');
+  const select_catProduct = $('select#catProduct');
+  const select_store = $('select#store');
+  const textarea_detail = $('textarea#detail');
+  const input_images = $('input#product_images');
+
+  // validan los datos
+  if(!validInput(input_name.val(), false, "Ingrese un nombre")) return false;
+  if(!validInput(select_catProduct.val(), false, "Escoga una categoria")) return false;
+  if(!validInput(select_store.val(), false, "Escoga una bodega")) return false;
+  if(!validInput(textarea_detail.val(), false, "Ingrese un detalle")) return false;
+
+  const productFormData = new FormData();
+  productFormData.append('name', input_name.val());
+  productFormData.append('idCategorie', select_catProduct.val());
+  productFormData.append('idStore', select_store.val());
+  productFormData.append('detail', textarea_detail.val());
+
+  productFormData.append('action', "add");
+
+  productFormData.append('ajaxMethod', "adminProducts");  
+
+  result = await ajaxRequest(productFormData);
+  showNotification(result.Message, result.Success);
+
+}
+
+async function deleteProduct(e){
+  e.preventDefault();
+
+  const idProduct = $(this).attr('data-delete-product');
+
+  const deleteProductFormData = new FormData();
+  deleteProductFormData.append('idProduct', idProduct);  
+  deleteProductFormData.append('action', "delete");  
+  deleteProductFormData.append('ajaxMethod', "adminProducts");  
+
+  result = await ajaxRequest(deleteProductFormData);
+  showNotification(result.Message, result.Success);
+}
 
 
 

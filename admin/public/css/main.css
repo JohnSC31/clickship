@@ -89,11 +89,65 @@ div.sell_report_container .field select{
     background-color: var(--white);
 }
 
+/* ------------------------------- ORDER MODAL ------------------------------------ */
+div.modal_order{
+    width: 40%;
+    padding: 1rem;
+}
+
+div.modal_order div.order_client_container{
+    display: flex;
+    align-items: center;
+    background-color: var(--yellow);
+    border-radius: var(--radius);
+    padding: .5rem;
+    font-weight: bold;
+}
+div.modal_order div.price_product_detail p.product_total_price{
+    margin-left: 1rem;
+}
+div.modal_order div.order_client_container .picture{
+    font-size: 5rem;
+    padding: 0 3rem;
+}
+div.modal_order div.order_client_container p{
+    padding: .5rem 0;
+}
+div.modal_order div.bill_detail_container p.numProduct{
+    margin-right: 1rem;
+}
+
+div.modal_order div.order_summary .total{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--blue);
+    font-weight: bold;
+
+}
+
+div.modal_order div.address_detail{
+    padding: 1rem 0;
+}
+
+div.modal_order div.order_action_container{
+    display: flex;
+    padding: 1rem 0;
+    align-items: center;
+    justify-content: center;
+}
+
+
 /* ------------------------------- INVENTARIO ------------------------------------ */
-div.add_product_from_container{
+div.add_product_form_container{
     padding: .5rem;
     background-color: var(--blue);
     border-radius: var(--radius);
+}
+div.add_product_form_container p.form_title{
+    font-size: 2rem;
+    color: var(--white);
+    font-weight: bold;
 }
 form#add_product label{
     color: var(--white);
@@ -102,11 +156,24 @@ form#add_product .field input,
 form#add_product select,
 form#add_product textarea{
     color: var(--black);
-    font-weight: bold;
     background-color: var(--white);
 }
 
 /* data table de inventario */
 div.table-inventory-container{
     margin-top: 2rem;
+}
+/* ------------------------------- MODAL PRODUCTO ------------------------------------ */
+div.modal_product{
+    width: 50%;
+    padding: 1rem;
+}
+div.modal_product form#edit_product label{
+    color: var(--blue);
+}
+form#edit_product .field input,
+form#edit_product select,
+form#edit_product textarea{
+    color: var(--black);
+    border: 1px solid var(--blue);
 }

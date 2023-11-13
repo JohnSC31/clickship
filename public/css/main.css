@@ -297,11 +297,11 @@ form .field textarea{
 
 form .col_2{
     display: flex;
-    align-items: center;
+    align-items: top;
     justify-content: space-between;
 }
 
-form .col_2 .field{
+form .col_2 > div{
     width: calc(50% - .5rem);
 }
 
@@ -309,7 +309,7 @@ form .col_2 .field{
     form .col_2{
         flex-direction: column;
     }
-    form .col_2 .field{
+    form .col_2 > div{
         width: 100%;
     }
 }
