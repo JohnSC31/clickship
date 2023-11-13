@@ -71,14 +71,7 @@
                 ),
             );
 
-            $output = array(
-                "draw"				=>	$REQUEST['draw'],
-                "recordsTotal"      =>  2,  // total number of records
-                "recordsFiltered"   =>  2, // total number of records after searching, if there is no searching then totalFiltered = totalData
-                "data"				=>  $queryResults
-            );
-        
-            echo json_encode($output);
+            echo $this->dataTableOutput($REQUEST['draw'], 2, 2, $queryResults);
 
         }
 
