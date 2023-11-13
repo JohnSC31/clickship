@@ -4,7 +4,7 @@
 	    die('Invalid Request');
     }
 
-    require_once '../lib/Db.php';
+    require_once '../../app/lib/Db.php';
 
 
     class Ajax {

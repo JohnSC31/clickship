@@ -15,13 +15,13 @@
 
         //Se crea la conexion con la base de datos
         public function __construct(){
-            //config la coo
+            //config la conexion
             $dsn = "sqlsrv:Server=$this->host, $this->port; Database=$this->name";
-            // $dsn = "mssql:host=$this->host, $this->port; dbname=$this->name";
-            $opc = array(
-                PDO::ATTR_PERSISTENT => true,
-                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-            ); 
+
+            // $opc = array(
+            //     PDO::ATTR_PERSISTENT => true,
+            //     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+            // ); 
 
             //instancia del PDO
             try {
@@ -54,13 +54,6 @@
                 }
             }
             $this->stmt->bindValue($param, $val, $type);
-        }
-                
-        public function getStmt(){
-            return $this->stmt;
-        }
-        public function getDbh(){
-            return $this->dbh;
         }
         //ejecuta la consulta
         public function execute(){
