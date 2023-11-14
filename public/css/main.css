@@ -295,6 +295,25 @@ form .field textarea{
     border: none;
 }
 
+form .col_2{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+form .col_2 .field{
+    width: calc(50% - .5rem);
+}
+
+@media only screen and (max-width: 768px ) {
+    form .col_2{
+        flex-direction: column;
+    }
+    form .col_2 .field{
+        width: 100%;
+    }
+}
+
 form .submit{
     display: flex;
     align-items: center;
@@ -319,18 +338,20 @@ div.modal_container{
     background-color: rgba(0,0,0,0.4);
     justify-content: center;
 }
-div.modal_container div.modal{
+div.modal_container .myModal{
     background-color: #fff;
     border-radius: var(--radius);
     margin: 5rem auto;
+    display: block;
 }
+  
 /* Header del modal */
-div.modal div.modal_header{
+div.myModal div.modal_header{
     display: flex;
     justify-content: end;
     padding: 0 1rem;
 }
-div.modal div.modal_header a.close_modal{
+div.myModal div.modal_header a.close_modal{
     color: var(--black);
     font-size: 2.5rem;
     font-weight: bold;
@@ -496,6 +517,18 @@ section.search_product div.search_bar input{
 section.search_product div.search_bar a{
     color: var(--blue);
 }
+ /* seccion de filtros */
+ section.filters p{
+   font-weight: bold;
+   font-size: 2rem;
+}
+section.filters div.filters_container select{
+    padding: .5rem;
+    font-size: 1.5rem;
+    border-radius: var(--radius);
+    background-color: transparent;
+    border: 1px solid var(--blue);
+}
 
 /*//////////////////////  PRODUCT LIST  ///////////////////////*/
 section.product_list{
@@ -651,6 +684,7 @@ div.modal_login form .field label{
 }
 div.modal_login form .field input{
    border: 2px solid var(--white);
+   color: var(--white);
 }
 div.modal_login p.register{
     color: var(--white);
@@ -755,6 +789,7 @@ div.checkout_container{
     flex-wrap: wrap;
     justify-content: space-between;
     padding: 3rem 0;
+    min-height: 65vh;
 }
 @media only screen and (max-width: 700px ) {
     div.checkout_container{
@@ -863,91 +898,10 @@ div.checkout_container div.payment{
     }
 }
 
-div.payment form#checkout_form .field label{
+div.payment form#order_form .field label{
     color: var(--white);
 }
-div.payment form#checkout_form .field input{
+div.payment form#order_form .field input,
+div.payment form#order_form .field select{
    background-color: var(--white);
-}
-
-/*//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
-/*////////////////////// -------------------------- ADMIN AREA  --------------------------------------------- ///////////////////////*/
-/*//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
-
-div.admin_container{
-    display: flex;
-    height: 100vh;
-}
-
-
-div.admin_container div.header_container{
-    background-color: var(--black);
-    flex: 0 0 30%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    color: var(--white);
-    padding: 2rem 0;
-}
-
-div.admin_container div.header_container div.admin_logo{
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    padding: 0 5rem 2rem 5rem;
-}
-div.header_container nav.admin_navigation ul li{
-    cursor: pointer;
-    padding: 2rem;
-    font-size: 2rem;
-    font-weight: bold;
-}
-div.header_container nav.admin_navigation ul li.active{
-    background-color: var(--white);
-    color: var(--black);
-}
-div.header_container nav.admin_navigation ul i{
-    margin-right: 1rem;
-}
-
-div.header_container p.header_rights{
-    font-size: 1.3rem;
-    text-align: center;
-}
-@media only screen and (max-width: 768px) {
-    div.header_container nav.admin_navigation ul li{
-        text-align: center;
-    }
-
-    div.header_container nav.admin_navigation ul i{
-        margin-right: 0;
-    }
-  }
-
-/* ------------------------------DASHBOARD CONTAINER--------------------------- */
-
-div.dashboard_container{
-    flex: 0 0 70%;
-    padding: 1rem;
-    overflow: scroll;
-}
-
-
-/* ------------------------------- VENTAS ------------------------------------ */
-div.sells_container{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-div.sell_report_container{
-    background-color: var(--blue);
-    border-radius: var(--radius);
-    padding: 1rem;
-    color: var(--white);
-    width: 50%;
-}
-
-div.sell_report_container .field input,
-div.sell_report_container .field select{
-    background-color: var(--white);
 }

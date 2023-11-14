@@ -4,7 +4,7 @@
 	    die('Invalid Request');
     }
 
-    require_once 'Db.php';
+    require_once '../../app/lib/Db.php';
 
 
     class Ajax {
@@ -39,10 +39,55 @@
             echo json_encode($result);
         }
 
+        // Metodo para la carga de los modals
+        private function loadModal($data){
+            require_once '../views/modals/'. $data['modal'] . '.php';
+        }
+
 
         // Metodo de prueba
         private function foo($data){
             $this->ajaxRequestResult(true, $data['message']);
+        }
+
+        private function loadDataTableSells($REQUEST){
+            // se realiza la consulta a la base de datos
+            $btnDetail = "<button type='button' class='btn btn-warning btn-sm' data-modal='order' data-modal-data='{'idOrder': 2}'><i class='fa-solid fa-eye'></i></button>";
+
+            $queryResults = array(
+                array(
+                    'idSell' => 1,
+                    'clientName' => "Jose luis",
+                    'status' => "Progreso",
+                    'store' => 1,
+                    'actions' => $btnDetail,
+                ),
+                array(
+                    'idSell' => 2,
+                    'clientName' => "Miguel de los angeles",
+                    'status' => "Finalizado",
+                    'store' => 2,
+                    'actions' => $btnDetail,
+                ),
+            );
+
+            echo $this->dataTableOutput($REQUEST['draw'], 2, 2, $queryResults);
+
+        }
+
+        //Params: Draw, TotalFiltrados, TotalRecords, Datos
+        //Result: un array codificado en formato json
+        //Prepara los datos de la consulta hecha y los ordena para ser leidos por las dataTables
+        public function dataTableOutput($draw, $totalFiltered, $totalRecords, $data){
+            // $output = array();
+            $output = array(
+                "draw"				=>	$draw,
+                "recordsTotal"      =>  $totalFiltered,  // total number of records
+                "recordsFiltered"   =>  $totalRecords, // total number of records after searching, if there is no searching then totalFiltered = totalData
+                "data"				=>  $data
+            );
+        
+            return json_encode($output);
         }
 
 
