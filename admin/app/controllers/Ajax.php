@@ -51,6 +51,40 @@
         private function foo($data){
             $this->ajaxRequestResult(true, $data['message']);
         }
+        
+        // --------------------------- SESSION DEL ADMINISTRADOR -------------------------------------------
+        private function adminLogin($admin){
+
+            // se validan las credenciales
+            // obtener el nombre, apellido, id, role, departamento
+
+            // se inicia sesion y el carrito
+            $adminSession = array(
+                'SESSION' => TRUE,
+                'ID' => "idAdmin",
+                'NAME' => "John Sanchez",
+                'ROLE' => "Admin",
+            );
+
+            $_SESSION['ADMIN'] = $adminSession;
+
+            if(isset($_SESSION['ADMIN'])){
+                $this->ajaxRequestResult(true, "Inicia sesion ". $admin['email']);
+            }else{
+                $this->ajaxRequestResult(false, "Error al iniciar sesion");
+            }
+        }
+
+        private function adminLogout($admin){
+            unset($_SESSION['ADMIN']); 
+
+            if(session_destroy()){
+              
+                $this->ajaxRequestResult(true, "Se ha cerrado sesion");
+            }else{ 
+                $this->ajaxRequestResult(false, "Error al cerrar sesion");
+            }
+        }
 
         // --------------------------- SECCION DE VENTAS -------------------------------------------
         // metodo para cargar las data table de ventas

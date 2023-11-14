@@ -8,6 +8,9 @@ const AJAX_URL = URL_PATH + 'app/controllers/Ajax.php';
     document.addEventListener('DOMContentLoaded', function (){
       // Despues de cargar todo el DOM se ejecuta el codigo
 
+      //LOGIN
+      $("body").on("submit", "form#admin_login", loginAdmin);
+
       // APERTURA DE LOS MODALS
       $("body").on("click", "[data-modal]", openModal);
       $("body").on("click", "[close-modal]", closeModal);
@@ -17,6 +20,10 @@ const AJAX_URL = URL_PATH + 'app/controllers/Ajax.php';
         e.stopPropagation();
         adminNavigation(e.currentTarget);
       });
+
+      //LOGOUT
+      $("body").on("click", "[data-admin-logout]", logoutAdmin);
+      
 
       // INICIALIZACION DE LA DATA TABLES
       // SECCION DE VENTAS
@@ -179,6 +186,48 @@ function validFiles(fileInput){
 ///////////// ********************************************** ADMIN AREA ****************************************** ///////////////
 ///////////// **************************************************************************************************** ///////////////
 
+// FUNCION PARA INICIAR SESION DE ADMINSITRADOR
+async function loginAdmin(e){
+  e.preventDefault();
+  // campos
+  const input_email = $('input#email');
+  const input_pass = $('input#pass');
+  // validacion
+  if(!validEmail(input_email.val())) return false;
+  if(!validPassword(input_pass.val())) return false;
+
+  // form data
+  const loginFormData = new FormData();
+  loginFormData.append('email', input_email.val());
+  loginFormData.append('pass', input_pass.val());
+  loginFormData.append('ajaxMethod', "adminLogin");  
+
+  result = await ajaxRequest(loginFormData);
+  showNotification(result.Message, result.Success, false);
+
+  if(result.Success){
+    setTimeout(()=>{
+      window.location.href = URL_PATH + 'home';
+    }, 1500)
+  }
+}
+
+// CERRAR SESION DE ADMINSITRADOR
+async function logoutAdmin(e){
+  e.preventDefault();
+
+  const logoutFormData = new FormData();
+  logoutFormData.append('ajaxMethod', "adminLogout");  
+
+  result = await ajaxRequest(logoutFormData);
+  showNotification(result.Message, result.Success, false);
+
+  if(result.Success){
+    setTimeout(()=>{
+      window.location.href = URL_PATH + 'login';
+    }, 1500)
+  }
+}
 
 // FUNCION PARA LA INICIALIZACION DE LAS DATATABLES
 // ///////////////////////----------------------AJAX TABLE LOADES/ CARGADOR PARA LAS TABLAS AJAX ---------------------////////////////////////////

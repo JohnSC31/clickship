@@ -50,7 +50,13 @@ div.header_container p.header_rights{
     div.header_container nav.admin_navigation ul i{
         margin-right: 0;
     }
-  }
+}
+
+nav.admin_navigation div.logout_btn_container{
+    padding: 1rem 0;
+    display: flex;
+    justify-content: center;
+}
 
 /* ------------------------------DASHBOARD CONTAINER--------------------------- */
 
@@ -316,3 +322,31 @@ div.detail_call_container p{
     margin: .5rem 0;
 }
 
+/* ------------------------------- LOGIN ------------------------------------ */
+body#login{
+    background-color: var(--black);
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+div.admin_login_container{
+    background-color: var(--white);
+    padding: 1rem;
+    border-radius: var(--radius);
+}
+div.admin_login_container h1{
+    text-align: center;
+}
+
+form#admin_login label{
+    color: var(--black);
+}
+form#admin_login .field input,
+form#admin_login select,
+form#admin_login textarea{
+    color: var(--black);
+    background-color: var(--white);
+    border: 1px solid var(--black);
+}

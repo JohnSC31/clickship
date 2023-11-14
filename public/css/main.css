@@ -276,6 +276,18 @@ p,a{
     border-color: var(--white);
 }
 
+/* BLACK BUTTOM */
+.btn_black{
+    color: var(--white);
+    background-color: var(--black);
+}
+.btn_black:hover{
+    color: var(--black);
+    background-color: var(--white);
+    border-color: var(--black);
+}
+
+
 /* ------------------ GENERAL FORMS STYLES ------------------------------ */
 form .field{
     padding-top: 1.5rem;
