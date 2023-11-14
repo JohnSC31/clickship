@@ -142,7 +142,32 @@
         }
 
         // --------------------------- SECCION DE RECURSOS HUMANOS ---------------------------------------
+        // metodo para cargas la datatable de recursos humanos
+        private function loadDataTableRrhh($REQUEST){
+            // se realiza la consulta a la base de datos
+            $btnDetail = "<button type='button' class='btn btn-warning btn-sm' data-modal='employee' data-modal-data='{\"idProduct\": 2}'><i class='fa-solid fa-pen'></i></button>";
 
+            $queryResults = array(
+                array(
+                    'name' => "Nombre del empleado",
+                    'email' => "email@gmail.com",
+                    'country' => "Pais",
+                    'rol' => "Rol",
+                    'department' => "Departamento",
+                    'actions' => $btnDetail,
+                ),
+                array(
+                    'name' => "Nombre del empleado",
+                    'email' => "email@gmail.com",
+                    'country' => "Pais",
+                    'rol' => "Rol",
+                    'department' => "Departamento",
+                    'actions' => $btnDetail,
+                )
+            );
+
+            echo $this->dataTableOutput($REQUEST['draw'], 2, 2, $queryResults);
+        }
 
 
         // --------------------------- SECCION DE SERVICIO AL CLIENTE ---------------------------------------

@@ -14,7 +14,7 @@
     <div class="modal-content">
         <div class="order_client_container">
             <div class="picture">
-                <i class="fa-solid fa-user"></i>
+                <i class="fa-solid fa-user-circle"></i>
             </div>
             <div>
                 <p>John Sánchez Cespedes</p>

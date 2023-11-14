@@ -71,11 +71,11 @@ div.datatable-container table{
 }
 
 /* ------------------------------- VENTAS ------------------------------------ */
-div.sells_container{
+/* div.sells_container{
     /* display: flex;
     flex-direction: column;
-    align-items: center; */
-}
+    align-items: center; *
+} */
 div.sell_report_container{
     background-color: var(--blue);
     border-radius: var(--radius);
@@ -190,4 +190,72 @@ div.carrousel_container div.carrousel-btns-container{
     padding: 0 .5rem;
     display: flex;
     justify-content: space-between;
+}
+
+/* ------------------------------- RECURSOS HUMANOS ------------------------------------ */
+form#add_employee label{
+    color: var(--white);
+}
+form#add_employee .field input,
+form#add_employee select,
+form#add_employee textarea{
+    color: var(--black);
+    background-color: var(--white);
+}
+
+div.table-rrhh-container{
+    margin-top: 2rem;
+}
+
+/* MODAL DE EMPLEADO */
+div.modal_employee{
+    width: 50%;
+    padding: 1rem;
+}
+
+div.modal_employee div.employee_card_container{
+    background-color: var(--grey);
+    border-radius: var(--radius);
+    padding: .5rem;
+}
+div.modal_employee div.employee_card_container div.employee_photo{
+    font-size: 8rem;
+    display: flex;
+    justify-content: center;
+    padding: 1rem 0;
+}
+div.modal_employee div.employee_card_container p{
+    font-weight: bold;
+    padding: .5rem 0;
+}
+div.modal_employee div.employee_card_container p.name_and_email  span{
+    color: var(--blue);
+}
+
+div.modal_employee div.employee_salary_container{
+    background-color: var(--blue);
+    padding: .5rem;
+    border-radius: var(--radius);
+    margin-top: 1rem;
+}
+div.modal_employee div.employee_salary_container > p{
+    font-weight: bold;
+    color: var(--white);
+    padding: .5rem 0;
+}
+
+div.modal_employee div.employee_salary_container form label{
+    color: var(--white);
+}
+div.modal_employee div.employee_salary_container .field input,
+div.modal_employee div.employee_salary_container .field select,
+div.modal_employee div.employee_salary_container .field textarea{
+    color: var(--black);
+    background-color: var(--white);
+}
+
+div.modal_employee div.calculate_paid{
+    padding: 2rem 0;
+    text-align: center;
+    font-weight: bold;
 }
