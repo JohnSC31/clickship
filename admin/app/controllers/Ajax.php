@@ -171,7 +171,28 @@
 
 
         // --------------------------- SECCION DE SERVICIO AL CLIENTE ---------------------------------------
+        private function loadDataTableService($REQUEST){
+            $btnDetail = "<button type='button' class='btn btn-warning btn-sm' data-modal='call' data-modal-data='{\"idCall\": 2}'><i class='fa-solid fa-eye'></i></button>";
 
+            $queryResults = array(
+                array(
+                    'id' => "1",
+                    'employee' => "Nombre del empleado",
+                    'idOrder' => "123",
+                    'date' => "12/3/23",
+                    'actions' => $btnDetail,
+                ),
+                array(
+                    'id' => "2",
+                    'employee' => "Nombre del empleado",
+                    'idOrder' => "123",
+                    'date' => "12/3/23",
+                    'actions' => $btnDetail,
+                ),
+            );
+
+            echo $this->dataTableOutput($REQUEST['draw'], 2, 2, $queryResults);
+        }
 
         //Params: Draw, TotalFiltrados, TotalRecords, Datos
         //Result: un array codificado en formato json

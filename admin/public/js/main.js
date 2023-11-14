@@ -37,7 +37,7 @@ const AJAX_URL = URL_PATH + 'app/controllers/Ajax.php';
       initDataTable('rrhh', 'loadDataTableRrhh');
 
       // SECCION DE SERVICIO AL CLIENTE
-      
+      initDataTable('service', 'loadDataTableService');
   
     }); // end DOMContentLoaded
   
@@ -209,6 +209,11 @@ function getDataTableColumns(table){
 
   // COLS PARA RECURSOS HUMANOS
   if(table === 'rrhh') columns = [{data: 'name'}, {data: 'email'}, {data: 'country'}, {data: 'rol'}, {data: 'department'}];
+
+  // COLS PARA SERVICIO AL CLIENTE
+  if(table === 'service') columns = [{data: 'id'}, {data: 'employee'}, {data: 'date'}, {data: 'idOrder'}];
+
+  
 
   //PARA LAS ACCIONES
   columns.push({data: 'actions', "orderable": false });

@@ -95,7 +95,7 @@ div.modal_order{
     padding: 1rem;
 }
 
-div.modal_order div.order_client_container{
+div.order_client_container{
     display: flex;
     align-items: center;
     background-color: var(--yellow);
@@ -103,27 +103,25 @@ div.modal_order div.order_client_container{
     padding: .5rem;
     font-weight: bold;
 }
-div.modal_order div.price_product_detail p.product_total_price{
-    margin-left: 1rem;
-}
-div.modal_order div.order_client_container .picture{
+div.order_client_container .picture{
     font-size: 5rem;
     padding: 0 3rem;
 }
-div.modal_order div.order_client_container p{
+div.order_client_container p{
     padding: .5rem 0;
 }
 div.modal_order div.bill_detail_container p.numProduct{
     margin-right: 1rem;
 }
-
+div.modal_order div.price_product_detail p.product_total_price{
+    margin-left: 1rem;
+}
 div.modal_order div.order_summary .total{
     display: flex;
     align-items: center;
     justify-content: space-between;
     color: var(--blue);
     font-weight: bold;
-
 }
 
 div.modal_order div.address_detail{
@@ -259,3 +257,62 @@ div.modal_employee div.calculate_paid{
     text-align: center;
     font-weight: bold;
 }
+
+/* ------------------------------- SERVICIO AL CLIENTE ------------------------------------ */
+div.add_call_form_container{
+    padding: .5rem;
+    background-color: var(--blue);
+    border-radius: var(--radius);
+}
+div.add_call_form_container > p{
+    color: var(--white);
+    font-weight: bold;
+}
+form#add_call label{
+    color: var(--white);
+}
+form#add_call .field input,
+form#add_call select,
+form#add_call textarea{
+    color: var(--black);
+    background-color: var(--white);
+}
+
+/* MODAL LLAMADA */
+div.modal_call{
+    width: 50%;
+    padding: 1rem;
+}
+div.order_call_summary{
+    border-radius: var(--radius);
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 1rem 0;
+    font-weight: bold;
+    color: var(--white);
+}
+
+div.order_status_1{
+    background-color: var(--blue);
+}
+div.order_status_2{
+    background-color: var(--yellow);
+}
+div.order_status_3{
+    background-color: var(--green);
+}
+div.order_status_4{
+    background-color: var(--red);
+}
+
+div.detail_call_container{
+    padding: .5rem 0;
+}
+
+div.detail_call_container p{
+    font-weight: bold;
+    margin: .5rem 0;
+}
+
