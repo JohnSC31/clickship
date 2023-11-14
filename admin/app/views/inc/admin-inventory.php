@@ -5,14 +5,14 @@
         <p class="form_title">Agrega un producto</p>
         <form action="" method="post" id="add_product">
             <div class="col_2">
-                <div class="">
+                <div class="form_column">
                     <div class="field">
                         <label for="name">Nombre del Producto</label>
-                        <input type="text" name="name" id="name">
+                        <input type="text" name="name" id="name" require>
                     </div>
                     <div class="field">
                         <label for="catProduct">Categoria Producto</label>
-                        <select name="catProduct" id="catProduct">
+                        <select name="catProduct" id="catProduct" require>
                             <option value="">Categorias</option>
                             <option value="1">Categoria 1</option>
                             <option value="2">Categoria 2</option>
@@ -20,23 +20,32 @@
                         </select>
                     </div>
                     <div class="field">
-                        <label for="store">Bodega</label>
-                        <select name="store" id="store">
-                            <option value="">Bodegas</option>
-                            <option value="1">Bodega 1</option>
-                            <option value="2">Bodega 2</option>
-                            <option value="3">Bodega 3</option>
-                        </select>
+                        <label for="store3">Precio</label>
+                        <input type="text" name="store3" id="price" data-mask="0000000000000" require>
                     </div>
-                </div>
-                <div class="">
                     <div class="field">
                         <label for="country">Detalle</label>
-                        <textarea name="description" id="detail" cols="30" rows="10" require></textarea>
+                        <textarea name="description" id="detail" cols="30" rows="5" require></textarea>
+                    </div>
+                    
+                </div>
+                <div class="form_column">
+                    <div class="field">
+                        <label for="store1">Cantidad bodega 1</label>
+                        <input type="text" name="store1" id="amountStore1" data-mask="00000000" require>
                     </div>
                     <div class="field">
+                        <label for="store2">Cantidad bodega 2</label>
+                        <input type="text" name="store2" id="amountStore2" data-mask="00000000" require>
+                    </div>
+                    <div class="field">
+                        <label for="store3">Cantidad bodega 3</label>
+                        <input type="text" name="store3" id="amountStore3" data-mask="00000000" require>
+                    </div>
+
+                    <div class="field">
                         <label for="images">Imagenes</label>
-                        <input name="images" id="product_images" type="file"  accept="image/*"/>
+                        <input name="images" id="product_images" type="file"  accept="image/*" multiple require>
                     </div>
                 </div>
             </div>

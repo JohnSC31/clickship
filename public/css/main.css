@@ -297,7 +297,7 @@ form .field textarea{
 
 form .col_2{
     display: flex;
-    align-items: top;
+    align-items: flex-start;
     justify-content: space-between;
 }
 

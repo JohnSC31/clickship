@@ -177,3 +177,17 @@ form#edit_product textarea{
     color: var(--black);
     border: 1px solid var(--blue);
 }
+
+/* CARRUSEL DE IMAGENES PARA EL PRODUCTO */
+div.carrousel_container{
+    position: relative;
+}
+div.carrousel_container div.carrousel-btns-container{
+    position: absolute;
+    top: 50%;
+    right: 0;
+    width: 100%;
+    padding: 0 .5rem;
+    display: flex;
+    justify-content: space-between;
+}

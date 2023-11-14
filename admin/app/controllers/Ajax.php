@@ -112,8 +112,19 @@
         private function adminProducts($product){
 
             if($product['action'] === "add"){
-                // se realiza la eliminacion del producto con el id dado
-                $this->ajaxRequestResult(true, "Agregado un producto");
+                // se crea el producto con los datos del form
+                $imagesName = "";
+                if(count($_FILES) > 0){
+                    foreach($_FILES as $key => $image){
+                        $imagesName .= $image["tmp_name"];
+                        $imagesName .= ", ";
+                    }
+                }else{
+                    $imagesName = "No images";
+                }
+
+                
+                $this->ajaxRequestResult(true, "Agregado un producto", $imagesName);
             }
 
             if($product['action'] === "edit"){
