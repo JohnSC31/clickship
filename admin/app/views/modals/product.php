@@ -3,6 +3,7 @@
     // se obtiene los datos de la orden con el id de la orden
     // datos del cliente
     // detalle de la factura
+    $idProduct = $data['data']['idProduct'];
 ?>
 
 <div class="myModal modal_product" >
@@ -67,13 +68,14 @@
                     </div>
 
                     <div class="field">
-                        <label for="images">Imagenes</label>
+                        <label for="images">Imagenes (Reemplazar)</label>
                         <input name="images" id="product_images" type="file"  accept="image/*" multiple require>
                     </div>
                 </div>
             </div>
             <div class="submit">
                 <input type="submit" class="btn btn_yellow" value="Editar">
+                <input type="hidden" id="idProduct" data-id="<?php echo $idProduct; ?>">
             </div>
         </form>
         
@@ -81,5 +83,4 @@
 </div>
 
 <!-- JQUERY  -->
-<script src="https://code.jquery.com/jquery-3.7.0.js"></script>
 <script src="<?php echo URL_PATH; ?>public/js/jquery.mask.js"></script>

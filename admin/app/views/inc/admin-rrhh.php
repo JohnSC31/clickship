@@ -8,7 +8,7 @@
                 <div class="form_column">
                     <div class="field">
                         <label for="name">Nombre</label>
-                        <input type="text" name="name" id="name" require>
+                        <input type="text" name="name" id="employee_name" require>
                     </div>
                     <div class="field">
                         <label for="lastname">Apellido</label>

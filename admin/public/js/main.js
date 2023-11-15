@@ -26,13 +26,16 @@ const AJAX_URL = URL_PATH + 'app/controllers/Ajax.php';
       
 
       // INICIALIZACION DE LA DATA TABLES
-      // SECCION DE VENTAS
+      // -------------------------------------------------------------------SECCION DE VENTAS
       initDataTable('sells', 'loadDataTableSells');
+      $("body").on("click", "[data-update-order-status]", changeOrderStatus);
+      
 
-      // SECCION DE INVENTARIO
+      // -------------------------------------------------------------------SECCION DE INVENTARIO
       initDataTable('inventory', 'loadDataTableInventory');
-      $("body").on("submit", "form#add_product", addProduct);
-      $("body").on("click", "[data-delete-product]", deleteProduct);
+      $("body").on("submit", "form#add_product", addProduct); // agrega producto
+      $("body").on("click", "[data-delete-product]", deleteProduct); // elimina producto
+      $("body").on("submit", "form#edit_product", editProduct); // edita product
 
       // carrusel de imagenes del producto
       $("body").on("click", "[data-carrousel-pass]", function(e){
@@ -40,11 +43,18 @@ const AJAX_URL = URL_PATH + 'app/controllers/Ajax.php';
         changeCarrouselImage(e.currentTarget);
       });
 
-      // SECCION DE RECURSOS HUMANOS
+      // -------------------------------------------------------------------SECCION DE RECURSOS HUMANOS
       initDataTable('rrhh', 'loadDataTableRrhh');
+      $("body").on("submit", "form#add_employee", addEmployee); // agrega empleado
+      $("body").on("submit", "form#add_hours", addEmployeeHours); // agrega horas
+      $("body").on("click", "[data-calc-paid]", calcEmployeePaid); // calcular el pago
+      
+      
 
-      // SECCION DE SERVICIO AL CLIENTE
+      // -------------------------------------------------------------------SECCION DE SERVICIO AL CLIENTE
       initDataTable('service', 'loadDataTableService');
+      $("body").on("submit", "form#add_call", addCall); // agrega llamada
+      
   
     }); // end DOMContentLoaded
   
@@ -75,12 +85,17 @@ function openModal(e){
     $('div#modal_container').html(data);
     $('div#modal_container').css('display', 'block'); // estaba en flex
     $('body').css('overflow', 'hidden');
+
+    // acciones para los modals
+    if(modalName === "product"){
+      loadSelectOptions('catProduct');
+    }
   });
 }
 
 // FUNCION PARA CERRAR UN MODAL
-function closeModal(e){
-  e.preventDefault();
+function closeModal(e = false){
+  if(e) e.preventDefault();
   $('div.modal_container').css('display', 'none');
   $('div#modal_container').html('');
   $('body').css('overflow', 'auto');
@@ -287,12 +302,53 @@ function adminNavigation(option){
   $('div#dashboard_container > div').css('display', 'none');
   // se muestra el div correspondiente
   $('div#dashboard_container div.'+ $(option).attr("data-admin-nav") + '_container').css('display', 'block');
+
+  // ACCIONES PARA LAS SECCIONES
+  if($(option).attr("data-admin-nav") === 'sells'){
+    refreshDataTables('sells'); // recarga la tabla
+    
+  }
+  if($(option).attr("data-admin-nav") === 'inventory'){
+    refreshDataTables('inventory'); // recarga la tabla
+    loadSelectOptions('catProduct'); // carga select de categorias
+  }
+  if($(option).attr("data-admin-nav") === 'human_resources'){
+    refreshDataTables('rrhh'); // recarga la tabla
+    loadSelectOptions('country'); // carga select de paises
+    loadSelectOptions('rol'); // carga select de roles
+    loadSelectOptions('department'); // carga select de departamentos
+    loadSelectOptions('currency'); // carga select de monedas
+  }
+  if($(option).attr("data-admin-nav") === 'client_service'){
+    refreshDataTables('service'); // recarga la tabla
+    loadSelectOptions('questionType'); // carga select de paises
+  }
 }
 
 //-------------------------------------------------- SECCION DE VENTAS---------------------------------------------------------
+async function changeOrderStatus(e){
+  e.preventDefault();
+  const status = $(this).attr('data-update-order-status');
+  const idOrder = $(this).attr('data-id-order');
 
+  const orderFormData = new FormData();
+  orderFormData.append('status', status);
+  orderFormData.append('idOrder', idOrder);
+
+  orderFormData.append('ajaxMethod', "changeOrderStatus");  
+
+  result = await ajaxRequest(orderFormData);
+
+  showNotification(result.Message, result.Success);
+
+  if(result.Success){
+    refreshDataTables('sells'); // recarga la tabla
+  }
+
+}
 
 // -------------------------------------------------- SECCION DE INVENTARIO ---------------------------------------------------
+// se agrega un producto
 async function addProduct(e){
   e.preventDefault();
 
@@ -343,9 +399,69 @@ async function addProduct(e){
   result = await ajaxRequest(productFormData);
 
   showNotification(result.Message, result.Success);
+  if(result.Success){
+    $(this)[0].reset();// se resetea al formulario
+    refreshDataTables('inventory'); // recarga la tabla
+  }
 
 }
+// se edita un producto
+async function editProduct(e){
+  e.preventDefault();
 
+  // optienen los campos del formulario
+  const input_name = $('form#edit_product input#name');
+  const select_catProduct = $('form#edit_product select#catProduct');
+  const input_price = $('form#edit_product input#price');
+  const textarea_detail = $('form#edit_product textarea#detail');
+
+  const input_AmountStore1 = $('form#edit_product input#amountStore1');
+  const input_AmountStore2 = $('form#edit_product input#amountStore2');
+  const input_AmountStore3 = $('form#edit_product input#amountStore3');
+  
+  const input_images = $('form#edit_product input#product_images');
+
+  // validan los datos
+  if(!validInput(input_name.val(), false, "Ingrese un nombre")) return false;
+  if(!validInput(select_catProduct.val(), false, "Escoga una categoria")) return false;
+  if(!validInput(input_price.val(), false, "Ingrese un precio")) return false;
+  if(!validInput(textarea_detail.val(), false, "Ingrese un detalle")) return false;
+
+  if(!validInput(input_AmountStore1.val(), false, "Ingrese una cantidad para bodega 1")) return false;
+  if(!validInput(input_AmountStore2.val(), false, "Ingrese una cantidad para bodega 2")) return false;
+  if(!validInput(input_AmountStore3.val(), false, "Ingrese una cantidad para bodega 3")) return false;
+
+  // validacion de archivos si no hay no hace nada
+  if(!validFiles(input_images) && input_images[0].files.length > 0) return false;
+  
+
+  const productFormData = new FormData();
+  productFormData.append('id', $("form#edit_product input#idProduct").attr('data-id'));
+  productFormData.append('name', input_name.val());
+  productFormData.append('idCategorie', select_catProduct.val());
+  productFormData.append('price', input_price.val());
+  productFormData.append('detail', textarea_detail.val());
+
+  productFormData.append('amountStore1', input_AmountStore1.val());
+  productFormData.append('amountStore2', input_AmountStore2.val());
+  productFormData.append('amountStore3', input_AmountStore3.val());
+
+  for (var i = 0; i < input_images[0].files.length; i++){
+    productFormData.append("image_"+ i, input_images[0].files[i]);
+  }
+  
+  productFormData.append('action', "edit");
+
+  productFormData.append('ajaxMethod', "adminProducts");  
+
+  result = await ajaxRequest(productFormData);
+
+  showNotification(result.Message, result.Success);
+  if(result.Success){
+    $(this)[0].reset();// se resetea al formulario
+    refreshDataTables('inventory');
+  }
+}
 async function deleteProduct(e){
   e.preventDefault();
 
@@ -383,8 +499,141 @@ function changeCarrouselImage(button){
   $('div#'+carrousel_id +' > div.img-'+ current_image).css('display', 'block')
 }
 
+// -------------------------------------------------- SECCION DE RECURSOS HUMANOS ---------------------------------------------------
+// se agrega un empleado
+async function addEmployee(e){
+  e.preventDefault();
+
+  // optienen los campos del formulario
+  const input_name = $('input#employee_name');
+  const input_lastname = $('input#lastname');
+  const input_email = $('input#email');
+  const select_country = $('select#country');
+  const select_rol = $('select#rol');
+  const select_department = $('select#department');
+
+  const input_salary = $('input#salary');
+  const select_currency = $('select#currency');
+
+  // validan los datos
+  if(!validInput(input_name.val(), false, "Ingrese un nombre")) return false;
+  if(!validInput(input_lastname.val(), false, "Ingrese un apellido")) return false;
+  if(!validEmail(input_email.val())) return false;
+
+  if(!validInput(select_country.val(), false, "Escoga un pais")) return false;
+  if(!validInput(select_rol.val(), false, "Escoga un rol")) return false;
+  if(!validInput(select_department.val(), false, "Escoga un departamento")) return false;
+
+  if(!validInput(input_salary.val(), false, "Ingrese un salario")) return false;
+  if(!validInput(select_currency.val(), false, "Escoga una moneda")) return false;
+  
+
+  const employeeFormData = new FormData();
+  employeeFormData.append('name', input_name.val());
+  employeeFormData.append('lastname', input_lastname.val());
+  employeeFormData.append('email', input_email.val());
+
+  employeeFormData.append('idCountry', select_country.val());
+  employeeFormData.append('idRol', select_rol.val());
+  employeeFormData.append('idDepartment', select_department.val());
+
+  employeeFormData.append('salary', input_salary.val());
+  employeeFormData.append('idCurrency', select_currency.val());
+
+  employeeFormData.append('ajaxMethod', "addEmployee");  
+
+  result = await ajaxRequest(employeeFormData);
+
+  showNotification(result.Message, result.Success);
+  if(result.Success){
+    $(this)[0].reset();// se resetea al formulario
+    refreshDataTables('rrhh'); // recarga la tabla
+  }
+
+}
+
+// funcion para agregar las horas de un empleado
+async function addEmployeeHours(e){
+  e.preventDefault();
+
+  const input_workedHours = $('input#workedHours');
+  const select_day = $('select#day');
+
+  if(!validInput(input_workedHours.val(), false, "Ingrese horas")) return false;
+  if(!validInput(select_day.val(), false, "Escoga un dia")) return false;
+
+  const employeeFormData = new FormData();
+  employeeFormData.append('hours', input_workedHours.val());
+  employeeFormData.append('idDay', select_day.val());
+  employeeFormData.append('idEmployee', $('input[data-id-employee]').val());
+
+  employeeFormData.append('ajaxMethod', "addHoursEmployee"); 
+
+  result = await ajaxRequest(employeeFormData);
+
+  showNotification(result.Message, result.Success);
+  if(result.Success){
+    $(this)[0].reset();// se resetea al formulario
+    refreshDataTables('rrhh'); // recarga la tabla
+  }
+  
+}
+
+// funcion para calcular el pago de un empleado
+async function calcEmployeePaid(e){
+  e.preventDefault();
+
+  const idEmployee = $(this).attr('data-calc-paid');
+
+  const employeeFormData = new FormData();
+  employeeFormData.append('idEmployee', idEmployee);  
+  employeeFormData.append('ajaxMethod', "calcEmployeePaid");  
+
+  result = await ajaxRequest(employeeFormData);
+  showNotification(result.Message, result.Success);
+  if(result.Success){
+    $("span#calc_paid").text(result.Data);
+  }
+}
+// -------------------------------------------------- SECCION DE SERVICIO AL CLIENTE ---------------------------------------------------
+async function addCall(e){
+  e.preventDefault();
+
+  const input_idOrder = $('input#idOrder');
+  const select_questionType = $('select#questionType');
+  const textarea_detail = $('textarea#call_detail');
+
+  if(!validInput(input_idOrder.val(), false, "Ingrese una orden")) return false;
+  if(!validInput(select_questionType.val(), false, "Escoga un tipo de pregunta")) return false;
+  if(!validInput(textarea_detail.val(), false, "Ingrese un detalle")) return false;
+
+  const callFormData = new FormData();
+  callFormData.append('idOrder', input_idOrder.val());
+  callFormData.append('idQuestionType', select_questionType.val());
+  callFormData.append('detail', textarea_detail.val());
+
+  callFormData.append('ajaxMethod', "addCall"); 
+
+  result = await ajaxRequest(callFormData);
+
+  showNotification(result.Message, result.Success);
+  if(result.Success){
+    $(this)[0].reset();// se resetea al formulario
+    refreshDataTables('services'); // recarga la tabla
+  }
+  
+}
 
 
+///////////// ************************ CARGAR LOS SELECT ************************ ///////////////
+async function loadSelectOptions(idSelect){
+
+  const selectFormData = new FormData();
+  selectFormData.append("idSelect", idSelect);
+  selectFormData.append('ajaxMethod', "loadSelectOptions");
+
+  ajaxHTMLRequest(selectFormData, "select#" + idSelect);
+}
 
 ///////////// ************************ AJAX BACKEND CONN ************************ ///////////////
 // FUNCION QUE REALIZA LA CONECCION CON EL BACKEND

@@ -1,6 +1,7 @@
 
 <?php  
     // se obtiene los datos de la orden con el id de la orden
+    $idOrder = $data['data']['idOrder'];
     // datos del cliente
     // detalle de la factura
 ?>
@@ -48,7 +49,7 @@
             </div>
         </div>
         <div class="order_action_container">
-            <button class="btn btn_blue">Finalizar</button>
+            <button class="btn btn_blue" data-update-order-status="idStatus" data-id-order="idOrder">Finalizar</button>
         </div>
         
     </div><!-- .modal-content -->

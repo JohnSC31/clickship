@@ -8,7 +8,7 @@
                 <div class="form_column">
                     <div class="field">
                         <label for="idOrder">Id de la orden</label>
-                        <input type="text" name="idOrder" id="idOrder" require data-mask>
+                        <input type="text" name="idOrder" id="idOrder" require data-mask="000000000">
                     </div>
                     <div class="field">
                         <label for="questionType">Tipo de Pregunta</label>
@@ -23,7 +23,7 @@
                 <div class="form_column">
                     <div class="field">
                         <label for="country">Descripcion</label>
-                        <textarea name="description" id="detail" cols="30" rows="6" require></textarea>
+                        <textarea name="description" id="call_detail" cols="30" rows="6" require></textarea>
                     </div>
                 </div>
             </div>

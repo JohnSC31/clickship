@@ -3,6 +3,7 @@
     // se obtiene los datos de la orden con el id de la orden
     // datos del cliente
     // detalle de la factura
+    $idEmployee = $data['data']['idEmployee'];
 ?>
 
 <div class="myModal modal_employee" >
@@ -27,12 +28,12 @@
             <form action="" method="post" id="add_hours">
                 <div class="col_2">
                     <div class="field">
-                        <label for="salary">Horas</label>
-                        <input type="text" name="salary" id="salary" require data-mask="00000000">
+                        <label for="workedHours">Horas</label>
+                        <input type="text" name="workedHours" id="workedHours" require data-mask="00000000">
                     </div>
                     <div class="field">
                         <label for="Day">Día</label>
-                        <select name="Day" id="Day" require>
+                        <select name="Day" id="day" require>
                             <option value="">Días</option>
                             <option value="1">Lunes</option>
                             <option value="2">Martes</option>
@@ -47,13 +48,14 @@
                 </div>
                 <div class="submit">
                     <input type="submit" class="btn btn_yellow" value="Agregar">
+                    <input type="hidden" data-id-employee="" value="<?php echo $idEmployee; ?>">
                 </div>
             </form>
        </div>
 
        <div class="calculate_paid">
             <p>Pago: <span id="calc_paid">120000</span></p>
-            <button class="btn btn_blue">Calcular Pago</button>
+            <button class="btn btn_blue" data-calc-paid="<?php echo $idEmployee; ?>">Calcular Pago</button>
        </div>
         
     </div><!-- .modal-content -->
