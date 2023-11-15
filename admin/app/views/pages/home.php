@@ -1,3 +1,9 @@
+<?php
+    $sellsRollsAccess = ['Admin', 'Gerente'];
+    $inventoryRollsAccess = ['Admin', 'Gerente'];
+    $rrhhRollsAccess = ['Admin', 'Gerente'];
+    $servicesRollsAccess = ['Admin', 'Gerente'];
+?>
 <div class="admin_container">
     <div class="header_container">
         <nav class="admin_navigation">
@@ -6,11 +12,23 @@
             </div>
 
             <ul id="admin_nav">
-                <li class="active" data-admin-nav="sells"><i class="fa-solid fa-cart-shopping"></i> <span class="hide_medium"> Ventas</span></li>
-                <li data-admin-nav="inventory" ><i class="fa-solid fa-box" ></i> <span class="hide_medium"> Inventario</span></li>
-                <li data-admin-nav="human_resources" ><i class="fa-solid fa-person"></i></i> <span class="hide_medium"> Recursos humanos</span></li>
-                <li data-admin-nav="client_service"><i class="fa-solid fa-phone"></i> <span class="hide_medium"> Servicio al cliente</span></li>
+                <?php if(($rolKey = array_search($_SESSION['ADMIN']['ROLE'], $sellsRollsAccess)) !== false){ ?>
+                    <li data-admin-nav="sells"><i class="fa-solid fa-cart-shopping"></i> <span class="hide_medium"> Ventas</span></li>
+                <?php } 
+                if(($rolKey = array_search($_SESSION['ADMIN']['ROLE'], $inventoryRollsAccess)) !== false){ ?>
+                    <li data-admin-nav="inventory" ><i class="fa-solid fa-box" ></i> <span class="hide_medium"> Inventario</span></li>
+                <?php } 
+                if(($rolKey = array_search($_SESSION['ADMIN']['ROLE'], $rrhhRollsAccess)) !== false){ ?>
+                    <li data-admin-nav="human_resources" ><i class="fa-solid fa-person"></i></i> <span class="hide_medium"> Recursos humanos</span></li>
+                <?php } 
+                if(($rolKey = array_search($_SESSION['ADMIN']['ROLE'], $servicesRollsAccess)) !== false){ ?>
+                    <li data-admin-nav="client_service"><i class="fa-solid fa-phone"></i> <span class="hide_medium"> Servicio al cliente</span></li>
+                <?php } ?>
             </ul>
+
+            <div class="logout_btn_container">
+                <button class="btn btn_white" data-admin-logout="true">Cerrar Sesión</button>
+            </div>
 
         </nav>
         <p class="header_rights hide_medium">Todos los derechos resevados 2023</p>

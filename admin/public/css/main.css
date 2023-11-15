@@ -50,7 +50,13 @@ div.header_container p.header_rights{
     div.header_container nav.admin_navigation ul i{
         margin-right: 0;
     }
-  }
+}
+
+nav.admin_navigation div.logout_btn_container{
+    padding: 1rem 0;
+    display: flex;
+    justify-content: center;
+}
 
 /* ------------------------------DASHBOARD CONTAINER--------------------------- */
 
@@ -71,11 +77,11 @@ div.datatable-container table{
 }
 
 /* ------------------------------- VENTAS ------------------------------------ */
-div.sells_container{
+/* div.sells_container{
     /* display: flex;
     flex-direction: column;
-    align-items: center; */
-}
+    align-items: center; *
+} */
 div.sell_report_container{
     background-color: var(--blue);
     border-radius: var(--radius);
@@ -89,11 +95,63 @@ div.sell_report_container .field select{
     background-color: var(--white);
 }
 
+/* ------------------------------- ORDER MODAL ------------------------------------ */
+div.modal_order{
+    width: 40%;
+    padding: 1rem;
+}
+
+div.order_client_container{
+    display: flex;
+    align-items: center;
+    background-color: var(--yellow);
+    border-radius: var(--radius);
+    padding: .5rem;
+    font-weight: bold;
+}
+div.order_client_container .picture{
+    font-size: 5rem;
+    padding: 0 3rem;
+}
+div.order_client_container p{
+    padding: .5rem 0;
+}
+div.modal_order div.bill_detail_container p.numProduct{
+    margin-right: 1rem;
+}
+div.modal_order div.price_product_detail p.product_total_price{
+    margin-left: 1rem;
+}
+div.modal_order div.order_summary .total{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--blue);
+    font-weight: bold;
+}
+
+div.modal_order div.address_detail{
+    padding: 1rem 0;
+}
+
+div.modal_order div.order_action_container{
+    display: flex;
+    padding: 1rem 0;
+    align-items: center;
+    justify-content: center;
+}
+
+
 /* ------------------------------- INVENTARIO ------------------------------------ */
-div.add_product_from_container{
+div.add_product_form_container{
     padding: .5rem;
     background-color: var(--blue);
     border-radius: var(--radius);
+}
+div.add_product_form_container p.form_title{
+    font-size: 2rem;
+    color: var(--white);
+    font-weight: bold;
 }
 form#add_product label{
     color: var(--white);
@@ -102,11 +160,193 @@ form#add_product .field input,
 form#add_product select,
 form#add_product textarea{
     color: var(--black);
-    font-weight: bold;
     background-color: var(--white);
 }
 
 /* data table de inventario */
 div.table-inventory-container{
     margin-top: 2rem;
+}
+/* ------------------------------- MODAL PRODUCTO ------------------------------------ */
+div.modal_product{
+    width: 50%;
+    padding: 1rem;
+}
+div.modal_product form#edit_product label{
+    color: var(--blue);
+}
+form#edit_product .field input,
+form#edit_product select,
+form#edit_product textarea{
+    color: var(--black);
+    border: 1px solid var(--blue);
+}
+
+/* CARRUSEL DE IMAGENES PARA EL PRODUCTO */
+div.carrousel_container{
+    position: relative;
+}
+div.carrousel_container div.carrousel-btns-container{
+    position: absolute;
+    top: 50%;
+    right: 0;
+    width: 100%;
+    padding: 0 .5rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+/* ------------------------------- RECURSOS HUMANOS ------------------------------------ */
+form#add_employee label{
+    color: var(--white);
+}
+form#add_employee .field input,
+form#add_employee select,
+form#add_employee textarea{
+    color: var(--black);
+    background-color: var(--white);
+}
+
+div.table-rrhh-container{
+    margin-top: 2rem;
+}
+
+/* MODAL DE EMPLEADO */
+div.modal_employee{
+    width: 50%;
+    padding: 1rem;
+}
+
+div.modal_employee div.employee_card_container{
+    background-color: var(--grey);
+    border-radius: var(--radius);
+    padding: .5rem;
+}
+div.modal_employee div.employee_card_container div.employee_photo{
+    font-size: 8rem;
+    display: flex;
+    justify-content: center;
+    padding: 1rem 0;
+}
+div.modal_employee div.employee_card_container p{
+    font-weight: bold;
+    padding: .5rem 0;
+}
+div.modal_employee div.employee_card_container p.name_and_email  span{
+    color: var(--blue);
+}
+
+div.modal_employee div.employee_salary_container{
+    background-color: var(--blue);
+    padding: .5rem;
+    border-radius: var(--radius);
+    margin-top: 1rem;
+}
+div.modal_employee div.employee_salary_container > p{
+    font-weight: bold;
+    color: var(--white);
+    padding: .5rem 0;
+}
+
+div.modal_employee div.employee_salary_container form label{
+    color: var(--white);
+}
+div.modal_employee div.employee_salary_container .field input,
+div.modal_employee div.employee_salary_container .field select,
+div.modal_employee div.employee_salary_container .field textarea{
+    color: var(--black);
+    background-color: var(--white);
+}
+
+div.modal_employee div.calculate_paid{
+    padding: 2rem 0;
+    text-align: center;
+    font-weight: bold;
+}
+
+/* ------------------------------- SERVICIO AL CLIENTE ------------------------------------ */
+div.add_call_form_container{
+    padding: .5rem;
+    background-color: var(--blue);
+    border-radius: var(--radius);
+}
+div.add_call_form_container > p{
+    color: var(--white);
+    font-weight: bold;
+}
+form#add_call label{
+    color: var(--white);
+}
+form#add_call .field input,
+form#add_call select,
+form#add_call textarea{
+    color: var(--black);
+    background-color: var(--white);
+}
+
+/* MODAL LLAMADA */
+div.modal_call{
+    width: 50%;
+    padding: 1rem;
+}
+div.order_call_summary{
+    border-radius: var(--radius);
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 1rem 0;
+    font-weight: bold;
+    color: var(--white);
+}
+
+div.order_status_1{
+    background-color: var(--blue);
+}
+div.order_status_2{
+    background-color: var(--yellow);
+}
+div.order_status_3{
+    background-color: var(--green);
+}
+div.order_status_4{
+    background-color: var(--red);
+}
+
+div.detail_call_container{
+    padding: .5rem 0;
+}
+
+div.detail_call_container p{
+    font-weight: bold;
+    margin: .5rem 0;
+}
+
+/* ------------------------------- LOGIN ------------------------------------ */
+body#login{
+    background-color: var(--black);
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+div.admin_login_container{
+    background-color: var(--white);
+    padding: 1rem;
+    border-radius: var(--radius);
+}
+div.admin_login_container h1{
+    text-align: center;
+}
+
+form#admin_login label{
+    color: var(--black);
+}
+form#admin_login .field input,
+form#admin_login select,
+form#admin_login textarea{
+    color: var(--black);
+    background-color: var(--white);
+    border: 1px solid var(--black);
 }

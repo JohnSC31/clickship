@@ -8,6 +8,9 @@ const AJAX_URL = URL_PATH + 'app/controllers/Ajax.php';
     document.addEventListener('DOMContentLoaded', function (){
       // Despues de cargar todo el DOM se ejecuta el codigo
 
+      //LOGIN
+      $("body").on("submit", "form#admin_login", loginAdmin);
+
       // APERTURA DE LOS MODALS
       $("body").on("click", "[data-modal]", openModal);
       $("body").on("click", "[close-modal]", closeModal);
@@ -18,11 +21,30 @@ const AJAX_URL = URL_PATH + 'app/controllers/Ajax.php';
         adminNavigation(e.currentTarget);
       });
 
+      //LOGOUT
+      $("body").on("click", "[data-admin-logout]", logoutAdmin);
+      
+
       // INICIALIZACION DE LA DATA TABLES
+      // SECCION DE VENTAS
       initDataTable('sells', 'loadDataTableSells');
 
-      initDataTable('inventory', 'loadDataTableSells');
-      
+      // SECCION DE INVENTARIO
+      initDataTable('inventory', 'loadDataTableInventory');
+      $("body").on("submit", "form#add_product", addProduct);
+      $("body").on("click", "[data-delete-product]", deleteProduct);
+
+      // carrusel de imagenes del producto
+      $("body").on("click", "[data-carrousel-pass]", function(e){
+        e.stopPropagation();
+        changeCarrouselImage(e.currentTarget);
+      });
+
+      // SECCION DE RECURSOS HUMANOS
+      initDataTable('rrhh', 'loadDataTableRrhh');
+
+      // SECCION DE SERVICIO AL CLIENTE
+      initDataTable('service', 'loadDataTableService');
   
     }); // end DOMContentLoaded
   
@@ -35,7 +57,7 @@ const AJAX_URL = URL_PATH + 'app/controllers/Ajax.php';
 function openModal(e){
   e.preventDefault();
   const modalName = $(this).attr('data-modal');
-  const modalData = $(this).attr('data-modal-data') !== undefined ? $(this).attr('data-modal-data') : '{}';
+  const modalData = $(this).attr('data-modal-data') !== undefined ? JSON.parse($(this).attr('data-modal-data')) : {};
 
   const myData = {
     'ajaxMethod': 'loadModal',
@@ -49,7 +71,7 @@ function openModal(e){
     dataType:'html',
     data: myData
   }).done(function(data){
-    console.log(data);
+    // console.log(data);
     $('div#modal_container').html(data);
     $('div#modal_container').css('display', 'block'); // estaba en flex
     $('body').css('overflow', 'hidden');
@@ -93,6 +115,7 @@ function showNotification(message, success, timer = true){
 }
 
 // FUNCIONES PARA LA VALIDACION DE FORMULARIO
+// validar inputs comunes
 function validInput(input_value, max_length = false, msj = 'Campo Obligatorio'){
   
   if(input_value.length == 0){
@@ -107,7 +130,7 @@ function validInput(input_value, max_length = false, msj = 'Campo Obligatorio'){
   return true;
   
 }
-
+// validar contrasenas
 function validPassword(input_value){
   if(input_value.length == 0){
     showNotification("Ingrese una contreseña", false);
@@ -119,7 +142,7 @@ function validPassword(input_value){
   }
   return true
 }
-
+// validar correos
 function validEmail(input_value){
   const validEmailPattern = /^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/;
   if(input_value.length == 0){
@@ -133,11 +156,78 @@ function validEmail(input_value){
   }
   return true;
 }
+// valida archivos
+function validFiles(fileInput){
+
+  if(fileInput[0].files.length == 0){
+    showNotification("Ingrese al menos una imagen", false);
+    return false
+  }
+
+  for (var i = 0; i < fileInput[0].files.length; i++){
+    
+    if (fileInput[0].files[i] && fileInput[0].files[i].size < 2000000){ 
+      return true;
+    }
+    var msjError;
+    if(!fileInput[0].files[i]) msjError = 'Selecciona un archivo';
+
+    if(fileInput[0].files[i] && fileInput[0].files[i].size > 2000000) msjError = 'El archivo seleccionado es muy grande';
+    showNotification(msjError, false);
+    return false;
+
+  }
+
+  
+  
+}
 
 ///////////// **************************************************************************************************** ///////////////
 ///////////// ********************************************** ADMIN AREA ****************************************** ///////////////
 ///////////// **************************************************************************************************** ///////////////
 
+// FUNCION PARA INICIAR SESION DE ADMINSITRADOR
+async function loginAdmin(e){
+  e.preventDefault();
+  // campos
+  const input_email = $('input#email');
+  const input_pass = $('input#pass');
+  // validacion
+  if(!validEmail(input_email.val())) return false;
+  if(!validPassword(input_pass.val())) return false;
+
+  // form data
+  const loginFormData = new FormData();
+  loginFormData.append('email', input_email.val());
+  loginFormData.append('pass', input_pass.val());
+  loginFormData.append('ajaxMethod', "adminLogin");  
+
+  result = await ajaxRequest(loginFormData);
+  showNotification(result.Message, result.Success, false);
+
+  if(result.Success){
+    setTimeout(()=>{
+      window.location.href = URL_PATH + 'home';
+    }, 1500)
+  }
+}
+
+// CERRAR SESION DE ADMINSITRADOR
+async function logoutAdmin(e){
+  e.preventDefault();
+
+  const logoutFormData = new FormData();
+  logoutFormData.append('ajaxMethod', "adminLogout");  
+
+  result = await ajaxRequest(logoutFormData);
+  showNotification(result.Message, result.Success, false);
+
+  if(result.Success){
+    setTimeout(()=>{
+      window.location.href = URL_PATH + 'login';
+    }, 1500)
+  }
+}
 
 // FUNCION PARA LA INICIALIZACION DE LAS DATATABLES
 // ///////////////////////----------------------AJAX TABLE LOADES/ CARGADOR PARA LAS TABLAS AJAX ---------------------////////////////////////////
@@ -164,7 +254,15 @@ function getDataTableColumns(table){
   if(table === 'sells') columns = [{data: 'idSell'}, {data: 'clientName'}, {data: 'status'}, {data: 'store'}];
 
   // COLS PARA INVENTARIO
-  if(table === 'inventory') columns = [{data: 'idSell'}, {data: 'clientName'}, {data: 'status'}, {data: 'store'}];
+  if(table === 'inventory') columns = [{data: 'id'}, {data: 'name'}, {data: 'categorie'}, {data: 'price'}, {data: 'amount'}];
+
+  // COLS PARA RECURSOS HUMANOS
+  if(table === 'rrhh') columns = [{data: 'name'}, {data: 'email'}, {data: 'country'}, {data: 'rol'}, {data: 'department'}];
+
+  // COLS PARA SERVICIO AL CLIENTE
+  if(table === 'service') columns = [{data: 'id'}, {data: 'employee'}, {data: 'date'}, {data: 'idOrder'}];
+
+  
 
   //PARA LAS ACCIONES
   columns.push({data: 'actions', "orderable": false });
@@ -191,6 +289,99 @@ function adminNavigation(option){
   $('div#dashboard_container div.'+ $(option).attr("data-admin-nav") + '_container').css('display', 'block');
 }
 
+//-------------------------------------------------- SECCION DE VENTAS---------------------------------------------------------
+
+
+// -------------------------------------------------- SECCION DE INVENTARIO ---------------------------------------------------
+async function addProduct(e){
+  e.preventDefault();
+
+  // optienen los campos del formulario
+  const input_name = $('input#name');
+  const select_catProduct = $('select#catProduct');
+  const input_price = $('input#price');
+  const textarea_detail = $('textarea#detail');
+
+  const input_AmountStore1 = $('input#amountStore1');
+  const input_AmountStore2 = $('input#amountStore2');
+  const input_AmountStore3 = $('input#amountStore3');
+  
+  const input_images = $('input#product_images');
+
+  // validan los datos
+  if(!validInput(input_name.val(), false, "Ingrese un nombre")) return false;
+  if(!validInput(select_catProduct.val(), false, "Escoga una categoria")) return false;
+  if(!validInput(input_price.val(), false, "Ingrese un precio")) return false;
+  if(!validInput(textarea_detail.val(), false, "Ingrese un detalle")) return false;
+
+  if(!validInput(input_AmountStore1.val(), false, "Ingrese una cantidad para bodega 1")) return false;
+  if(!validInput(input_AmountStore2.val(), false, "Ingrese una cantidad para bodega 2")) return false;
+  if(!validInput(input_AmountStore3.val(), false, "Ingrese una cantidad para bodega 3")) return false;
+
+  // validacion de archivos
+  if(!validFiles(input_images)) return false;
+  
+
+  const productFormData = new FormData();
+  productFormData.append('name', input_name.val());
+  productFormData.append('idCategorie', select_catProduct.val());
+  productFormData.append('price', input_price.val());
+  productFormData.append('detail', textarea_detail.val());
+
+  productFormData.append('amountStore1', input_AmountStore1.val());
+  productFormData.append('amountStore2', input_AmountStore2.val());
+  productFormData.append('amountStore3', input_AmountStore3.val());
+
+  for (var i = 0; i < input_images[0].files.length; i++){
+    productFormData.append("image_"+ i, input_images[0].files[i]);
+  }
+  
+  productFormData.append('action', "add");
+
+  productFormData.append('ajaxMethod', "adminProducts");  
+
+  result = await ajaxRequest(productFormData);
+
+  showNotification(result.Message, result.Success);
+
+}
+
+async function deleteProduct(e){
+  e.preventDefault();
+
+  const idProduct = $(this).attr('data-delete-product');
+
+  const deleteProductFormData = new FormData();
+  deleteProductFormData.append('idProduct', idProduct);  
+  deleteProductFormData.append('action', "delete");  
+  deleteProductFormData.append('ajaxMethod', "adminProducts");  
+
+  result = await ajaxRequest(deleteProductFormData);
+  showNotification(result.Message, result.Success);
+}
+
+function changeCarrouselImage(button){
+
+  var carrousel_id = $(button).attr('data-carrousel-id');
+
+  var max_image = parseInt($('input#input-'+carrousel_id).attr('data-max-image'));
+  var current_image = parseInt($('input#input-'+carrousel_id).attr('data-current-image'));
+
+  if($(button).attr('data-carrousel-pass') === 'left'){
+    current_image = current_image - 1 < 0 ? max_image: current_image -= 1;
+  }
+
+  if($(button).attr('data-carrousel-pass') === 'right'){
+    current_image = current_image + 1 > max_image ? 0 : current_image += 1;
+  }
+  // se actualiza la imagen actual
+  $('input#input-'+carrousel_id).attr('data-current-image', current_image);
+  
+  // se ocultan todas las imagnes
+  $('div#'+carrousel_id +' > div.img').css('display', 'none');
+  // se muestra la que toca
+  $('div#'+carrousel_id +' > div.img-'+ current_image).css('display', 'block')
+}
 
 
 

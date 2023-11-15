@@ -104,6 +104,7 @@ textarea {
     --blue: #3772FF;
     --red: #DF2935;
     --yellow: #FDCA40;
+    --green: #9FBB73;
     --grey: #E6E8E6;
     --white: #ffffff;
 
@@ -275,6 +276,18 @@ p,a{
     border-color: var(--white);
 }
 
+/* BLACK BUTTOM */
+.btn_black{
+    color: var(--white);
+    background-color: var(--black);
+}
+.btn_black:hover{
+    color: var(--black);
+    background-color: var(--white);
+    border-color: var(--black);
+}
+
+
 /* ------------------ GENERAL FORMS STYLES ------------------------------ */
 form .field{
     padding-top: 1.5rem;
@@ -297,11 +310,11 @@ form .field textarea{
 
 form .col_2{
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-between;
 }
 
-form .col_2 .field{
+form .col_2 > div{
     width: calc(50% - .5rem);
 }
 
@@ -309,7 +322,7 @@ form .col_2 .field{
     form .col_2{
         flex-direction: column;
     }
-    form .col_2 .field{
+    form .col_2 > div{
         width: 100%;
     }
 }

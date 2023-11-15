@@ -15,7 +15,7 @@
         private $db;
 
         public function __construct(){
-            $this->db = new Db;
+            // $this->db = new Db;
             $this->ajaxMethod = isset($_POST['ajaxMethod']) ? $_POST['ajaxMethod'] : NULL ;
             unset($_POST['ajaxMethod']);
 
