@@ -27,8 +27,8 @@ BEGIN
 		END
 		ELSE
 		BEGIN
-			SET @responseMessage='Se ha iniciado sesión con éxito'
-			SELECT CONCAT(nombre, ' ', apellido1, ' ', apellido2) FROM Clientes WHERE idCliente = @idClient
+			SELECT idCliente, nombre, apellido1, apellido2, correo FROM Clientes WHERE idCliente = @idClient
+			RETURN;
 		END
     END TRY
     BEGIN CATCH
