@@ -1,9 +1,32 @@
-<div class="inventory_container" style="display:none;">
-    <h1>Inventario</h1>
 
-    <div class="add_product_form_container">
-        <p class="form_title">Agrega un producto</p>
-        <form action="" method="post" id="add_product">
+<?php  
+    // se obtiene los datos de la orden con el id de la orden
+    // datos del cliente
+    // detalle de la factura
+?>
+
+<div class="myModal modal_product" >
+
+    <div class="modal_header">
+        <a close-modal="" class="close_modal"><i class="fas fa-times"></i></a>
+    </div>
+
+    <div class="modal-content">
+        <?php $maxImages = 3; ?>
+        <div class="product_imgs_container carrousel_container" id="carrousel-product">
+            <?php for($i = 0; $i < $maxImages; $i++) { ?>
+                <div class="img img-<?php echo $i; ?>" <?php echo $i !== 0 ? "style='display: none;'" : ""; ?> >
+                    <img src="<?php echo URL_PATH; ?>public/img/product2.jpeg" alt="Product Image">
+                </div>   
+            <?php } ?> 
+
+            <div class="carrousel-btns-container" >
+                <button data-carrousel-pass="left" data-carrousel-id="carrousel-product" class="btn btn_yellow"><i class="fa-solid fa-chevron-left"></i></button>
+                <button data-carrousel-pass="right" data-carrousel-id="carrousel-product" class="btn btn_yellow"><i class="fa-solid fa-chevron-right"></i></button>
+                <input type="hidden" id="input-carrousel-product" data-current-image="1" data-max-image="<?php echo $maxImages-1; ?>">
+            </div>   
+        </div>
+        <form action="" method="post" id="edit_product">
             <div class="col_2">
                 <div class="form_column">
                     <div class="field">
@@ -50,23 +73,13 @@
                 </div>
             </div>
             <div class="submit">
-                <input type="submit" class="btn btn_yellow" value="Agregar">
+                <input type="submit" class="btn btn_yellow" value="Editar">
             </div>
         </form>
-    </div>
-
-    <div class="table-inventory-container datatable-container">
-        <table id="inventory-table" class="table table-striped table-bordered" style="width:100%">
-            <thead>
-                <tr>
-                    <th width="5%">Id</th>
-                    <th width="25%">Producto</th>
-                    <th width="20%">Categoria</th>
-                    <th width="10%">Precio</th>
-                    <th width="15%">Cantidad</th>
-                    <th width="15%">Acciones</th>
-                </tr>
-            </thead>
-        </table>
-    </div>
+        
+    </div><!-- .modal-content -->
 </div>
+
+<!-- JQUERY  -->
+<script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+<script src="<?php echo URL_PATH; ?>public/js/jquery.mask.js"></script>

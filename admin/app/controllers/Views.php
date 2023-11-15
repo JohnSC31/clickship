@@ -39,9 +39,16 @@
 
         // CARGA DEL HOME
         public function home(){
+            if(!isset($_SESSION['ADMIN']['SESSION'])) header('Location:'.URL_ADMIN_PATH."login");
             $data = $this->getPageData('home','Administracion');
             $this->loadView('pages/home', $data); // se carga la vista necesaria
         }
+        // CARGA DEL HOME
+        public function login(){
+            $data = $this->getPageData('login','Inicio de sesión');
+            $this->loadView('pages/login', $data); // se carga la vista necesaria
+        }
+    
     }
 
 
