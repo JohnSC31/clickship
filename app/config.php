@@ -2,10 +2,11 @@
     // CONTIENE LAS CONFIGURACIONES GENERALES DEL PROYECTO
 
     //config de acceso de la base de datos
-    // define('DB_HOST', 'localhost');
-    // define('DB_USER', 'root');
-    // define('DB_PASS', '');
-    // define('DB_NAME', 'clickship');
+    define('DB_HOST', '25.66.14.213');
+    define('DB_USER', 'sa');
+    define('DB_PASS', 'Ship567!');
+    define('DB_NAME', 'Clickship');
+    define('DB_PORT', 1433); // puerto
 
     //Ruta de la app
     define('APP_PATH', dirname(dirname(__FILE__))); 

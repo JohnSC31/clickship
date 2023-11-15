@@ -1,5 +1,5 @@
 
-<div class="modal modal_login">
+<div class="myModal modal_login">
     <div class="modal_header">
         <a close-modal="" class="close_modal"><i class="fas fa-times"></i></a>
     </div>

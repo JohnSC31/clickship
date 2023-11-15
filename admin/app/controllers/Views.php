@@ -39,33 +39,16 @@
 
         // CARGA DEL HOME
         public function home(){
-            $data = $this->getPageData('home','Encuentra todos tus productos en CLICKSHIP');
+            if(!isset($_SESSION['ADMIN']['SESSION'])) header('Location:'.URL_ADMIN_PATH."login");
+            $data = $this->getPageData('home','Administracion');
             $this->loadView('pages/home', $data); // se carga la vista necesaria
         }
-
-        // CARGA DE REGISTRO
-        public function signup(){
-            $data = $this->getPageData('signup','Registro de CLICKSHIP');
-            $this->loadView('pages/signup', $data); // se carga la vista necesaria
+        // CARGA DEL HOME
+        public function login(){
+            $data = $this->getPageData('login','Inicio de sesión');
+            $this->loadView('pages/login', $data); // se carga la vista necesaria
         }
-
-        // CARGA DE PERFIL
-        public function profile(){
-            $data = $this->getPageData('profile','Perfil de CLICKSHIP');
-            $this->loadView('pages/profile', $data); // se carga la vista necesaria
-        }
-
-        // CARGA DE CARRITO DE COMPRAS
-        public function checkout(){
-            $data = $this->getPageData('checkout','Carrito de compras de CLICKSHIP');
-            $this->loadView('pages/checkout', $data); // se carga la vista necesaria
-        }
-
-        // CARGA DE PRODCUTO
-        public function product($productId){
-            $data = $this->getPageData('product','Producto de CLICKSHIP');
-            $this->loadView('pages/product', $data); // se carga la vista necesaria
-        }
+    
     }
 
 

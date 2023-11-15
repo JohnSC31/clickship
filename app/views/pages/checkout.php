@@ -6,13 +6,13 @@
 
     <div class="checkout_container">
         <div class="bill_container">
-            <div class="bill_detail_container">
-                <?php for($i = 0; $i < 6; $i++) { ?>
+            <div class="bill_detail_container" id="cart_container">
+                <?php for($i = 0; $i < 0; $i++) { ?>
                     <div class="bill_detail">
                         <div class="detail_product">
                             <button class="btn_minus_product"><i class="fa-solid fa-minus"></i></button>
                             <p class="numProduct" id="numProduct">3</p>
-                            <button class="btn_add_product"><i class="fa-solid fa-plus"></i></button>
+                            <button class="btn_add_product" data-cart="plus" data><i class="fa-solid fa-plus"></i></button>
                             <p>Nombre producto</p>
                         </div>
                         <div class="price_product_detail">
@@ -28,30 +28,43 @@
             </div>
         </div>
         <div class="payment">
-            <form action="" method="post" id="checkout_form">
+            <form action="" method="post" id="order_form">
                 <div class="field">
                     <label for="carNumber">Número de tarjeta</label>
                     <input type="text" name="carNumber" id="carNumber" data-mask="0000 0000 0000 0000">
                 </div>
-                <div class="field">
-                    <label for="expireDate">Fecha de vencimiento</label>
-                    <input type="text" name="expireDate" id="expireDate" data-mask="00/00">
+                <div class="col_2">
+                    <div class="field">
+                        <label for="expireDate">Fecha de vencimiento</label>
+                        <input type="text" name="expireDate" id="expireDate" data-mask="00/00">
+                    </div>
+                    <div class="field">
+                        <label for="cvc">CVC</label>
+                        <input type="text" name="cvc" id="cvc" data-mask="000">
+                    </div>
                 </div>
-                <div class="field">
-                    <label for="cvc">CVC</label>
-                    <input type="text" name="cvc" id="cvc" data-mask="000">
-                </div>
+                
 
                 <div class="field">
                     <label for="shippingAddress">Dirección de envío</label>
                     <input type="text" name="shippingAddress" id="shippingAddress">
                 </div>
+
+                <!-- <div class="field">
+                    <label for="countries">Pais</label>
+                    <select name="countries" id="select_country">
+                        <!- se cargan las categorias de la base de datos --
+                        <option value="">Paises</option>
+                        <option value="1">Pais 1</option>
+                        <option value="2">Pais 2</option>
+                    </select>
+                </div>
                 <div class="field">
                     <label for="postalCode">Codigo Postal</label>
                     <input type="text" name="postalCode" id="postalCode" data-mask="000000">
-                </div>
+                </div> -->
                 <div class="submit">
-                    <input type="submit" class="btn btn_yellow" value="Ordenar">
+                    <input type="submit" class="btn btn_yellow <?php echo count($_SESSION['CLIENT']['CART']) === 0 ? 'disabled': ''; ?>" value="Ordenar">
                 </div>
 
             </form>

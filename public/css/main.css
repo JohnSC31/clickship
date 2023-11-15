@@ -104,6 +104,7 @@ textarea {
     --blue: #3772FF;
     --red: #DF2935;
     --yellow: #FDCA40;
+    --green: #9FBB73;
     --grey: #E6E8E6;
     --white: #ffffff;
 
@@ -219,6 +220,15 @@ p,a{
     }
 }
 
+.disabled{
+    pointer-events: none!important;
+    cursor: default!important;
+    color: var(--darkGrey)!important;
+    background-color: var(--lightGrey)!important;
+    border: 1px solid var(--darkGrey)!important;
+    user-select: none!important;
+}
+
 /* ////////// ------------------- BOTTOMS SYLES ------------------------ /////// */
 .btn{
     text-decoration: none;
@@ -266,6 +276,18 @@ p,a{
     border-color: var(--white);
 }
 
+/* BLACK BUTTOM */
+.btn_black{
+    color: var(--white);
+    background-color: var(--black);
+}
+.btn_black:hover{
+    color: var(--black);
+    background-color: var(--white);
+    border-color: var(--black);
+}
+
+
 /* ------------------ GENERAL FORMS STYLES ------------------------------ */
 form .field{
     padding-top: 1.5rem;
@@ -284,6 +306,25 @@ form .field textarea{
     background-color: transparent;
     width: 100%;
     border: none;
+}
+
+form .col_2{
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+form .col_2 > div{
+    width: calc(50% - .5rem);
+}
+
+@media only screen and (max-width: 768px ) {
+    form .col_2{
+        flex-direction: column;
+    }
+    form .col_2 > div{
+        width: 100%;
+    }
 }
 
 form .submit{
@@ -310,18 +351,20 @@ div.modal_container{
     background-color: rgba(0,0,0,0.4);
     justify-content: center;
 }
-div.modal_container div.modal{
+div.modal_container .myModal{
     background-color: #fff;
     border-radius: var(--radius);
     margin: 5rem auto;
+    display: block;
 }
+  
 /* Header del modal */
-div.modal div.modal_header{
+div.myModal div.modal_header{
     display: flex;
     justify-content: end;
     padding: 0 1rem;
 }
-div.modal div.modal_header a.close_modal{
+div.myModal div.modal_header a.close_modal{
     color: var(--black);
     font-size: 2.5rem;
     font-weight: bold;
@@ -363,6 +406,19 @@ div.modal div.modal_header a.close_modal{
     color: #fff;
   }
 
+/*////////////////////// -------------------------- CARRUSEL DE IMAGENES --------------------------------------------- ///////////////////////*/
+div.carrousel_container{
+    position: relative;
+}
+div.carrousel_container div.carrousel-btns-container{
+    position: absolute;
+    top: 50%;
+    right: 0;
+    width: 100%;
+    padding: 0 .5rem;
+    display: flex;
+    justify-content: space-between;
+}
 
 /*////////////////////// -------------------------- HEADER --------------------------------------------- ///////////////////////*/
 header.web_header .fixed_bar{
@@ -486,6 +542,18 @@ section.search_product div.search_bar input{
 }
 section.search_product div.search_bar a{
     color: var(--blue);
+}
+ /* seccion de filtros */
+ section.filters p{
+   font-weight: bold;
+   font-size: 2rem;
+}
+section.filters div.filters_container select{
+    padding: .5rem;
+    font-size: 1.5rem;
+    border-radius: var(--radius);
+    background-color: transparent;
+    border: 1px solid var(--blue);
 }
 
 /*//////////////////////  PRODUCT LIST  ///////////////////////*/
@@ -642,6 +710,7 @@ div.modal_login form .field label{
 }
 div.modal_login form .field input{
    border: 2px solid var(--white);
+   color: var(--white);
 }
 div.modal_login p.register{
     color: var(--white);
@@ -700,6 +769,12 @@ div.profile_dashboard div.profile_form_container input{
     color: var(--black);
     background-color: var(--grey)!important;
 }
+
+div.profile_dashboard div.logout_container{
+    padding: .5rem 0;
+    display: flex;
+    justify-content: center;
+}
 /* LISTA DE ORDENES */
 div.profile_dashboard div.orders_container{
     border-radius: var(--radius);
@@ -721,6 +796,71 @@ div.orders_container div.order{
     border-bottom: 1px solid var(--grey);
     padding: .5rem 1rem;
 }
+/* ------------------------------- ORDER MODAL ------------------------------------ */
+div.modal_order{
+    width: 40%;
+    padding: 1rem;
+}
+
+div.order_client_container{
+    display: flex;
+    align-items: center;
+    background-color: var(--yellow);
+    border-radius: var(--radius);
+    padding: .5rem;
+    font-weight: bold;
+}
+div.order_client_container .picture{
+    font-size: 5rem;
+    padding: 0 3rem;
+}
+div.order_client_container p{
+    padding: .5rem 0;
+}
+div.modal_order div.bill_detail_container p.numProduct{
+    margin-right: 1rem;
+}
+div.modal_order div.price_product_detail p.product_total_price{
+    margin-left: 1rem;
+}
+div.modal_order div.order_summary .total{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--blue);
+    font-weight: bold;
+}
+
+div.modal_order div.address_detail{
+    padding: 1rem 0;
+}
+
+div.modal_order div.order_action_container{
+    display: flex;
+    padding: 1rem 0;
+    align-items: center;
+    justify-content: center;
+}
+div.modal_order div.order_status_container{
+    padding: 2rem 0;
+    text-align: center;
+    font-weight: bold;
+    color: var(--white);
+    border-radius: 0 0 var(--radius) var(--radius);
+}
+
+div.order_status_1{
+    background-color: var(--blue);
+}
+div.order_status_2{
+    background-color: var(--yellow);
+}
+div.order_status_3{
+    background-color: var(--green);
+}
+div.order_status_4{
+    background-color: var(--red);
+}
 /*////////////////////// -------------------------- PRODUCT  --------------------------------------------- ///////////////////////*/
 body#product .product_container{
     display: flex;
@@ -740,6 +880,7 @@ div.checkout_container{
     flex-wrap: wrap;
     justify-content: space-between;
     padding: 3rem 0;
+    min-height: 65vh;
 }
 @media only screen and (max-width: 700px ) {
     div.checkout_container{
@@ -812,6 +953,11 @@ div.bill_detail button.btn_detele_product:hover{
     border: 1px solid var(--red);
 }
 
+div.bill_detail_container div.no_items_cart p{
+    text-align: center;
+    color: var(--blue);
+}
+
 /* total de factura */
 div.bill_container div.bill_total{
     border: 1px solid var(--blue);
@@ -843,91 +989,10 @@ div.checkout_container div.payment{
     }
 }
 
-div.payment form#checkout_form .field label{
+div.payment form#order_form .field label{
     color: var(--white);
 }
-div.payment form#checkout_form .field input{
+div.payment form#order_form .field input,
+div.payment form#order_form .field select{
    background-color: var(--white);
-}
-
-/*//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
-/*////////////////////// -------------------------- ADMIN AREA  --------------------------------------------- ///////////////////////*/
-/*//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
-
-div.admin_container{
-    display: flex;
-    height: 100vh;
-}
-
-
-div.admin_container div.header_container{
-    background-color: var(--black);
-    flex: 0 0 30%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    color: var(--white);
-    padding: 2rem 0;
-}
-
-div.admin_container div.header_container div.admin_logo{
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    padding: 0 5rem 2rem 5rem;
-}
-div.header_container nav.admin_navigation ul li{
-    cursor: pointer;
-    padding: 2rem;
-    font-size: 2rem;
-    font-weight: bold;
-}
-div.header_container nav.admin_navigation ul li.active{
-    background-color: var(--white);
-    color: var(--black);
-}
-div.header_container nav.admin_navigation ul i{
-    margin-right: 1rem;
-}
-
-div.header_container p.header_rights{
-    font-size: 1.3rem;
-    text-align: center;
-}
-@media only screen and (max-width: 768px) {
-    div.header_container nav.admin_navigation ul li{
-        text-align: center;
-    }
-
-    div.header_container nav.admin_navigation ul i{
-        margin-right: 0;
-    }
-  }
-
-/* ------------------------------DASHBOARD CONTAINER--------------------------- */
-
-div.dashboard_container{
-    flex: 0 0 70%;
-    padding: 1rem;
-    overflow: scroll;
-}
-
-
-/* ------------------------------- VENTAS ------------------------------------ */
-div.sells_container{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-div.sell_report_container{
-    background-color: var(--blue);
-    border-radius: var(--radius);
-    padding: 1rem;
-    color: var(--white);
-    width: 50%;
-}
-
-div.sell_report_container .field input,
-div.sell_report_container .field select{
-    background-color: var(--white);
 }
