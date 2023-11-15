@@ -1,8 +1,7 @@
 
 <?php  
-    // se obtiene los datos de la orden con el id de la orden
-    // datos del cliente
-    // detalle de la factura
+    // se obtiene los datos de la orden con el id de la llamada
+    $data['data']['idCall'];
 ?>
 
 <div class="myModal modal_call" >
