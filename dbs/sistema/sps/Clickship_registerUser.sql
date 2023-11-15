@@ -49,9 +49,6 @@ BEGIN
 		--Insert user into system
         INSERT INTO dbo.[Clientes] (correo, contrasena, nombre, apellido1, apellido2)
         VALUES(@pLogin, HASHBYTES('SHA2_512', @pPassword), @pFirstName, @pLastName, @pLastName2)
-
-        SET @responseMessage='Se ha registrado el usuario con exito!'
-
     END TRY
     BEGIN CATCH
         SET @responseMessage=ERROR_MESSAGE() 
