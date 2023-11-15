@@ -12,15 +12,6 @@
     </div>
 
     <div class="modal-content">
-        <div class="order_client_container">
-            <div class="picture">
-                <i class="fa-solid fa-user-circle"></i>
-            </div>
-            <div>
-                <p>John Sánchez Cespedes</p>
-                <P>jostsace05@gmail.com</P>
-            </div>
-        </div>
         <div class="order_detail_container">
             <p>Orden: ID23445</p>
             <div class="bill_detail_container">
@@ -47,8 +38,8 @@
                 <p> <b>Dirección de envío:</b> <span>San isidro del general, Costa Rica</span></p>
             </div>
         </div>
-        <div class="order_action_container">
-            <button class="btn btn_blue">Finalizar</button>
+        <div class="order_status_container order_status_1">
+            <p>Recibido</p>
         </div>
         
     </div><!-- .modal-content -->

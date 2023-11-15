@@ -15,7 +15,7 @@
         private $db;
 
         public function __construct(){
-            $this->db = new Db;
+            // $this->db = new Db;
             $this->ajaxMethod = isset($_POST['ajaxMethod']) ? $_POST['ajaxMethod'] : NULL ;
             unset($_POST['ajaxMethod']);
 
@@ -69,7 +69,10 @@
             // se inicia sesion y el carrito
             $clientSession = array(
                 'SESSION' => TRUE,
-                'CID' => "idClient",
+                'CID' => "0",
+                'EMAIL' => $client['email'],
+                'NAME' => "John",
+                'LASTNAME' => "Sanchez",
                 'CART' => array() // arreglo para el carrito
             );
 
@@ -80,8 +83,6 @@
             }else{
                 $this->ajaxRequestResult(false, "Error al iniciar sesion");
             }
-
-
             
         }
 
@@ -221,11 +222,49 @@
         private function clientMakeOrder($order){
             // obtiene los detalles de la orden
             // se crea la order
-            // se le agregan los productos
-            // sacar todos los productos del carrito de compras
+            // se le agregan los productos a la orden
+
+            // limpiar el carrito
+            $_SESSION['CLIENT']['CART'] = array();
             
             // retorna el mensaje
             $this->ajaxRequestResult(true, "Se ha realizado la orden");
+        }
+
+        // METODO PARA CARGAR LOS SELECT DEL FRONTEND
+        private function loadSelectOptions($select){
+            // se cargan las categorias
+            if($select['idSelect'] ===  "select_categorie"){
+                // carga categorias de home
+                $categories = []; // se obtienen de la base de datos
+
+                if(count($categories) > 0){ ?>
+                    <option value="" selected >Categorias</option>
+                    <?php foreach($categories as $categorie) { ?>
+                        <option value="<?php echo $categorie->idTipoProducto ?>"> <?php echo $categorie->descripcion; ?> </option>
+                    <?php }
+                }else{ ?>
+                    <option value="">No hay Categorias</option>
+                <?php }
+            }
+        }
+
+        // METODO PARA CARGAR LAS ORDENES DE UN CLIENTE EN EL PERFIL
+        private function loadClientOrders($data){
+            $_SESSION['CLIENT']['CID'];
+            $orders = [1,2,3,4,5]; //obtienen en base de datos con el id del cliente 
+
+            foreach($orders as $key => $value){ ?>
+                <div class="order">
+                    <p><?php echo "Estado"; ?></p>
+                    <p><?php echo "9/9/23"; ?></p>
+                    <p><?php echo "Total"; ?> </p>
+                    <a href="javascript:void(0);" class="btn btn_blue" data-modal="order">Ver</a>
+                    
+                </div>
+                <?php } ?>
+
+            <?php
         }
 
     }

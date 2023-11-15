@@ -63,9 +63,11 @@
         }
 
         // CARGA DEL PRODUCT
-        public function product(){
+        public function product($idProduct){
             // $this->validUserSession('signup');
             $data = $this->getPageData('product','Producto');
+            $data['idProduct'] = $idProduct;
+            
             $this->loadView('pages/product', $data); // se carga la vista necesaria
         }
 
