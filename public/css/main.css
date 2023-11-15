@@ -406,6 +406,19 @@ div.myModal div.modal_header a.close_modal{
     color: #fff;
   }
 
+/*////////////////////// -------------------------- CARRUSEL DE IMAGENES --------------------------------------------- ///////////////////////*/
+div.carrousel_container{
+    position: relative;
+}
+div.carrousel_container div.carrousel-btns-container{
+    position: absolute;
+    top: 50%;
+    right: 0;
+    width: 100%;
+    padding: 0 .5rem;
+    display: flex;
+    justify-content: space-between;
+}
 
 /*////////////////////// -------------------------- HEADER --------------------------------------------- ///////////////////////*/
 header.web_header .fixed_bar{
@@ -782,6 +795,71 @@ div.orders_container div.order{
     font-weight: bold;
     border-bottom: 1px solid var(--grey);
     padding: .5rem 1rem;
+}
+/* ------------------------------- ORDER MODAL ------------------------------------ */
+div.modal_order{
+    width: 40%;
+    padding: 1rem;
+}
+
+div.order_client_container{
+    display: flex;
+    align-items: center;
+    background-color: var(--yellow);
+    border-radius: var(--radius);
+    padding: .5rem;
+    font-weight: bold;
+}
+div.order_client_container .picture{
+    font-size: 5rem;
+    padding: 0 3rem;
+}
+div.order_client_container p{
+    padding: .5rem 0;
+}
+div.modal_order div.bill_detail_container p.numProduct{
+    margin-right: 1rem;
+}
+div.modal_order div.price_product_detail p.product_total_price{
+    margin-left: 1rem;
+}
+div.modal_order div.order_summary .total{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--blue);
+    font-weight: bold;
+}
+
+div.modal_order div.address_detail{
+    padding: 1rem 0;
+}
+
+div.modal_order div.order_action_container{
+    display: flex;
+    padding: 1rem 0;
+    align-items: center;
+    justify-content: center;
+}
+div.modal_order div.order_status_container{
+    padding: 2rem 0;
+    text-align: center;
+    font-weight: bold;
+    color: var(--white);
+    border-radius: 0 0 var(--radius) var(--radius);
+}
+
+div.order_status_1{
+    background-color: var(--blue);
+}
+div.order_status_2{
+    background-color: var(--yellow);
+}
+div.order_status_3{
+    background-color: var(--green);
+}
+div.order_status_4{
+    background-color: var(--red);
 }
 /*////////////////////// -------------------------- PRODUCT  --------------------------------------------- ///////////////////////*/
 body#product .product_container{
