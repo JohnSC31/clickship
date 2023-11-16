@@ -5,7 +5,7 @@
     }
 
     require_once '../../../app/config.php';
-    require_once '../../app/lib/Db.php';
+    require_once '../../../app/lib/Db.php';
     
 
 
@@ -16,7 +16,7 @@
         private $db;
 
         public function __construct(){
-            // $this->db = new Db;
+            $this->db = new Db;
             $this->ajaxMethod = isset($_POST['ajaxMethod']) ? $_POST['ajaxMethod'] : NULL ;
             unset($_POST['ajaxMethod']);
 
@@ -310,13 +310,15 @@
 
             // se cargan los paises
             if($select['idSelect'] ===  "country"){
-                // carga categorias de home
-                $countries = []; // se obtienen de la base de datos
+                // carga paises
+                $this->db->query("{ CALL Clickship_getPaises()}");
+                $countries = $this->db->results(); // se obtienen de la base de datos
+                // var_dump($countries);
 
                 if(count($countries) > 0){ ?>
                     <option value="" selected >Paises</option>
                     <?php foreach($countries as $country) { ?>
-                        <option value="<?php echo $country->paisID ?>"> <?php echo $country->nombre; ?> </option>
+                        <option value="<?php echo $country->id ?>"> <?php echo $country->nombre; ?> </option>
                     <?php }
                 }else{ ?>
                     <option value="">No hay Paises</option>
@@ -325,13 +327,15 @@
 
             // se cargan los roles
             if($select['idSelect'] ===  "rol"){
-                // carga categorias de home
-                $rols = []; // se obtienen de la base de datos
+                
+                $this->db->query("{ CALL Clickship_getRoles()}");
+                $rols = $this->db->results(); // se obtienen de la base de datos
+                // var_dump($rols);
 
                 if(count($rols) > 0){ ?>
                     <option value="" selected >Roles</option>
                     <?php foreach($rols as $rol) { ?>
-                        <option value="<?php echo $rol->rolID ?>"> <?php echo $rol->rol; ?> </option>
+                        <option value="<?php echo $rol->id ?>"> <?php echo $rol->rol; ?> </option>
                     <?php }
                 }else{ ?>
                     <option value="">No hay Roles</option>
@@ -341,7 +345,9 @@
             // se cargan los departamentos
             if($select['idSelect'] ===  "department"){
                 // carga categorias de home
-                $departments = []; // se obtienen de la base de datos
+                $this->db->query("{ CALL Clickship_getDepartamentos()}");
+                $departments = $this->db->results(); // se obtienen de la base de datos
+                // var_dump($departments);
 
                 if(count($departments) > 0){ ?>
                     <option value="" selected >Departamentos</option>
@@ -355,13 +361,15 @@
 
             // se cargan las monedas
             if($select['idSelect'] ===  "currency"){
-                // carga categorias de home
-                $currencies = []; // se obtienen de la base de datos
+                
+                $this->db->query("{ CALL Clickship_getMonedas()}");
+                $currencies = $this->db->results(); // se obtienen de la base de datos
+                // var_dump($currencies);
 
                 if(count($currencies) > 0){ ?>
                     <option value="" selected >Monedas</option>
                     <?php foreach($currencies as $currency) { ?>
-                        <option value="<?php echo $currency->monedaID ?>"> <?php echo $currency->nombre; ?> </option>
+                        <option value="<?php echo $currency->id ?>"> <?php echo $currency->simbolo." ".$currency->nombre; ?> </option>
                     <?php }
                 }else{ ?>
                     <option value="">No hay Monedas</option>
@@ -370,8 +378,10 @@
 
             // se cargan los tipos de preguntas
             if($select['idSelect'] ===  "questionType"){
-                // carga categorias de home
-                $types = []; // se obtienen de la base de datos
+                
+                $this->db->query("{ CALL Clickship_getCallTypes()}");
+                $types = $this->db->results(); // se obtienen de la base de datos
+                // var_dump($types);
 
                 if(count($types) > 0){ ?>
                     <option value="" selected >Tipos de preguntas</option>
@@ -397,6 +407,11 @@
             );
         
             return json_encode($output);
+        }
+
+        // METODO PARA VALIDAR LOS MENSAJES DE ERRORES DE LOS SP (TRUE SI HAY ERROR, FALSE SI NO)
+        private function isErrorInResult($result){
+            return (isset($result['Error']) && $result['Error'] != "");
         }
 
 

@@ -15,7 +15,7 @@
         private $db;
 
         public function __construct(){
-            // $this->db = new Db;
+            $this->db = new Db;
             $this->ajaxMethod = isset($_POST['ajaxMethod']) ? $_POST['ajaxMethod'] : NULL ;
             unset($_POST['ajaxMethod']);
 
@@ -53,36 +53,63 @@
 
         // REGISTRO DEL CLIENTE
         private function clientSignup($client){
-
             // REALIZAR LA INSERCCION EN LA BASE DE DATOS
+            $this->db->query("{ CALL Clickship_registerClient(?, ?, ?, ?, ?) }");
 
-            // INICIAR LA SESION DEL CLIENTE
-            $this->ajaxRequestResult(true, "Se registra". $client['name']);
+            $this->db->bind(1, $client['email']);
+            $this->db->bind(2, $client['pass']);
+            $this->db->bind(3, $client['name']);
+            $this->db->bind(4, $client['lastname1']);
+            $this->db->bind(5, $client['lastname2']);
+
+            $result = $this->db->result();
+
+            if($this->isErrorInResult($result)){
+                $this->ajaxRequestResult(false, $result['Error']);
+              
+            }else{
+                // INICIAR LA SESION DEL CLIENTE
+                $this->clientLogin($client);
+                
+            }
+
+           
         }
 
         // INICIO DE SESION DEL CLIENTE
         private function clientLogin($client){
-            
+
             // se validan las credenciales
+            $this->db->query("{ CALL Clickship_loginClient(?, ?) }");
             // obtener el nombre, apellidos e email para el perfil
-
+            $this->db->bind(1, $client['email']);
+            $this->db->bind(2, $client['pass']);
             // se inicia sesion y el carrito
-            $clientSession = array(
-                'SESSION' => TRUE,
-                'CID' => "0",
-                'EMAIL' => $client['email'],
-                'NAME' => "John",
-                'LASTNAME' => "Sanchez",
-                'CART' => array() // arreglo para el carrito
-            );
 
-            $_SESSION['CLIENT'] = $clientSession;
+            $loggedClient = $this->db->result();
 
-            if(isset($_SESSION['CLIENT'])){
-                $this->ajaxRequestResult(true, "Inicia sesion ". $client['email']);
+            if($this->isErrorInResult($loggedClient)){
+                $this->ajaxRequestResult(false, $loggedClient['Error']);
             }else{
-                $this->ajaxRequestResult(false, "Error al iniciar sesion");
+                $clientSession = array(
+                    'SESSION' => TRUE,
+                    'CID' => $loggedClient['idCliente'],
+                    'EMAIL' => $loggedClient['correo'],
+                    'NAME' => $loggedClient['nombre'],
+                    'LASTNAME1' => $loggedClient['apellido1'],
+                    'LASTNAME2' => $loggedClient['apellido2'],
+                    'CART' => array() // arreglo para el carrito
+                );
+    
+                $_SESSION['CLIENT'] = $clientSession;
+    
+                if(isset($_SESSION['CLIENT'])){
+                    $this->ajaxRequestResult(true, "Se ha iniciado sesion");
+                }else{
+                    $this->ajaxRequestResult(false, "Error al iniciar sesion");
+                }
             }
+            
             
         }
 
@@ -265,6 +292,11 @@
                 <?php } ?>
 
             <?php
+        }
+
+        // METODO PARA VALIDAR LOS MENSAJES DE ERRORES DE LOS SP (TRUE SI HAY ERROR, FALSE SI NO)
+        private function isErrorInResult($result){
+            return (isset($result['Error']) && $result['Error'] != "");
         }
 
     }
