@@ -1,6 +1,4 @@
-﻿--BD 1  dolares
-
---insert for Monedas
+﻿--insert for Monedas
 INSERT INTO Monedas (nombre, acronimo, monedaBase,simbolo) values
 ('Dolar', 'USD', 1, '$'),
 ('Colon', 'CRC', 0, '₡'),
@@ -39,7 +37,7 @@ VALUES
   ('Batería Externa', 6, 40, 1, 0.5, 'Batería portátil para dispositivos');
 
 
-  -- Insertar precios históricos para una moneda y un tipo de cambio  BD 1
+  -- insert for preciosHistóricos one moneda and a tipoDeCambio  BD 3
 INSERT INTO preciosHistoricos (idProducto, precio, idMoneda, idTipoDeCambio)
 VALUES
   (1, 500, 3, 3),

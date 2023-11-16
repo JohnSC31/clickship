@@ -1,6 +1,4 @@
-﻿--BD 1  dolares
-
---insert for Monedas
+﻿--insert for Monedas
 INSERT INTO Monedas (nombre, acronimo, monedaBase,simbolo) values
 ('Dolar', 'USD', 1, '$'),
 ('Colon', 'CRC', 0, '₡'),
@@ -24,7 +22,6 @@ VALUES
   
 
 --insert for productos
--- Insertar 10 productos básicos
 INSERT INTO productos (nombre, idTipoProducto, cantidad, estado, peso, descripcion)
 VALUES
   ('Teléfono', 1, 50, 1, 0.2, 'Teléfono móvil básico'),
@@ -39,7 +36,7 @@ VALUES
   ('Batería Externa', 6, 40, 1, 0.5, 'Batería portátil para dispositivos');
 
 
-  -- Insertar precios históricos para una moneda y un tipo de cambio  BD 1
+  -- insert for preciosHistóricos one moneda and a tipoDeCambio  BD 2
 INSERT INTO preciosHistoricos (idProducto, precio, idMoneda, idTipoDeCambio)
 VALUES
   (1, 500, 2, 2),
@@ -52,11 +49,3 @@ VALUES
   (8, 1249.99, 2, 2),
   (9, 1199.99, 2, 2),
   (10, 1299.99, 2, 2);
-
-
-
-select * from Monedas
-select * from TipoDeCambio
-select * from tiposProductos 
-select * from productos where estado = 1 or estado = 0
-select * from preciosHistoricos
