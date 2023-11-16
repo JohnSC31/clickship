@@ -21,7 +21,7 @@
                     </div>
                     <div class="field">
                         <label for="lastnames">Apellidos</label>
-                        <input type="text" name="lastnames" id="lastnames" value="<?php echo $_SESSION['CLIENT']['LASTNAME']; ?>">
+                        <input type="text" name="lastnames" id="lastnames" value="<?php echo $_SESSION['CLIENT']['LASTNAME1'] ." ".$_SESSION['CLIENT']['LASTNAME2']; ?>">
                     </div>
                 </form>
                 <div class="logout_container">

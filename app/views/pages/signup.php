@@ -7,8 +7,12 @@
                 <input type="text" name="name" id="name">
             </div>
             <div class="field">
-                <label for="lastnames">Apellidos</label>
-                <input type="text" name="lastnames" id="lastnames">
+                <label for="lastnames">Primer apellido</label>
+                <input type="text" name="lastnames" id="lastname1">
+            </div>
+            <div class="field">
+                <label for="lastnames">Segundo apellido</label>
+                <input type="text" name="lastnames" id="lastname2">
             </div>
             <div class="field">
                 <label for="email">Correo electrónico</label>

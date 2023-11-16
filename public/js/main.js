@@ -189,19 +189,23 @@ async function clientSignupForm(e){
 
   // optienen los campos del formulario
   const input_name = $('input#name');
-  const input_lastnames = $('input#lastnames');
+  const input_lastname1 = $('input#lastname1');
+  const input_lastname2 = $('input#lastname2');
+  
   const input_email = $('input#email');
   const input_pass = $('input#pass');
 
   // validan los datos
   if(!validInput(input_name.val(), false, "Ingrese un nombre")) return false;
-  if(!validInput(input_lastnames.val(), false, "Ingrese un apellido")) return false;
+  if(!validInput(input_lastname1.val(), false, "Ingrese un apellido")) return false;
+  if(!validInput(input_lastname2.val(), false, "Ingrese un apellido")) return false;
   if(!validEmail(input_email.val())) return false;
   if(!validPassword(input_pass.val())) return false;
 
   const signupFormData = new FormData();
   signupFormData.append('name', input_name.val());
-  signupFormData.append('lastnames', input_lastnames.val());
+  signupFormData.append('lastname1', input_lastname1.val());
+  signupFormData.append('lastname2', input_lastname2.val());
   signupFormData.append('email', input_email.val());
   signupFormData.append('pass', input_pass.val());
   signupFormData.append('ajaxMethod', "clientSignup");  
