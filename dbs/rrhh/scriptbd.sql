@@ -96,6 +96,17 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
+-- Table `mydb`.`Departamentos`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `mydb`.`Departamentos` ;
+
+CREATE TABLE IF NOT EXISTS `mydb`.`Departamentos` (
+  `departamentoID` INT NOT NULL,
+  `nombre` VARCHAR(100) NOT NULL,
+  PRIMARY KEY (`departamentoID`));
+
+
+-- -----------------------------------------------------
 -- Table `mydb`.`Empleados`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `mydb`.`Empleados` ;
@@ -107,9 +118,11 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Empleados` (
   `correo` VARCHAR(65) NOT NULL,
   `rolID` SMALLINT NOT NULL,
   `paisID` INT NOT NULL,
+  `departamentoID` INT NOT NULL,
   PRIMARY KEY (`empleadoID`),
   INDEX `fk_Empleados_Roles1_idx` (`rolID` ASC) VISIBLE,
   INDEX `fk_Empleados_Paises1_idx` (`paisID` ASC) VISIBLE,
+  INDEX `fk_Empleados_Departamentos1_idx` (`departamentoID` ASC) VISIBLE,
   CONSTRAINT `fk_Empleados_Roles1`
     FOREIGN KEY (`rolID`)
     REFERENCES `mydb`.`Roles` (`rolID`)
@@ -119,23 +132,10 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Empleados` (
     FOREIGN KEY (`paisID`)
     REFERENCES `mydb`.`Paises` (`paisID`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `mydb`.`EntradasEmpleadosLogs`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `mydb`.`EntradasEmpleadosLogs` ;
-
-CREATE TABLE IF NOT EXISTS `mydb`.`EntradasEmpleadosLogs` (
-  `empleadoID` INT NOT NULL,
-  `timestamp` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  INDEX `fk_EntradasEmpleadosLogs_Empleados1_idx` (`empleadoID` ASC) VISIBLE,
-  PRIMARY KEY (`empleadoID`, `timestamp`),
-  CONSTRAINT `fk_EntradasEmpleadosLogs_Empleados1`
-    FOREIGN KEY (`empleadoID`)
-    REFERENCES `mydb`.`Empleados` (`empleadoID`)
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Empleados_Departamentos1`
+    FOREIGN KEY (`departamentoID`)
+    REFERENCES `mydb`.`Departamentos` (`departamentoID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -148,9 +148,10 @@ DROP TABLE IF EXISTS `mydb`.`SalidasEmpleadosLogs` ;
 
 CREATE TABLE IF NOT EXISTS `mydb`.`SalidasEmpleadosLogs` (
   `empleadoID` INT NOT NULL,
-  `timestamp` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `dia` DATE NOT NULL,
+  `horas` DECIMAL(8,4) NOT NULL,
   INDEX `fk_EntradasEmpleadosLogs_Empleados1_idx` (`empleadoID` ASC) VISIBLE,
-  PRIMARY KEY (`empleadoID`, `timestamp`),
+  PRIMARY KEY (`empleadoID`, `dia`),
   CONSTRAINT `fk_EntradasEmpleadosLogs_Empleados10`
     FOREIGN KEY (`empleadoID`)
     REFERENCES `mydb`.`Empleados` (`empleadoID`)
