@@ -3,8 +3,7 @@ CREATE OR ALTER PROCEDURE dbo.Clickship_registerClient
     @pPassword NVARCHAR(50) = NULL, 
     @pFirstName NVARCHAR(40) = NULL, 
     @pLastName NVARCHAR(40) = NULL,
-	@pLastName2 NVARCHAR(40) = NULL, 
-    @responseMessage NVARCHAR(250) OUTPUT
+	@pLastName2 NVARCHAR(40) = NULL
 AS
 BEGIN
     SET NOCOUNT ON
@@ -12,27 +11,27 @@ BEGIN
 	-- Validate none of the params are null
 	IF (ISNULL(@pLogin, '')='')
 	BEGIN
-		SET @responseMessage='El correo no puede ser nulo'
+		SELECT 'El correo no puede ser nulo' 'Error';
 		RETURN
 	END
 	IF (ISNULL(@pPassword, '')='')
 	BEGIN
-		SET @responseMessage='La contraseña no puede ser nula'
+		SELECT 'La contraseña no puede ser nula' 'Error';
 		RETURN
 	END
 	IF (ISNULL(@pFirstName, '')='')
 	BEGIN
-		SET @responseMessage='El nombre no puede ser nulo'
+		SELECT 'El nombre no puede ser nulo' 'Error';
 		RETURN
 	END
 	IF (ISNULL(@pLastName, '')='')
 	BEGIN
-		SET @responseMessage='El primer apellido no puede ser nulo'
+		SELECT 'El primer apellido no puede ser nulo' 'Error';
 		RETURN
 	END
 	IF (ISNULL(@pLastName2, '')='')
 	BEGIN
-		SET @responseMessage='El segundo apellido no puede ser nulo'
+		SELECT 'El segundo apellido no puede ser nulo' 'Error';
 		RETURN
 	END
 
@@ -41,7 +40,7 @@ BEGIN
 	SET @existentClient = (SELECT idCliente FROM Clientes WHERE correo = @pLogin)
 	IF (ISNULL(@existentClient, -1)!=-1)
 	BEGIN
-		SET @responseMessage='El correo electronico ya está en uso'
+		SELECT 'El correo electronico ya está en uso' 'Error';
 		RETURN
 	END
 
@@ -51,7 +50,7 @@ BEGIN
         VALUES(@pLogin, HASHBYTES('SHA2_512', @pPassword), @pFirstName, @pLastName, @pLastName2)
     END TRY
     BEGIN CATCH
-        SET @responseMessage=ERROR_MESSAGE() 
+        SELECT ERROR_MESSAGE() 'Error' 
     END CATCH
 
 END
