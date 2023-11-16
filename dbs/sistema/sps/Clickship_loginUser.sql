@@ -1,7 +1,6 @@
 CREATE OR ALTER PROCEDURE dbo.Clickship_loginClient
     @pLogin NVARCHAR(50) = NULL, 
-    @pPassword NVARCHAR(50) = NULL, 
-    @responseMessage NVARCHAR(250) OUTPUT
+    @pPassword NVARCHAR(50) = NULL
 AS
 BEGIN
     SET NOCOUNT ON
@@ -9,12 +8,12 @@ BEGIN
 		-- Validate none of the params are null
 		IF (ISNULL(@pLogin, '')='')
 		BEGIN
-			SET @responseMessage='El correo no puede ser nulo'
+			SELECT 'El correo no puede ser nulo' 'Error';
 			RETURN
 		END
 		IF (ISNULL(@pPassword, '')='')
 		BEGIN
-			SET @responseMessage='La contraseña no puede ser nula'
+			SELECT 'La contraseña no puede ser nula' 'Error';
 			RETURN
 		END
 
@@ -22,7 +21,7 @@ BEGIN
 		SET @idClient = (SELECT idCliente FROM Clientes WHERE correo = @pLogin AND contrasena = HASHBYTES('SHA2_512', @pPassword))
 		IF(ISNULL(@idClient, -1)=-1)
 		BEGIN
-			SET @responseMessage='El correo o la contrasenna son incorrectos'
+			SELECT 'El correo o la contraseña son incorrectos' 'Error';
 			RETURN
 		END
 		ELSE
@@ -32,7 +31,7 @@ BEGIN
 		END
     END TRY
     BEGIN CATCH
-        SET @responseMessage=ERROR_MESSAGE() 
+        SELECT ERROR_MESSAGE() 'Error';
     END CATCH
 
 END
