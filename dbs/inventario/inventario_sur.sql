@@ -19,12 +19,6 @@ CREATE TABLE tipoDeCambio (
   precioCambio DECIMAL(10, 2)
 );
 
--- Tabla de afinidad
-CREATE TABLE afinidad (
-  idAfinidad INT PRIMARY KEY IDENTITY(1,1),
-  descripcion varchar(255) NOT NULL
-);
-
 -- Tabla de productos
 CREATE TABLE tipoProducto (
   idTipoProducto INT PRIMARY KEY IDENTITY(1,1),
@@ -36,15 +30,14 @@ CREATE TABLE productos (
   idProducto INT PRIMARY KEY IDENTITY(1,1),
   nombreProducto VARCHAR(255) UNIQUE NOT NULL,
   tipoProductoID int REFERENCES tipoProducto(idTipoProducto),
-  afinidadID int REFERENCES afinidad(idAfinidad),
-  monedaID smallint REFERENCES monedas(monedaID)
+  cantidadProducto INT,
+  estado BIT NOT NULL DEFAULT 1 
 );
 
 -- Tabla de inventario
 CREATE TABLE inventario_sur (
   idInventarioSur INT PRIMARY KEY IDENTITY(1,1),
-  productoID INT REFERENCES productos(idProducto),
-  cantidadProducto INT
+  productoID INT REFERENCES productos(idProducto)
 );
 
 -- Tabla detalles de productos
@@ -54,8 +47,7 @@ CREATE TABLE detallesProducto (
   peso DECIMAL(10, 2),
   dimensiones VARCHAR(255),
   descripcion TEXT,
-  monedaID smallint REFERENCES monedas(monedaID),
-  tipoDeCambioID INT REFERENCES tipoDeCambio(tipoDeCambioID)
+  
 );
 
 -- Tabla precios históricos
@@ -65,5 +57,6 @@ CREATE TABLE preciosHistoricos (
   fechaInicio DATETIME NOT NULL,
   fechaFin DATETIME,
   precio DECIMAL(10, 2) NOT NULL,
+  monedaID smallint REFERENCES monedas(monedaID),
   tipoDeCambioID INT REFERENCES tipoDeCambio(tipoDeCambioID)
 );
