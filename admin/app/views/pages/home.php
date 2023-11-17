@@ -3,6 +3,7 @@
     $inventoryRollsAccess = ['Admin', 'Jefe Inventario', 'Bodeguista'];
     $rrhhRollsAccess = ['Admin', 'Jefe RRHH', 'Trabajador RRHH'];
     $servicesRollsAccess = ['Admin', 'Jefe Servicio al Cliente', 'Asistente Callcenter'];
+    $configRollsAccess = ['Admin'];
 ?>
 <div class="admin_container">
     <div class="header_container">
@@ -23,6 +24,9 @@
                 <?php } 
                 if(($rolKey = array_search($_SESSION['ADMIN']['ROLE'], $servicesRollsAccess)) !== false){ ?>
                     <li data-admin-nav="client_service"><i class="fa-solid fa-phone"></i> <span class="hide_medium"> Servicio al cliente</span></li>
+                <?php } 
+                if(($rolKey = array_search($_SESSION['ADMIN']['ROLE'], $configRollsAccess)) !== false){ ?>
+                    <li data-admin-nav="settings"><i class="fa-solid fa-gear"></i> <span class="hide_medium"> Configuración</span></li>
                 <?php } ?>
             </ul>
 
@@ -42,6 +46,8 @@
         <?php require_once '../app/views/inc/admin-rrhh.php'; ?>
         <!-- PAGINA DE SERVICIO AL CLIENTE -->
         <?php require_once '../app/views/inc/admin-client-service.php'; ?>
+        <!-- PAGINA DE CONFIGURACIONES -->
+        <?php require_once '../app/views/inc/admin-settings.php'; ?>
         
     </div>
 </div>
