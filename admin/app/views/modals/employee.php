@@ -1,9 +1,12 @@
 
 <?php  
     // se obtiene los datos de la orden con el id de la orden
-    // datos del cliente
-    // detalle de la factura
-    $idEmployee = $data['data']['idEmployee'];
+
+    // se obtiene los datos de la orden
+    $this->db->query("{ CALL Clickship_getEmployeeById(?) }");
+    $this->db->bind(1, $data['data']['idEmployee']);
+
+    $employee = $this->db->result();
 ?>
 
 <div class="myModal modal_employee" >
@@ -17,10 +20,10 @@
             <div class="employee_photo">
                 <i class="fa-solid fa-user"></i>
             </div>
-            <p class="name_and_email">Nombre del empleado - <span>jostsace05@gmail.com</span></p>
-            <p class="country">Costa Rica</p>
-            <p class="department">Departamento</p>
-            <p class="hours">Horas Trabajadas: <span id="worked_hours">10</span></p>
+            <p class="name_and_email"><?php echo $employee['nombre']." ".$employee['apellidos']; ?> - <span><?php echo $employee['correo']; ?></span></p>
+            <p class="country">Salario: <?php echo $employee['salario']; ?></p>
+            <p class="department"><?php echo $employee['departamento']." - ".$employee['rol']; ?></p>
+            <p class="hours">Horas Trabajadas: <span id="worked_hours"></span></p>
        </div>
 
         <div class="employee_salary_container">

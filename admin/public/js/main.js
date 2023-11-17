@@ -37,6 +37,8 @@ const AJAX_URL = URL_PATH + 'app/controllers/Ajax.php';
       $("body").on("click", "[data-delete-product]", deleteProduct); // elimina producto
       $("body").on("submit", "form#edit_product", editProduct); // edita product
 
+      loadSelectOptions('catProduct'); // carga select de categorias
+
       // carrusel de imagenes del producto
       $("body").on("click", "[data-carrousel-pass]", function(e){
         e.stopPropagation();
@@ -49,12 +51,16 @@ const AJAX_URL = URL_PATH + 'app/controllers/Ajax.php';
       $("body").on("submit", "form#add_hours", addEmployeeHours); // agrega horas
       $("body").on("click", "[data-calc-paid]", calcEmployeePaid); // calcular el pago
       
-      
+      loadSelectOptions('country'); // carga select de paises
+      loadSelectOptions('rol'); // carga select de roles
+      loadSelectOptions('department'); // carga select de departamentos
+      loadSelectOptions('currency'); // carga select de monedas
 
       // -------------------------------------------------------------------SECCION DE SERVICIO AL CLIENTE
       initDataTable('service', 'loadDataTableService');
       $("body").on("submit", "form#add_call", addCall); // agrega llamada
       
+      loadSelectOptions('questionType'); // carga select de paises
   
     }); // end DOMContentLoaded
   
@@ -266,7 +272,7 @@ function initDataTable(table, ajaxMethod){
 function getDataTableColumns(table){
   var columns = new Array();
   //COLS PARA VENTAS
-  if(table === 'sells') columns = [{data: 'idSell'}, {data: 'clientName'}, {data: 'status'}, {data: 'store'}];
+  if(table === 'sells') columns = [{data: 'idSell'}, {data: 'clientName'}, {data: 'status'}, {data: 'date'}];
 
   // COLS PARA INVENTARIO
   if(table === 'inventory') columns = [{data: 'id'}, {data: 'name'}, {data: 'categorie'}, {data: 'price'}, {data: 'amount'}];
@@ -275,9 +281,7 @@ function getDataTableColumns(table){
   if(table === 'rrhh') columns = [{data: 'name'}, {data: 'email'}, {data: 'country'}, {data: 'rol'}, {data: 'department'}];
 
   // COLS PARA SERVICIO AL CLIENTE
-  if(table === 'service') columns = [{data: 'id'}, {data: 'employee'}, {data: 'date'}, {data: 'idOrder'}];
-
-  
+  if(table === 'service') columns = [{data: 'client'}, {data: 'type'}, {data: 'employee'}, {data: 'date'}, {data: 'idOrder'}];
 
   //PARA LAS ACCIONES
   columns.push({data: 'actions', "orderable": false });
@@ -306,22 +310,18 @@ function adminNavigation(option){
   // ACCIONES PARA LAS SECCIONES
   if($(option).attr("data-admin-nav") === 'sells'){
     refreshDataTables('sells'); // recarga la tabla
-    
   }
+
   if($(option).attr("data-admin-nav") === 'inventory'){
     refreshDataTables('inventory'); // recarga la tabla
-    loadSelectOptions('catProduct'); // carga select de categorias
   }
+
   if($(option).attr("data-admin-nav") === 'human_resources'){
     refreshDataTables('rrhh'); // recarga la tabla
-    loadSelectOptions('country'); // carga select de paises
-    loadSelectOptions('rol'); // carga select de roles
-    loadSelectOptions('department'); // carga select de departamentos
-    loadSelectOptions('currency'); // carga select de monedas
   }
+
   if($(option).attr("data-admin-nav") === 'client_service'){
     refreshDataTables('service'); // recarga la tabla
-    loadSelectOptions('questionType'); // carga select de paises
   }
 }
 

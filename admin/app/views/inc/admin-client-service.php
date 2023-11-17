@@ -37,11 +37,12 @@
         <table id="service-table" class="table table-striped table-bordered" style="width:100%">
             <thead>
                 <tr>
-                    <th width="5%">Id</th>
+                    <th width="25%">Cliente</th>
+                    <th width="10%">Tipo</th>
                     <th width="25%">Empleado</th>
                     <th width="20%">Fecha</th>
                     <th width="10%">Id de Orden</th>
-                    <th width="15%">Acciones</th>
+                    <th width="10%">Acciones</th>
                 </tr>
             </thead>
         </table>

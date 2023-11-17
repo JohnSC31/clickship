@@ -91,25 +91,30 @@
         // metodo para cargar las data table de ventas
         private function loadDataTableSells($REQUEST){
             // se realiza la consulta a la base de datos
-            $btnDetail = "<button type='button' class='btn btn-warning btn-sm' data-modal='order' data-modal-data='{\"idOrder\": 2}'><i class='fa-solid fa-eye'></i></button>";
-            $queryResults = array(
-                array(
-                    'idSell' => 1,
-                    'clientName' => "Jose luis",
-                    'status' => "Progreso",
-                    'store' => 1,
-                    'actions' => $btnDetail,
-                ),
-                array(
-                    'idSell' => 2,
-                    'clientName' => "Miguel de los angeles",
-                    'status' => "Finalizado",
-                    'store' => 2,
-                    'actions' => $btnDetail,
-                ),
-            );
+            $this->db->query("{ CALL Clickship_getVentas() }");
+            // NULLOS PORQUE TRAEN TODOS LOS RESULTADOS
 
-            echo $this->dataTableOutput($REQUEST['draw'], 2, 2, $queryResults);
+            $sells = $this->db->results(); // se obtienen de la base de datos
+            $totalRecords = count($sells);
+
+            // var_dump($employees);
+
+            $dataTableArray = array();
+
+            foreach($sells as $key => $row){
+                $row = get_object_vars($row);
+                $btnDetail = "<button type='button' class='btn btn-warning btn-sm' data-modal='order' data-modal-data='{\"idOrder\": ".$row['ordenID']."}'><i class='fa-solid fa-eye'></i></button>";
+
+                $sub_array = array();
+                $sub_array['idSell'] = $row['ordenID'];
+                $sub_array['clientName'] = $row['nombreCliente'];
+                $sub_array['status'] = $row['estado'];
+                $sub_array['date'] = date('j-n-Y', strtotime($row['fecha']));
+                $sub_array['actions'] = $btnDetail;
+                $dataTableArray[] = $sub_array;
+            }
+
+            echo $this->dataTableOutput(intval($REQUEST['draw']), $totalRecords, $totalRecords, $dataTableArray);
 
         }
 
@@ -124,29 +129,35 @@
         // metodo para cargas la datatable de inventario
         private function loadDataTableInventory($REQUEST){
             // se realiza la consulta a la base de datos
-            $btnDetail = "<button type='button' class='btn btn-warning btn-sm' data-modal='product' data-modal-data='{\"idProduct\": 2}'><i class='fa-solid fa-pen'></i></button>";
-            $btnDelete = "<button type='button' class='btn btn-danger btn-sm' data-delete-product='idproduct'><i class='fa-solid fa-trash'></i></button>";
 
-            $queryResults = array(
-                array(
-                    'id' => 1,
-                    'name' => "Nombre de producto",
-                    'categorie' => "Categoria",
-                    'price' => 1300,
-                    'amount' => 145,
-                    'actions' => $btnDetail . $btnDelete,
-                ),
-                array(
-                    'id' => 1,
-                    'name' => "Nombre de producto",
-                    'categorie' => "Categoria",
-                    'price' => 1300,
-                    'amount' => 145,
-                    'actions' => $btnDetail . $btnDelete,
-                )
-            );
+            $this->db->query("{ CALL Clickship_getProductos(?, ?) }");
+            // NULLOS PORQUE TRAEN TODOS LOS RESULTADOS
+            $this->db->bind(1, NULL);
+            $this->db->bind(2, NULL);
 
-            echo $this->dataTableOutput($REQUEST['draw'], 2, 2, $queryResults);
+            $products = $this->db->results(); // se obtienen de la base de datos
+            $totalRecords = count($products);
+
+            // var_dump($products);
+
+            $dataTableArray = array();
+
+            foreach($products as $key => $row){
+                $row = get_object_vars($row);
+                $btnDetail = "<button type='button' class='btn btn-warning btn-sm' data-modal='product' data-modal-data='{\"idProduct\": ".$row['idProducto']."}'><i class='fa-solid fa-pen'></i></button>";
+                $btnDelete = "<button type='button' class='btn btn-danger btn-sm' data-delete-product='".$row['idProducto']."'><i class='fa-solid fa-trash'></i></button>";
+
+                $sub_array = array();
+                $sub_array['id'] = $row['idProducto'];
+                $sub_array['name'] = $row['nombre'];
+                $sub_array['categorie'] = $row['tipoProducto'];
+                $sub_array['price'] = $row['precio'];
+                $sub_array['amount'] = $row['cantidad'];
+                $sub_array['actions'] = $btnDetail . $btnDelete;
+                $dataTableArray[] = $sub_array;
+            }
+
+            echo $this->dataTableOutput(intval($REQUEST['draw']), $totalRecords, $totalRecords, $dataTableArray);
         }
 
         // metodo para eliminar un producto de la base de datos
@@ -199,28 +210,30 @@
         // metodo para cargas la datatable de recursos humanos
         private function loadDataTableRrhh($REQUEST){
             // se realiza la consulta a la base de datos
-            $btnDetail = "<button type='button' class='btn btn-warning btn-sm' data-modal='employee' data-modal-data='{\"idEmployee\": 2}'><i class='fa-solid fa-pen'></i></button>";
+            
+            $this->db->query("{ CALL Clickship_getEmpleados()}");
+            $employees = $this->db->results(); // se obtienen de la base de datos
+            $totalRecords = count($employees);
 
-            $queryResults = array(
-                array(
-                    'name' => "Nombre del empleado",
-                    'email' => "email@gmail.com",
-                    'country' => "Pais",
-                    'rol' => "Rol",
-                    'department' => "Departamento",
-                    'actions' => $btnDetail,
-                ),
-                array(
-                    'name' => "Nombre del empleado",
-                    'email' => "email@gmail.com",
-                    'country' => "Pais",
-                    'rol' => "Rol",
-                    'department' => "Departamento",
-                    'actions' => $btnDetail,
-                )
-            );
+            // var_dump($employees);
 
-            echo $this->dataTableOutput($REQUEST['draw'], 2, 2, $queryResults);
+            $dataTableArray = array();
+
+            foreach($employees as $key => $row){
+                $row = get_object_vars($row);
+                $btnDetail = "<button type='button' class='btn btn-warning btn-sm' data-modal='employee' data-modal-data='{\"idEmployee\": ".$row["empleadoID"]."}'><i class='fa-solid fa-pen'></i></button>";
+
+                $sub_array = array();
+                $sub_array['name'] = $row['nombre'] ." ". $row['apellidos'];
+                $sub_array['email'] = $row['correo'];
+                $sub_array['country'] = $row['pais'];
+                $sub_array['rol'] = $row['rol'];
+                $sub_array['department'] = $row['departamento'];
+                $sub_array['actions'] = $btnDetail;
+                $dataTableArray[] = $sub_array;
+            }
+
+            echo $this->dataTableOutput(intval($REQUEST['draw']), $totalRecords, $totalRecords, $dataTableArray);
         }
 
         // se agrega un empleado a la base de datos
@@ -261,26 +274,30 @@
 
         // --------------------------- SECCION DE SERVICIO AL CLIENTE ---------------------------------------
         private function loadDataTableService($REQUEST){
-            $btnDetail = "<button type='button' class='btn btn-warning btn-sm' data-modal='call' data-modal-data='{\"idCall\": 2}'><i class='fa-solid fa-eye'></i></button>";
 
-            $queryResults = array(
-                array(
-                    'id' => "1",
-                    'employee' => "Nombre del empleado",
-                    'idOrder' => "123",
-                    'date' => "12/3/23",
-                    'actions' => $btnDetail,
-                ),
-                array(
-                    'id' => "2",
-                    'employee' => "Nombre del empleado",
-                    'idOrder' => "123",
-                    'date' => "12/3/23",
-                    'actions' => $btnDetail,
-                ),
-            );
+            $this->db->query("{ CALL Clickship_getLlamadas()}");
+            $calls = $this->db->results(); // se obtienen de la base de datos
+            $totalRecords = count($calls);
 
-            echo $this->dataTableOutput($REQUEST['draw'], 2, 2, $queryResults);
+            // var_dump($calls);
+
+            $dataTableArray = array();
+
+            foreach($calls as $key => $row){
+                $row = get_object_vars($row);
+                $btnDetail = "<button type='button' class='btn btn-warning btn-sm' data-modal='call' data-modal-data='{\"idCall\": ".$row['idLlamada']."}'><i class='fa-solid fa-eye'></i></button>";
+
+                $sub_array = array();
+                $sub_array['client'] = $row['cliente'];
+                $sub_array['type'] = $row['tipoPregunta'];
+                $sub_array['employee'] = $row['empleado'];
+                $sub_array['date'] = date('j-n-Y', strtotime($row['fecha']));
+                $sub_array['idOrder'] = $row['idOrden'];
+                $sub_array['actions'] = $btnDetail;
+                $dataTableArray[] = $sub_array;
+            }
+
+            echo $this->dataTableOutput(intval($REQUEST['draw']), $totalRecords, $totalRecords, $dataTableArray);
         }
 
         // metodo para agregar una llamada
@@ -296,12 +313,13 @@
             // se cargan las categorias
             if($select['idSelect'] ===  "catProduct"){
                 // carga categorias de home
-                $categories = []; // se obtienen de la base de datos
+                $this->db->query("{ CALL Clickship_getCategories()}");
+                $categories = $this->db->results(); // se obtienen de la base de datos
 
                 if(count($categories) > 0){ ?>
                     <option value="" selected >Categorias</option>
                     <?php foreach($categories as $categorie) { ?>
-                        <option value="<?php echo $categorie->idTipoProducto ?>"> <?php echo $categorie->descripcion; ?> </option>
+                        <option value="<?php echo $categorie->idTipoProducto ?>"> <?php echo $categorie->tipoProducto; ?> </option>
                     <?php }
                 }else{ ?>
                     <option value="">No hay Categorias</option>
@@ -386,7 +404,7 @@
                 if(count($types) > 0){ ?>
                     <option value="" selected >Tipos de preguntas</option>
                     <?php foreach($types as $type) { ?>
-                        <option value="<?php echo $type->preguntaID ?>"> <?php echo $type->pregunta; ?> </option>
+                        <option value="<?php echo $type->preguntaID ?>"> <?php echo $type->descripcion; ?> </option>
                     <?php }
                 }else{ ?>
                     <option value="">No hay Tipos de preguntas</option>

@@ -623,6 +623,15 @@ section.product_list{
     justify-content: center;
 }
 
+div.no_items_in_list{
+    border: 1px solid var(--blue);
+    border-radius: var(--radius);
+    width: 100%;
+    padding: 2rem 0;
+    text-align: center;
+    font-weight: bold;
+}
+
 /*////////////////////// -------------------------- SIGNUP --------------------------------------------- ///////////////////////*/
 section.signup{
    padding: 3rem 0;

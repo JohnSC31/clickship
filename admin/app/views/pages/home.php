@@ -1,8 +1,8 @@
 <?php
-    $sellsRollsAccess = ['Admin', 'Gerente'];
-    $inventoryRollsAccess = ['Admin', 'Gerente'];
-    $rrhhRollsAccess = ['Admin', 'Gerente'];
-    $servicesRollsAccess = ['Admin', 'Gerente'];
+    $sellsRollsAccess = ['Admin', 'Jefe Ventas', 'Manager de Ventas'];
+    $inventoryRollsAccess = ['Admin', 'Jefe Inventario', 'Bodeguista'];
+    $rrhhRollsAccess = ['Admin', 'Jefe RRHH', 'Trabajador RRHH'];
+    $servicesRollsAccess = ['Admin', 'Jefe Servicio al Cliente', 'Asistente Callcenter'];
 ?>
 <div class="admin_container">
     <div class="header_container">
