@@ -61,6 +61,17 @@ const AJAX_URL = URL_PATH + 'app/controllers/Ajax.php';
       $("body").on("submit", "form#add_call", addCall); // agrega llamada
       
       loadSelectOptions('questionType'); // carga select de paises
+
+      // -------------------------------------------------------------------SECCION DE CONFIGURACIONES
+      $("body").on("submit", "form#config_roll", validRollForm);
+      $("body").on("submit", "form#config_currency", validCurrencyForm);
+      $("body").on("submit", "form#config_country", validCountryForm);
+      $("body").on("submit", "form#config_categorie", validCategorieForm);
+      
+      
+      $("body").on("click", "[data-edit-config]", loadEditConfig); // cargar editar rol
+      $("body").on("click", "[data-delete-config]", deleteConfig);
+      
   
     }); // end DOMContentLoaded
   
@@ -322,6 +333,13 @@ function adminNavigation(option){
 
   if($(option).attr("data-admin-nav") === 'client_service'){
     refreshDataTables('service'); // recarga la tabla
+  }
+
+  if($(option).attr("data-admin-nav") === 'settings'){
+    loadConfigList("roll"); // carga los roles
+    loadConfigList("currency"); // carga las monedas
+    loadConfigList("country"); // cargar paises
+    loadConfigList("categorie"); // cargar categorias
   }
 }
 
@@ -623,6 +641,242 @@ async function addCall(e){
   }
   
 }
+
+// -------------------------------------------------- SECCION DE CONFIGURACION ---------------------------------------------------
+async function loadConfigList(configType){
+  const configFormData = new FormData();
+
+  configFormData.append('config', configType);
+  configFormData.append('ajaxMethod', "loadConfigs");
+
+  ajaxHTMLRequest(configFormData, "div#config_"+configType+"_list");
+}
+
+// FUNCION PARA CARGAR LAS CONFIGURACIONES EN EL FORMULARIO
+function loadEditConfig(e){
+  e.preventDefault();
+  const configType = $(this).attr('data-edit-config');
+  const configData = JSON.parse($(this).attr('data-config'));
+
+  if(configType === 'roll') loadEditRoll(configData);
+
+  if(configType ===  'currency') loadEditCurrency(configData);
+
+  if(configType ===  'country') loadEditCountry(configData);
+
+  if(configType ===  'categorie') loadEditCategorie(configData);
+}
+
+// para eliminar una configuracion
+async function deleteConfig(e){
+  e.preventDefault();
+  const configType = $(this).attr('data-delete-config');
+  const configData = JSON.parse($(this).attr('data-config'));
+
+  const configFormData = new FormData();
+
+  // eliminar un rols
+  configFormData.append('config', configType); 
+
+  configFormData.append('action', 'delete');
+
+  configFormData.append('idConfig', configData.idConfig);
+
+  configFormData.append('ajaxMethod', "adminConfigs");
+  result = await ajaxRequest(configFormData);
+
+  showNotification(result.Message, result.Success);
+
+  loadConfigList(configType); // actualizan los datos
+}
+
+// ---------------------------- ADMINSITRACION DE LOS ROLES
+function loadEditRoll(roll){
+  $("form#config_roll input#rol").val(roll.roll); // seteamos el rol
+  $("form#config_roll input#rolID").val(roll.rolID); // seteamos el id
+  $("form#config_roll input#action").val("edit"); // seteamos la action
+  $("form#config_roll input[type=submit]").val("Editar"); // seteamos la action
+}
+
+async function validRollForm(e){
+  e.preventDefault();
+
+  const input_rol = $('input#rol');
+  const action = $("form#config_roll input#action").val();
+  const rolID = $("form#config_roll input#rolID").val();
+
+  if(!validInput(input_rol.val(), false, "Ingrese un rol")) return false;
+
+  const configFormData = new FormData();
+
+  configFormData.append('rol', input_rol.val());
+
+  configFormData.append('config', "roll"); 
+  configFormData.append('action', action);
+
+  if(action === 'edit'){
+    configFormData.append('rolID', rolID);
+  }
+
+  configFormData.append('ajaxMethod', "adminConfigs");  
+
+  result = await ajaxRequest(configFormData);
+
+  showNotification(result.Message, result.Success);
+
+  if(result.Success){
+    // resetear el form
+    $(this)[0].reset();// se resetea al formulario
+    $("form#config_roll input#action").val("add"); // seteamos la action
+    $("form#config_roll input[type=submit]").val("Agregar"); // seteamos la action
+    loadConfigList('roll'); // actualizan los roles
+  }
+}
+
+// ---------------------------- ADMINSITRACION DE LAS MONEDAS
+function loadEditCurrency(currency){
+  $("form#config_currency input#currency").val(currency.nombre); 
+  $("form#config_currency input#acronym").val(currency.acronimo); 
+  $("form#config_currency input#symbol").val(currency.simbolo); 
+  $("form#config_currency input#currencyID").val(currency.monedaID); 
+
+  $("form#config_currency input#action").val("edit"); // seteamos la action
+  $("form#config_currency input[type=submit]").val("Editar"); // seteamos la action
+}
+
+async function validCurrencyForm(e){
+  e.preventDefault();
+
+  const input_currency = $('input#currency');
+  const input_acronym = $('input#acronym');
+  const input_symbol = $('input#symbol ');
+
+  const action = $("form#config_currency input#action").val();
+  const currencyID = $("form#config_currency input#currencyID").val();
+
+  if(!validInput(input_currency.val(), false, "Ingrese un nombre")) return false;
+  if(!validInput(input_acronym.val(), false, "Ingrese un acronimo")) return false;
+  if(!validInput(input_symbol.val(), false, "Ingrese un simbolo")) return false;
+
+  const configFormData = new FormData();
+
+  configFormData.append('currency', input_currency.val());
+  configFormData.append('acronym', input_acronym.val());
+  configFormData.append('symbol', input_symbol.val());
+
+  configFormData.append('config', "currency"); 
+  configFormData.append('action', action);
+
+  if(action === 'edit'){
+    configFormData.append('currencyID', currencyID);
+  }
+
+  configFormData.append('ajaxMethod', "adminConfigs");  
+
+  result = await ajaxRequest(configFormData);
+
+  showNotification(result.Message, result.Success);
+
+  if(result.Success){
+    // resetear el form
+    $(this)[0].reset();// se resetea al formulario
+    $(this).find("input#action").val("add"); // seteamos la action
+    $(this).find("input[type=submit]").val("Agregar"); // seteamos la action
+    loadConfigList('currency'); // actualizan los roles
+  }
+}
+
+// ---------------------------- ADMINSITRACION DE LOS PAISES
+function loadEditCountry(country){
+  $("form#config_country input#country").val(country.nombre); 
+  $("form#config_country input#countryID").val(country.paisID); 
+
+  $("form#config_country input#action").val("edit"); // seteamos la action
+  $("form#config_country input[type=submit]").val("Editar"); // seteamos la action
+}
+
+async function validCountryForm(e){
+  e.preventDefault();
+
+  const input_country = $('input#country');
+
+  const action = $("form#config_country input#action").val();
+  const countryID = $("form#config_currency input#countryID").val();
+
+  if(!validInput(input_country.val(), false, "Ingrese un nombre")) return false;
+
+  const configFormData = new FormData();
+
+  configFormData.append('currency', input_country.val());
+
+  configFormData.append('config', "country"); 
+  configFormData.append('action', action);
+
+  if(action === 'edit'){
+    configFormData.append('countryID', countryID);
+  }
+
+  configFormData.append('ajaxMethod', "adminConfigs");  
+
+  result = await ajaxRequest(configFormData);
+
+  showNotification(result.Message, result.Success);
+
+  if(result.Success){
+    // resetear el form
+    $(this)[0].reset();// se resetea al formulario
+    $(this).find("input#action").val("add"); // seteamos la action
+    $(this).find("input[type=submit]").val("Agregar"); // seteamos la action
+    loadConfigList('country'); // actualizan los roles
+  }
+}
+
+// ---------------------------- ADMINSITRACION DE LAS CATEGORIAS
+function loadEditCategorie(categorie){
+  $("form#config_categorie input#categorie").val(categorie.tipoProducto); 
+  $("form#config_categorie input#categorieID").val(categorie.idTipoProducto); 
+
+  $("form#config_categorie input#action").val("edit"); // seteamos la action
+  $("form#config_categorie input[type=submit]").val("Editar"); // seteamos la action
+}
+
+async function validCategorieForm(e){
+  e.preventDefault();
+
+  const input_categorie = $('input#categorie');
+
+  const action = $("form#config_categorie input#action").val();
+  const categorieID = $("form#config_currency input#categorieID").val();
+
+  if(!validInput(input_categorie.val(), false, "Ingrese una categoria")) return false;
+
+  const configFormData = new FormData();
+
+  configFormData.append('categorie', input_categorie.val());
+
+  configFormData.append('config', "categorie"); 
+  configFormData.append('action', action);
+
+  if(action === 'edit'){
+    configFormData.append('categorieID', categorieID);
+  }
+
+  configFormData.append('ajaxMethod', "adminConfigs");  
+
+  result = await ajaxRequest(configFormData);
+
+  showNotification(result.Message, result.Success);
+
+  if(result.Success){
+    // resetear el form
+    $(this)[0].reset();// se resetea al formulario
+    $(this).find("input#action").val("add"); // seteamos la action
+    $(this).find("input[type=submit]").val("Agregar"); // seteamos la action
+    loadConfigList('categorie'); // actualizan los roles
+  }
+}
+
+
 
 
 ///////////// ************************ CARGAR LOS SELECT ************************ ///////////////

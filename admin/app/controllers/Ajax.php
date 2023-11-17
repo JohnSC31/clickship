@@ -336,7 +336,7 @@
                 if(count($countries) > 0){ ?>
                     <option value="" selected >Paises</option>
                     <?php foreach($countries as $country) { ?>
-                        <option value="<?php echo $country->id ?>"> <?php echo $country->nombre; ?> </option>
+                        <option value="<?php echo $country->paisID ?>"> <?php echo $country->nombre; ?> </option>
                     <?php }
                 }else{ ?>
                     <option value="">No hay Paises</option>
@@ -353,7 +353,7 @@
                 if(count($rols) > 0){ ?>
                     <option value="" selected >Roles</option>
                     <?php foreach($rols as $rol) { ?>
-                        <option value="<?php echo $rol->id ?>"> <?php echo $rol->rol; ?> </option>
+                        <option value="<?php echo $rol->rolID ?>"> <?php echo $rol->rol; ?> </option>
                     <?php }
                 }else{ ?>
                     <option value="">No hay Roles</option>
@@ -387,7 +387,7 @@
                 if(count($currencies) > 0){ ?>
                     <option value="" selected >Monedas</option>
                     <?php foreach($currencies as $currency) { ?>
-                        <option value="<?php echo $currency->id ?>"> <?php echo $currency->simbolo." ".$currency->nombre; ?> </option>
+                        <option value="<?php echo $currency->monedaID ?>"> <?php echo $currency->simbolo." ".$currency->nombre; ?> </option>
                     <?php }
                 }else{ ?>
                     <option value="">No hay Monedas</option>
@@ -409,6 +409,152 @@
                 }else{ ?>
                     <option value="">No hay Tipos de preguntas</option>
                 <?php }
+            }
+        }
+
+        // --------------------------- SECCION DE CONFIGURACIONES -------------------------------------------
+        private function loadConfigs($data){
+            // se cargan los roles para las configuraciones
+            if($data['config'] === 'roll'){
+                // se cargan los roles
+                $this->db->query("{ CALL Clickship_getRoles()}");
+                $rolls = $this->db->results(); // se obtienen de la base de datos
+
+                foreach($rolls as $key => $rol){ ?>
+                    <div class="config_item">
+                        <p><?php echo $rol->rolID ?></p>
+                        <p><?php echo $rol->rol; ?></p>
+                        <div class="config_actions">
+                            <button class="btn btn_edit_config" data-edit-config="roll" data-config='{"rolID":<?php echo $rol->rolID?>, "roll": "<?php echo $rol->rol; ?>"}'><i class="fa-solid fa-pen"></i></button>
+                            <button class="btn btn_delete_config" data-delete-config="roll" data-config='{"idConfig":<?php echo $rol->rolID?>}'><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    </div>
+                <?php }
+            }
+
+            if($data['config'] === 'currency'){
+                // se cargan las monedas
+                $this->db->query("{ CALL Clickship_getMonedas()}");
+                $currencies = $this->db->results(); // se obtienen de la base de datos
+
+                foreach($currencies as $key => $currency){ ?>
+                    <div class="config_item">
+                        <p><?php echo $currency->monedaID; ?></p>
+                        <p><?php echo $currency->simbolo ." ".$currency->nombre ." (".$currency->acronimo .")"; ?></p>
+                        <div class="config_actions">
+                            <button class="btn btn_edit_config" data-edit-config="currency" data-config='<?php echo json_encode($currency); ?>'>
+                            <i class="fa-solid fa-pen"></i></button>
+                            <button class="btn btn_delete_config" data-delete-config="currency" data-config='{"idConfig":<?php echo $currency->monedaID; ?>}'><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    </div>
+                <?php }
+            }
+
+            if($data['config'] === 'country'){
+                // se cargan las monedas
+                $this->db->query("{ CALL Clickship_getPaises()}");
+                $countries = $this->db->results(); // se obtienen de la base de datos
+
+                foreach($countries as $key => $country){ ?>
+                    <div class="config_item">
+                        <p><?php echo $country->paisID; ?></p>
+                        <p><?php echo $country->nombre ?></p>
+                        <div class="config_actions">
+                            <button class="btn btn_edit_config" data-edit-config="country" data-config='<?php echo json_encode($country); ?>'>
+                            <i class="fa-solid fa-pen"></i></button>
+                            <button class="btn btn_delete_config" data-delete-config="country" data-config='{"idConfig":<?php echo $country->paisID; ?>}'><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    </div>
+                <?php }
+            }
+
+            if($data['config'] === 'categorie'){
+                // se cargan las monedas
+                $this->db->query("{ CALL Clickship_getCategories()}");
+                $categories = $this->db->results(); // se obtienen de la base de datos
+
+                foreach($categories as $key => $categorie){ ?>
+                    <div class="config_item">
+                        <p><?php echo $categorie->idTipoProducto; ?></p>
+                        <p><?php echo $categorie->tipoProducto; ?></p>
+                        <div class="config_actions">
+                            <button class="btn btn_edit_config" data-edit-config="categorie" data-config='<?php echo json_encode($categorie); ?>'>
+                            <i class="fa-solid fa-pen"></i></button>
+                            <button class="btn btn_delete_config" data-delete-config="categorie" data-config='{"idConfig":<?php echo $categorie->idTipoProducto; ?>}'><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    </div>
+                <?php }
+            }
+        }
+
+        // Metodo para adminitrar las configuraciones, eliminar, editar o agregar
+        private function adminConfigs($config){
+            // adminsitracion de roles
+            if($config['config'] === 'roll'){
+                if($config['action'] === 'add'){
+
+                    $this->ajaxRequestResult(true, "Se ha agregado un rol");
+                }
+                if($config['action'] === 'edit'){
+                    $this->ajaxRequestResult(true, "Se ha editado el rol");
+
+                }
+                if($config['action'] === 'delete'){
+                    $this->ajaxRequestResult(true, "Se ha eliminado el rol");
+
+                }
+                
+            }
+
+            // adminsitracion de monedas
+            if($config['config'] === 'currency'){
+                if($config['action'] === 'add'){
+
+                    $this->ajaxRequestResult(true, "Se ha agregado una moneda");
+                }
+                if($config['action'] === 'edit'){
+                    $this->ajaxRequestResult(true, "Se ha editado una moneda");
+
+                }
+                if($config['action'] === 'delete'){
+                    $this->ajaxRequestResult(true, "Se ha eliminado una moneda");
+
+                }
+                
+            }
+
+            // adminsitracion de paises
+            if($config['config'] === 'country'){
+                if($config['action'] === 'add'){
+
+                    $this->ajaxRequestResult(true, "Se ha agregado un pais");
+                }
+                if($config['action'] === 'edit'){
+                    $this->ajaxRequestResult(true, "Se ha editado un pais");
+
+                }
+                if($config['action'] === 'delete'){
+                    $this->ajaxRequestResult(true, "Se ha eliminado un pais");
+
+                }
+                
+            }
+
+            // adminsitracion de categorias
+            if($config['config'] === 'categorie'){
+                if($config['action'] === 'add'){
+
+                    $this->ajaxRequestResult(true, "Se ha agregado una categoria");
+                }
+                if($config['action'] === 'edit'){
+                    $this->ajaxRequestResult(true, "Se ha editado una categoria");
+
+                }
+                if($config['action'] === 'delete'){
+                    $this->ajaxRequestResult(true, "Se ha eliminado una categoria");
+
+                }
+                
             }
         }
 

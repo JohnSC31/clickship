@@ -283,6 +283,7 @@ div.config_container{
     background-color: var(--grey);
     padding: 1rem;
     border-radius: var(--radius);
+    margin: 1rem 0;
 }
 
 div.config_container form{
