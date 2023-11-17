@@ -8,7 +8,7 @@
                     <th>Venta</th>
                     <th>Cliente</th>
                     <th>Estado</th>
-                    <th>Bodega</th>
+                    <th>Fecha</th>
                     <th>Acciones</th>
                 </tr>
             </thead>

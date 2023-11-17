@@ -1,5 +1,7 @@
 
 <?php
+
+    
     $product = []; // se obtiene desde la base
     $data['idProduct'];
     

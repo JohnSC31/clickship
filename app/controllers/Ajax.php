@@ -225,24 +225,44 @@
         // METODO PARA CARGAR LOS PRODUCTOS DE LA BASE DE DATOS
         private function loadProducts($filters){
             $search = isset($filters['search']) ? $filters['search'] : NULL;
-            $idCategorie = isset($filters['idCategorie']) ? $filters['idCategorie'] : NULL;
+            $idCategorie = isset($filters['idCategorie']) ? intval($filters['idCategorie']) : NULL;
 
             // se realiza la consulta de los productos en base a estos filtros
             
+            $this->db->query("{ CALL Clickship_getProductos(?, ?) }");
+            // NULLOS PORQUE TRAEN TODOS LOS RESULTADOS
+            $this->db->bind(1, $search);
+            $this->db->bind(2, $idCategorie);
+
+            $products = $this->db->results(); // se obtienen de la base de datos
+
+            // var_dump($search, $idCategorie);
+            
             // se carga el html de los productos
-            for($i = 0; $i < 8; $i++){ ?>
-                <div class="product_item" data-item="<?php echo $i; ?>">
-                    <div class="img_product" style="background-image: url(<?php echo URL_PATH; ?>public/img/product.jpeg)"></div>
-                    <div class="product_detail">
-                        <p>Nombre de producto</p>
-                        <p class="price">$30</p>
-                        <div class="product_action">
-                            <a href="javascript:void(0);" class="btn btn_yellow <?php echo !isset($_SESSION['CLIENT']) ? "disabled" : ""; ?>" 
-                            data-cart="add" data-id="<?php echo $i; ?>" data-name="Producto <?php echo $i; ?>" data-price="15"> <i class="fa-solid fa-plus"></i> Agregar</a>
+            if(count($products) > 0){
+                foreach($products as $key => $product){
+                    $product = get_object_vars($product); ?>
+
+                    <div class="product_item" data-item="<?php echo $product['idProducto']; ?>">
+                        <div class="img_product" style="background-image: url(<?php echo URL_PATH; ?>public/img/product.jpeg)"><?php echo $product['foto']; ?></div>
+                        <div class="product_detail">
+                            <p><?php echo $product['nombre']." - ".$product['tipoProducto']; ?></p>
+                            <p class="price"><?php echo $product['simbolo']." ".$product['precio']; ?></p>
+                            <div class="product_action">
+                                <a href="javascript:void(0);" class="btn btn_yellow <?php echo !isset($_SESSION['CLIENT']) ? "disabled" : ""; ?>" 
+                                data-cart="add" data-id="<?php echo $product['idProducto']; ?>" data-name="<?php echo $product['nombre']; ?>" data-price="<?php echo $product['precio']; ?>"> <i class="fa-solid fa-plus"></i> Agregar</a>
+                            </div>
                         </div>
                     </div>
-                </div>
-            <?php } 
+                <?php } 
+            }else{
+                ?>
+                    <div class="no_items_in_list">
+                        <p>No hay productos para tu busqueda </p>
+                    </div>
+                
+                <?php
+            }
         }
         
         // METODO PARA CREAR UNA ORDEN DEL CLIENTE CON LO QUE TIENE EN EL CARRITO
@@ -263,12 +283,13 @@
             // se cargan las categorias
             if($select['idSelect'] ===  "select_categorie"){
                 // carga categorias de home
-                $categories = []; // se obtienen de la base de datos
+                $this->db->query("{ CALL Clickship_getCategories()}");
+                $categories = $this->db->results(); // se obtienen de la base de datos
 
                 if(count($categories) > 0){ ?>
                     <option value="" selected >Categorias</option>
                     <?php foreach($categories as $categorie) { ?>
-                        <option value="<?php echo $categorie->idTipoProducto ?>"> <?php echo $categorie->descripcion; ?> </option>
+                        <option value="<?php echo $categorie->idTipoProducto ?>"> <?php echo $categorie->tipoProducto; ?> </option>
                     <?php }
                 }else{ ?>
                     <option value="">No hay Categorias</option>
@@ -278,20 +299,27 @@
 
         // METODO PARA CARGAR LAS ORDENES DE UN CLIENTE EN EL PERFIL
         private function loadClientOrders($data){
-            $_SESSION['CLIENT']['CID'];
-            $orders = [1,2,3,4,5]; //obtienen en base de datos con el id del cliente 
+            
+            $this->db->query("{ CALL Clickship_getProductos(?) }");
+            $this->db->bind(1, $_SESSION['CLIENT']['CID']);
+            $orders = $this->db->results(); //obtienen en base de datos con el id del cliente 
 
-            foreach($orders as $key => $value){ ?>
-                <div class="order">
-                    <p><?php echo "Estado"; ?></p>
-                    <p><?php echo "9/9/23"; ?></p>
-                    <p><?php echo "Total"; ?> </p>
-                    <a href="javascript:void(0);" class="btn btn_blue" data-modal="order">Ver</a>
-                    
+            if(count($orders) > 0){
+                foreach($orders as $key => $order){ ?>
+                    <div class="order">
+                        <p><?php echo $order['estado']; ?></p>
+                        <p><?php echo $order['fecha']; ?></p>
+                        <p><?php echo $order['simbolo'] ." ".$order['montoTotal']; ?> </p>
+                        <a href="javascript:void(0);" class="btn btn_blue" data-modal="order">Ver</a>
+                        
+                    </div>
+                <?php } 
+            }else{ ?>
+                <div class="no_items_in_list">
+                    <p>No hay ordenes aun</p>
                 </div>
-                <?php } ?>
-
-            <?php
+            <?php }
+            
         }
 
         // METODO PARA VALIDAR LOS MENSAJES DE ERRORES DE LOS SP (TRUE SI HAY ERROR, FALSE SI NO)
