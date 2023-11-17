@@ -16,11 +16,15 @@ VALUES ('Recibido'),
 	   ('Finalizado'),
 	   ('En revision')
 
-INSERT INTO Ordenes (ClienteID, Fecha, CostoTotal, EstadoActualID, PaisID, Ubicacion, Direccion, MonedaID)
-VALUES (1, '2023-11-13 21:10:05', 45000, 1, 2, geography::STGeomFromText('POLYGON((-122.358 47.653 , -122.348 47.649, -122.348 47.658, -122.358 47.658, -122.358 47.653))', 4326), '', 2),
-	   (2, '2023-11-14 09:23:45', 10, 1, 1, geography::STGeomFromText('POLYGON((-22.358 47.653 , -22.348 47.649, -22.348 47.658, -22.358 47.658, -22.358 47.653))', 4326), '', 1),
-	   (1, '2023-11-15 12:57:32', 5000, 1, 2, geography::STGeomFromText('POLYGON((-122.358 47.653 , -122.348 47.649, -122.348 47.658, -122.358 47.658, -122.358 47.653))', 4326), '', 2)
+INSERT INTO Ordenes (ClienteID, Fecha, CostoTotal, EstadoActualID, PaisID, UbicacionID, Direccion, MonedaID)
+VALUES (1, '2023-11-13 21:10:05', 45000, 1, 2, 1, '', 2),
+	   (2, '2023-11-14 09:23:45', 10, 1, 1, 2, '', 1),
+	   (1, '2023-11-15 12:57:32', 5000, 1, 2, 3, '', 2)
 
+INSERT INTO Ubicaciones (Ubicacion)
+VALUES (geography::STGeomFromText('POLYGON((-122.358 47.653 , -122.348 47.649, -122.348 47.658, -122.358 47.658, -122.358 47.653))', 4326)),
+	    (geography::STGeomFromText('POLYGON((-22.358 47.653 , -22.348 47.649, -22.348 47.658, -22.358 47.658, -22.358 47.653))', 4326)),
+		(geography::STGeomFromText('POLYGON((-122.358 47.653 , -122.348 47.649, -122.348 47.658, -122.358 47.658, -122.358 47.653))', 4326))
 
 INSERT INTO ProductosXOrden (OrdenID, ProductoID, Cantidad)
 VALUES (1, 1, 5),
