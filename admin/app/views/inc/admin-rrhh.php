@@ -11,7 +11,7 @@
                         <input type="text" name="name" id="employee_name" require>
                     </div>
                     <div class="field">
-                        <label for="lastname">Apellido</label>
+                        <label for="lastname">Apellidos</label>
                         <input type="text" name="lastname" id="lastname" require>
                     </div>
                     <div class="field">

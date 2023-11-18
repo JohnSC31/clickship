@@ -27,17 +27,17 @@ const AJAX_URL = URL_PATH + 'app/controllers/Ajax.php';
 
       // INICIALIZACION DE LA DATA TABLES
       // -------------------------------------------------------------------SECCION DE VENTAS
-      initDataTable('sells', 'loadDataTableSells');
+      // initDataTable('sells', 'loadDataTableSells');
       $("body").on("click", "[data-update-order-status]", changeOrderStatus);
       
 
       // -------------------------------------------------------------------SECCION DE INVENTARIO
-      initDataTable('inventory', 'loadDataTableInventory');
+      // initDataTable('inventory', 'loadDataTableInventory');
       $("body").on("submit", "form#add_product", addProduct); // agrega producto
       $("body").on("click", "[data-delete-product]", deleteProduct); // elimina producto
       $("body").on("submit", "form#edit_product", editProduct); // edita product
 
-      loadSelectOptions('catProduct'); // carga select de categorias
+      // loadSelectOptions('catProduct'); // carga select de categorias
 
       // carrusel de imagenes del producto
       $("body").on("click", "[data-carrousel-pass]", function(e){
@@ -46,21 +46,16 @@ const AJAX_URL = URL_PATH + 'app/controllers/Ajax.php';
       });
 
       // -------------------------------------------------------------------SECCION DE RECURSOS HUMANOS
-      initDataTable('rrhh', 'loadDataTableRrhh');
+      // initDataTable('rrhh', 'loadDataTableRrhh');
       $("body").on("submit", "form#add_employee", addEmployee); // agrega empleado
       $("body").on("submit", "form#add_hours", addEmployeeHours); // agrega horas
       $("body").on("click", "[data-calc-paid]", calcEmployeePaid); // calcular el pago
-      
-      loadSelectOptions('country'); // carga select de paises
-      loadSelectOptions('rol'); // carga select de roles
-      loadSelectOptions('department'); // carga select de departamentos
-      loadSelectOptions('currency'); // carga select de monedas
 
       // -------------------------------------------------------------------SECCION DE SERVICIO AL CLIENTE
-      initDataTable('service', 'loadDataTableService');
+      // initDataTable('service', 'loadDataTableService');
       $("body").on("submit", "form#add_call", addCall); // agrega llamada
       
-      loadSelectOptions('questionType'); // carga select de paises
+      
 
       // -------------------------------------------------------------------SECCION DE CONFIGURACIONES
       $("body").on("submit", "form#config_roll", validRollForm);
@@ -71,6 +66,8 @@ const AJAX_URL = URL_PATH + 'app/controllers/Ajax.php';
       
       $("body").on("click", "[data-edit-config]", loadEditConfig); // cargar editar rol
       $("body").on("click", "[data-delete-config]", deleteConfig);
+
+      
       
   
     }); // end DOMContentLoaded
@@ -105,7 +102,7 @@ function openModal(e){
 
     // acciones para los modals
     if(modalName === "product"){
-      loadSelectOptions('catProduct');
+      // loadSelectOptions('catProduct');
     }
   });
 }
@@ -320,26 +317,58 @@ function adminNavigation(option){
 
   // ACCIONES PARA LAS SECCIONES
   if($(option).attr("data-admin-nav") === 'sells'){
-    refreshDataTables('sells'); // recarga la tabla
+
+    if ( ! $.fn.DataTable.isDataTable('#sells-table') ) {
+      initDataTable('sells', 'loadDataTableSells');
+    }else{
+      refreshDataTables('sells'); // recarga la tabla
+    }
+    
   }
 
   if($(option).attr("data-admin-nav") === 'inventory'){
-    refreshDataTables('inventory'); // recarga la tabla
+    
+    if ( ! $.fn.DataTable.isDataTable('#inventory-table') ) {
+      initDataTable('inventory', 'loadDataTableInventory');
+    }else{
+      refreshDataTables('inventory'); // recarga la tabla
+    }
+
+    loadSelectOptions('catProduct'); // carga select de categoria
   }
 
   if($(option).attr("data-admin-nav") === 'human_resources'){
-    refreshDataTables('rrhh'); // recarga la tabla
+
+    if ( ! $.fn.DataTable.isDataTable('#rrhh-table') ) {
+      initDataTable('rrhh', 'loadDataTableRrhh');
+    }else{
+      refreshDataTables('rrhh'); // recarga la tabla
+    }
+
+    loadSelectOptions('country'); // carga select de paises
+    loadSelectOptions('rol'); // carga select de roles
+    loadSelectOptions('department'); // carga select de departamentos
+    loadSelectOptions('currency'); // carga select de monedas
   }
 
   if($(option).attr("data-admin-nav") === 'client_service'){
-    refreshDataTables('service'); // recarga la tabla
+    
+    if ( ! $.fn.DataTable.isDataTable('#service-table') ) {
+      initDataTable('service', 'loadDataTableService');
+    }else{
+      refreshDataTables('service'); // recarga la tabla
+    }
+    
+    loadSelectOptions('questionType'); // carga select de paises
   }
 
   if($(option).attr("data-admin-nav") === 'settings'){
     loadConfigList("roll"); // carga los roles
     loadConfigList("currency"); // carga las monedas
     loadConfigList("country"); // cargar paises
+    loadSelectOptions('currency_country'); // carga select de paises
     loadConfigList("categorie"); // cargar categorias
+    
   }
 }
 
@@ -376,6 +405,7 @@ async function addProduct(e){
   const input_price = $('input#price');
   const textarea_detail = $('textarea#detail');
 
+  const input_weight = $('input#weight');
   const input_AmountStore1 = $('input#amountStore1');
   const input_AmountStore2 = $('input#amountStore2');
   const input_AmountStore3 = $('input#amountStore3');
@@ -388,6 +418,7 @@ async function addProduct(e){
   if(!validInput(input_price.val(), false, "Ingrese un precio")) return false;
   if(!validInput(textarea_detail.val(), false, "Ingrese un detalle")) return false;
 
+  if(!validInput(input_weight.val(), false, "Ingrese un peso")) return false;
   if(!validInput(input_AmountStore1.val(), false, "Ingrese una cantidad para bodega 1")) return false;
   if(!validInput(input_AmountStore2.val(), false, "Ingrese una cantidad para bodega 2")) return false;
   if(!validInput(input_AmountStore3.val(), false, "Ingrese una cantidad para bodega 3")) return false;
@@ -402,6 +433,7 @@ async function addProduct(e){
   productFormData.append('price', input_price.val());
   productFormData.append('detail', textarea_detail.val());
 
+  productFormData.append('weight', input_weight.val());
   productFormData.append('amountStore1', input_AmountStore1.val());
   productFormData.append('amountStore2', input_AmountStore2.val());
   productFormData.append('amountStore3', input_AmountStore3.val());
@@ -502,11 +534,11 @@ function changeCarrouselImage(button){
   var current_image = parseInt($('input#input-'+carrousel_id).attr('data-current-image'));
 
   if($(button).attr('data-carrousel-pass') === 'left'){
-    current_image = current_image - 1 < 0 ? max_image: current_image -= 1;
+    current_image = (current_image - 1) < 1 ? max_image : (current_image -= 1);
   }
 
   if($(button).attr('data-carrousel-pass') === 'right'){
-    current_image = current_image + 1 > max_image ? 0 : current_image += 1;
+    current_image = (current_image + 1) > max_image ? 1 : (current_image += 1);
   }
   // se actualiza la imagen actual
   $('input#input-'+carrousel_id).attr('data-current-image', current_image);
@@ -724,13 +756,12 @@ async function validRollForm(e){
 
   showNotification(result.Message, result.Success);
 
-  if(result.Success){
-    // resetear el form
-    $(this)[0].reset();// se resetea al formulario
-    $("form#config_roll input#action").val("add"); // seteamos la action
-    $("form#config_roll input[type=submit]").val("Agregar"); // seteamos la action
-    loadConfigList('roll'); // actualizan los roles
-  }
+  // resetear el form
+  $(this)[0].reset();// se resetea al formulario
+  $("form#config_roll input#action").val("add"); // seteamos la action
+  $("form#config_roll input[type=submit]").val("Agregar"); // seteamos la action
+  loadConfigList('roll'); // actualizan los roles
+  
 }
 
 // ---------------------------- ADMINSITRACION DE LAS MONEDAS
@@ -790,6 +821,7 @@ async function validCurrencyForm(e){
 function loadEditCountry(country){
   $("form#config_country input#country").val(country.nombre); 
   $("form#config_country input#countryID").val(country.paisID); 
+  $("form#config_country select#currency_country").val(country.monedaid).change();
 
   $("form#config_country input#action").val("edit"); // seteamos la action
   $("form#config_country input[type=submit]").val("Editar"); // seteamos la action
@@ -799,15 +831,18 @@ async function validCountryForm(e){
   e.preventDefault();
 
   const input_country = $('input#country');
+  const select_currency = $('select#currency_country');
 
   const action = $("form#config_country input#action").val();
-  const countryID = $("form#config_currency input#countryID").val();
+  const countryID = $("form#config_country input#countryID").val();
 
   if(!validInput(input_country.val(), false, "Ingrese un nombre")) return false;
+  if(!validInput(select_currency.val(), false, "Seleccione una moneda")) return false;
 
   const configFormData = new FormData();
 
-  configFormData.append('currency', input_country.val());
+  configFormData.append('country', input_country.val());
+  configFormData.append('idCurrency', select_currency.val());
 
   configFormData.append('config', "country"); 
   configFormData.append('action', action);
@@ -822,13 +857,11 @@ async function validCountryForm(e){
 
   showNotification(result.Message, result.Success);
 
-  if(result.Success){
-    // resetear el form
-    $(this)[0].reset();// se resetea al formulario
-    $(this).find("input#action").val("add"); // seteamos la action
-    $(this).find("input[type=submit]").val("Agregar"); // seteamos la action
-    loadConfigList('country'); // actualizan los roles
-  }
+  $(this)[0].reset();// se resetea al formulario
+  $(this).find("input#action").val("add"); // seteamos la action
+  $(this).find("input[type=submit]").val("Agregar"); // seteamos la action
+  loadConfigList('country'); // actualizan los roles
+  
 }
 
 // ---------------------------- ADMINSITRACION DE LAS CATEGORIAS

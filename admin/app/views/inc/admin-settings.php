@@ -63,9 +63,17 @@
         <h3>Paises</h3>
         
         <form action="" method="post" id="config_country">
-            <div class="field">
-                <label for="rol">Nombre</label>
-                <input type="text" name="rol" id="country" require>
+            <div class="col_2">
+                <div class="field">
+                    <label for="rol">Nombre</label>
+                    <input type="text" name="rol" id="country" require>
+                </div>
+                <div class="field">
+                    <label for="currency">Moneda</label>
+                    <select name="currency" id="currency_country" require>
+                        <option value="">Monedas</option>
+                    </select>
+                </div>
             </div>
             <div class="submit">
                 <input type="submit" class="btn btn_yellow" value="Agregar">

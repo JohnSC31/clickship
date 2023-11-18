@@ -117,7 +117,7 @@
         private function clientLogout($data){
             unset($_SESSION['CLIENT']); 
 
-            if(session_destroy()){
+            if(!isset($_SESSION['CLIENT'])){
               
                 $this->ajaxRequestResult(true, "Se ha cerrado sesion");
             }else{ 
