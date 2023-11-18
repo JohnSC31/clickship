@@ -7,7 +7,7 @@ BEGIN
     SET NOCOUNT ON
 
 	-- Validate none of the params are null
-	IF (ISNULL(@pPais, '')='')
+	IF (ISNULL(@pPais, -1)=-1)
 	BEGIN
 		SELECT 'El país no puede ser nulo' 'Error';
 		RETURN
@@ -26,7 +26,7 @@ BEGIN
 	END
 
     -- Validate if the country exists 
-	IF (SELECT COUNT (paisID) FROM [RRHH]...paises WHERE nombre = @pPais) = 0
+	IF (SELECT COUNT (paisID) FROM [RRHH]...paises WHERE paisID = @pPais) = 0
 	BEGIN
 		SELECT 'El país no existe' 'Error';
 		RETURN
