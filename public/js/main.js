@@ -305,9 +305,7 @@ async function loadProducts(){
     filtersProduct.append('idCurrency', select_currency.val());
   }
   
-
   filtersProduct.append('ajaxMethod', "loadProducts");  
-  console.log(select_currency);
   ajaxHTMLRequest(filtersProduct, "#product_list");
 
 }
@@ -323,11 +321,11 @@ function changeCarrouselImage(button){
   var current_image = parseInt($('input#input-'+carrousel_id).attr('data-current-image'));
 
   if($(button).attr('data-carrousel-pass') === 'left'){
-    current_image = current_image - 1 < 0 ? max_image: current_image -= 1;
+    current_image = (current_image - 1) < 1 ? max_image : (current_image -= 1);
   }
 
   if($(button).attr('data-carrousel-pass') === 'right'){
-    current_image = current_image + 1 > max_image ? 0 : current_image += 1;
+    current_image = (current_image + 1) > max_image ? 1 : (current_image += 1);
   }
   // se actualiza la imagen actual
   $('input#input-'+carrousel_id).attr('data-current-image', current_image);
