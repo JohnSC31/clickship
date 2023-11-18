@@ -1,7 +1,8 @@
 CREATE OR ALTER PROCEDURE dbo.Clickship_agregarEmpleado
     @pName VARCHAR(20) = NULL, 
     @pSurnames VARCHAR(30) = NULL,
-    @pEmail VARCHAR(50) = NULL, 
+    @pEmail VARCHAR(50) = NULL,
+	@pPassword NVARCHAR(50) = NULL,
     @pRol INT = NULL,
     @pCountry INT = NULL,
 	@pDepartment INT = NULL,
@@ -25,6 +26,11 @@ BEGIN
 	IF (ISNULL(@pEmail, '')='')
 	BEGIN
 		SELECT 'El correo no puede ser nulo' 'Error';
+		RETURN
+	END
+	IF (ISNULL(@pPassword, '')='')
+	BEGIN
+		SELECT 'La contraseña no puede ser nula' 'Error';
 		RETURN
 	END
 	IF (ISNULL(@pRol, -1)=-1)
@@ -59,6 +65,15 @@ BEGIN
 	IF (ISNULL(@existentEmployee, -1)!=-1)
 	BEGIN
 		SELECT 'El funcionario ya está registrado' 'Error';
+		RETURN
+	END
+
+	-- Validate if the email is not in use
+	DECLARE @existentMail INT
+	SET @existentMail = (SELECT idEmpleado FROM Empleados WHERE correo = @pEmail)
+	IF (ISNULL(@existentMail, -1)!=-1)
+	BEGIN
+		SELECT 'El correo electrónico ya está en uso' 'Error';
 		RETURN
 	END
 
@@ -98,8 +113,18 @@ BEGIN
 		DECLARE @newEmployeeID INT
 		SET @newEmployeeID = SCOPE_IDENTITY()
 
+		SET IDENTITY_INSERT Empleados OFF
+
+		INSERT INTO Empleados (idEmpleado, correo, contrasena)
+		VALUES (@newEmployeeID, @pEmail, HASHBYTES('SHA2_512', @pPassword))
+
+		SET IDENTITY_INSERT Empleados ON
+
+		DECLARE @date INT
+		SET @date = GETDATE()
+
 		INSERT INTO [RRHH]...salarioslogs (empleadoID, inicioVigencia, salario, monedaID, rolID)
-		VALUES (@newEmployeeID, GETDATE(), @pSalario, @pMoneda, @pRol)
+		VALUES (@newEmployeeID, @date, @pSalario, @pMoneda, @pRol)
 
 		RETURN @newEmployeeID
     END TRY
