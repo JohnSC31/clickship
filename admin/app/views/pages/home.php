@@ -1,5 +1,5 @@
 <?php
-    $sellsRollsAccess = ['Admin', 'Jefe Ventas', 'Manager de Ventas'];
+    $sellsRollsAccess = ['Admin', 'Jefe Ventas', 'Manager de Ventas','Jefe Servicio al Cliente', 'Asistente Callcenter'];
     $inventoryRollsAccess = ['Admin', 'Jefe Inventario', 'Bodeguista'];
     $rrhhRollsAccess = ['Admin', 'Jefe RRHH', 'Trabajador RRHH'];
     $servicesRollsAccess = ['Admin', 'Jefe Servicio al Cliente', 'Asistente Callcenter'];

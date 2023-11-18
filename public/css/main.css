@@ -608,6 +608,10 @@ section.product_list{
     background-color: #fff;
     background-position: center center;
     background-size: cover;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .product_item .product_detail{

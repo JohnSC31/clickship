@@ -226,28 +226,37 @@
         private function loadProducts($filters){
             $search = isset($filters['search']) ? $filters['search'] : NULL;
             $idCategorie = isset($filters['idCategorie']) ? intval($filters['idCategorie']) : NULL;
+            $idCurrency = isset($filters['idCurrency']) ? intval($filters['idCurrency']) : NULL;
 
             // se realiza la consulta de los productos en base a estos filtros
             
-            $this->db->query("{ CALL Clickship_getProductos(?, ?) }");
+            $this->db->query("{ CALL Clickship_getProductos(?, ?, ?) }");
             // NULLOS PORQUE TRAEN TODOS LOS RESULTADOS
             $this->db->bind(1, $search);
             $this->db->bind(2, $idCategorie);
+            $this->db->bind(3, $idCurrency);
 
             $products = $this->db->results(); // se obtienen de la base de datos
 
             // var_dump($search, $idCategorie);
-            
+
             // se carga el html de los productos
             if(count($products) > 0){
                 foreach($products as $key => $product){
                     $product = get_object_vars($product); ?>
 
                     <div class="product_item" data-item="<?php echo $product['idProducto']; ?>">
-                        <div class="img_product" style="background-image: url(<?php echo URL_PATH; ?>public/img/product.jpeg)"><?php echo $product['foto']; ?></div>
+                        <div class="img_product">
+                            <?php if($product['foto'] !== null) { ?>
+                                <img src="data:image/png;base64,<?php echo base64_encode($product['foto']); ?>" alt="productImage">
+                            <?php } else { ?>
+                                <img src="<?php echo URL_PATH . "public/img/default.jpg"?>" alt="producto">
+                            <?php } ?>
+                        </div>
                         <div class="product_detail">
                             <p><?php echo $product['nombre']." - ".$product['tipoProducto']; ?></p>
-                            <p class="price"><?php echo $product['simbolo']." ".$product['precio']; ?></p>
+                            <p class="price"><?php echo $product['simbolo']." ". round(floatval($product['precio']), 2); ?></p>
+
                             <div class="product_action">
                                 <a href="javascript:void(0);" class="btn btn_yellow <?php echo !isset($_SESSION['CLIENT']) ? "disabled" : ""; ?>" 
                                 data-cart="add" data-id="<?php echo $product['idProducto']; ?>" data-name="<?php echo $product['nombre']; ?>" data-price="<?php echo $product['precio']; ?>"> <i class="fa-solid fa-plus"></i> Agregar</a>
@@ -293,6 +302,23 @@
                     <?php }
                 }else{ ?>
                     <option value="">No hay Categorias</option>
+                <?php }
+            }
+
+            // se cargan las monedas
+            if($select['idSelect'] === "select_currency"){
+                
+                $this->db->query("{ CALL Clickship_getMonedas()}");
+                $currencies = $this->db->results(); // se obtienen de la base de datos
+                // var_dump($currencies);
+
+                if(count($currencies) > 0){ ?>
+                    <option value="" selected >Monedas</option>
+                    <?php foreach($currencies as $key => $currency) { ?>
+                        <option value="<?php echo $currency->monedaID ?>"> <?php echo $currency->simbolo." ".$currency->nombre; ?> </option>
+                    <?php }
+                }else{ ?>
+                    <option value="">No hay Monedas</option>
                 <?php }
             }
         }

@@ -37,11 +37,13 @@ const AJAX_URL = URL_PATH + 'app/controllers/Ajax.php';
 
         // carga las categorias del select
         loadSelectOptions('select_categorie');
+        loadSelectOptions('select_currency');
 
         // carga al ingresar en el input
         $("input#product_search").on("change", loadProducts);
         // carga productos al cambiar el select
         $("select#select_categorie").on("change", loadProducts);
+        $("select#select_currency").on("change", loadProducts);
       }
 
       // PAGINA DE CHECKOUT
@@ -287,8 +289,10 @@ async function loadProducts(){
 
   const input_search_product = $('input#product_search');
   const select_categorie = $('select#select_categorie');
+  const select_currency = $('select#select_currency');
 
   const filtersProduct = new FormData();
+
   if($(input_search_product).val() !== ""){
     filtersProduct.append('search', input_search_product.val());
   }
@@ -296,9 +300,14 @@ async function loadProducts(){
   if($(select_categorie).val() !== ""){
     filtersProduct.append('idCategorie', select_categorie.val());
   }
-  
-  filtersProduct.append('ajaxMethod', "loadProducts");  
 
+  if($(select_currency).val() !== ""){
+    filtersProduct.append('idCurrency', select_currency.val());
+  }
+  
+
+  filtersProduct.append('ajaxMethod', "loadProducts");  
+  console.log(select_currency);
   ajaxHTMLRequest(filtersProduct, "#product_list");
 
 }

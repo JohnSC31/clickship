@@ -23,7 +23,7 @@
             <p class="name_and_email"><?php echo $employee['nombre']." ".$employee['apellidos']; ?> - <span><?php echo $employee['correo']; ?></span></p>
             <p class="country">Salario: <?php echo $employee['salario']; ?></p>
             <p class="department"><?php echo $employee['departamento']." - ".$employee['rol']; ?></p>
-            <p class="hours">Horas Trabajadas: <span id="worked_hours"></span></p>
+            <p class="hours">Horas Trabajadas en quincena: <span id="worked_hours"></span></p>
        </div>
 
         <div class="employee_salary_container">
