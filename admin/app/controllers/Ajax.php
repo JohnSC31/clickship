@@ -166,62 +166,92 @@
 
             if($product['action'] === "add"){
                     
-                    $this->db->query("{ CALL Clickship_postProduct(?,?,?,?,?,?,?,?)}");
-                    $this->db->bind(1, $product['name']);
-                    $this->db->bind(2, intval($product['amountStore1']));
-                    $this->db->bind(3, intval($product['amountStore2']));
-                    $this->db->bind(4, intval($product['amountStore3']));
-                    $this->db->bind(5, $product['detail']);
-                    $this->db->bind(6, floatval($product['weight']));
-                    $this->db->bind(7, intval($product['idCategorie']));
-                    $this->db->bind(8, floatval($product['price']));
-                    
+                $this->db->query("{ CALL Clickship_postProduct(?,?,?,?,?,?,?,?)}");
+                $this->db->bind(1, $product['name']);
+                $this->db->bind(2, intval($product['amountStore1']));
+                $this->db->bind(3, intval($product['amountStore2']));
+                $this->db->bind(4, intval($product['amountStore3']));
+                $this->db->bind(5, $product['detail']);
+                $this->db->bind(6, floatval($product['weight']));
+                $this->db->bind(7, intval($product['idCategorie']));
+                $this->db->bind(8, floatval($product['price']));
+                
 
-                    $addedProductResult = $this->db->result();
+                $addedProductResult = $this->db->result();
 
-                    if($this->isErrorInResult($addedProductResult)){
-                        $this->ajaxRequestResult(false, "Error al agregar: ". $addedProductResult['Error']);
-                        return;
-                    }else{
-                        // se insertan las imagenes
-                        if(count($_FILES) > 0){
-                            foreach($_FILES as $key => $image){
+                if($this->isErrorInResult($addedProductResult)){
+                    $this->ajaxRequestResult(false, "Error al agregar: ". $addedProductResult['Error']);
+                    return;
+                }else{
+                    // se insertan las imagenes
 
-                                $this->db->query("{ CALL Clickship_postProductImage(?,?)}");
-                                $this->db->bind(1, $addedProductResult['idProducto']);
-                                $this->db->bind(2, file_get_contents($image["tmp_name"]));
-                                $imageResult = $this->db->result();
-                                if($this->isErrorInResult($imageResult)){
-                                    $this->ajaxRequestResult(false, "Agregado img " . $imageResult['Error']);
-                                    return;
-                                }
+                    if(count($_FILES) > 0){
+                        foreach($_FILES as $key => $image){
+
+                            $this->db->query("{ CALL Clickship_postProductImage(?,?)}");
+                            $this->db->bind(1, $addedProductResult['productoID']);
+                            $this->db->bind(2, base64_encode(file_get_contents($_FILES[$key]['tmp_name'])));
+                            // $this->db->bind(2, iconv('','UTF-8', $fp), PDO::PARAM_LOB);
+                            $imageResult = $this->db->result();
+                            if($this->isErrorInResult($imageResult)){
+                                $this->ajaxRequestResult(false, "Agregado img " . $imageResult['Error']);
+                                return;
                             }
-                            $this->ajaxRequestResult(true, "Se ha creado el producto correctamente");
-                            
-                        }else{
-                            // no hay imagenes para insertar
-                            $this->ajaxRequestResult(true, "Se ha creado producto");
                         }
+                        $this->ajaxRequestResult(true, "Se ha creado el producto correctamente");
                         
+                    }else{
+                        // no hay imagenes para insertar
+                        $this->ajaxRequestResult(true, "Se ha creado producto");
                     }
+                    
+                }
 
-                // // se agregan o se actualizan las imagenes
-                // $imagesName = "";
-                // if(count($_FILES) > 0){
-                //     foreach($_FILES as $key => $image){
-                //         // se agregan las imagenes a la base de datos
-                //         $imagesName .= $image["tmp_name"];
-                //         $imagesName .= ", ";
-                //     }
-                // }else{
-                //     $imagesName = "No images";
-                // }
             }
 
             if($product['action'] === "edit"){
-                $idProduct = $product["idProduct"];
-                // se realiza la eliminacion del producto con el id dado
-                $this->ajaxRequestResult(true, "Se ha editado el producto");
+
+                $this->db->query("{ CALL Clickship_patchProduct(?,?,?,?,?,?,?,?)}");
+                $this->db->bind(1, $product["id"]);
+                $this->db->bind(2, $product['name']);
+                $this->db->bind(3, intval($product['amountStore1']));
+                $this->db->bind(4, intval($product['amountStore2']));
+                $this->db->bind(5, intval($product['amountStore3']));
+                $this->db->bind(6, $product['detail']);
+                $this->db->bind(7, floatval($product['weight']));
+                $this->db->bind(8, intval($product['idCategorie']));
+                $this->db->bind(9, floatval($product['price']));
+
+                $editedProductResult = $this->db->result();
+
+                if($this->isErrorInResult($editedProductResult)){
+                    $this->ajaxRequestResult(false, "Error al editar: ". $editedProductResult['Error']);
+                    return;
+                }else{
+
+                    if(count($_FILES) > 0){
+                        // se eliminan las imagenes que existen para insertar las nuevas
+
+                        foreach($_FILES as $key => $image){
+
+                            $this->db->query("{ CALL Clickship_postProductImage(?,?)}");
+                            $this->db->bind(1, $product["id"]);
+                            $this->db->bind(2, base64_encode(file_get_contents($_FILES[$key]['tmp_name'])));
+    
+                            $imageResult = $this->db->result();
+                            if($this->isErrorInResult($imageResult)){
+                                $this->ajaxRequestResult(false, "Agregado img " . $imageResult['Error']);
+                                return;
+                            }
+                        }
+                        $this->ajaxRequestResult(true, "Se ha creado el producto correctamente");
+                        
+                    }else{
+                        // no hay imagenes para insertar
+                        $this->ajaxRequestResult(true, "Se ha editado el producto");
+                    }
+                }
+                
             }
 
             if($product['action'] === "delete"){
@@ -265,15 +295,16 @@
         // se agrega un empleado a la base de datos
         private function addEmployee($employee){
 
-            $this->db->query("{ CALL Clickship_agregarEmpleado(?,?,?,?,?,?,?,?)}");
+            $this->db->query("{ CALL Clickship_agregarEmpleado(?,?,?,?,?,?,?,?,?)}");
             $this->db->bind(1, $employee['name']);
-            $this->db->bind(2, $employee['lastname']);
+            $this->db->bind(2, $employee['lastnames']);
             $this->db->bind(3, $employee['email']);
-            $this->db->bind(4, $employee['idRol']);
-            $this->db->bind(5, $employee['idCountry']);
-            $this->db->bind(6, $employee['idDepartment']);
-            $this->db->bind(7, intval($employee['salary']));
-            $this->db->bind(8, $employee['idCurrency']);
+            $this->db->bind(4, $employee['pass']);
+            $this->db->bind(5, intval($employee['idRol']));
+            $this->db->bind(6, intval($employee['idCountry']));
+            $this->db->bind(7, intval($employee['idDepartment']));
+            $this->db->bind(8, intval($employee['salary']));
+            $this->db->bind(9, intval($employee['idCurrency']));
 
             $addEmployeeResult = $this->db->result();
 
@@ -303,6 +334,20 @@
             $employee['idEmployee'];
 
             $this->ajaxRequestResult(true, "Se ha calculado el pago", 250000);
+        }
+
+        // se carga el historial de pagos de un empleado
+        private function loadModalEmployeePaids($employee){
+            $employee['idEmployee'];
+
+            for($i = 0; $i < 4; $i++){ ?>
+                <div class="paid">
+                    <p>ID: <?php echo $i; ?></p>
+                    <p>Fecha: 12-2-23</p>
+                    <p>Pago: 5000</p>
+                </div>
+
+            <?php }
         }
 
 

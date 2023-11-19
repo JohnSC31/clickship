@@ -106,7 +106,7 @@
             </div>
             <div class="submit">
                 <input type="submit" class="btn btn_yellow" value="Editar">
-                <input type="hidden" id="idProduct" data-id="<?php echo $idProduct; ?>">
+                <input type="hidden" id="idProduct" data-id="<?php echo $product['idProducto']; ?>">
             </div>
         </form>
         

@@ -139,7 +139,7 @@
                 $_SESSION['CLIENT']['CART'][] = array(
                     'id' => $product['id'],
                     'name' => $product['name'],
-                    'price' => intval($product['price']),
+                    'price' => floatval($product['price']),
                     'amount' => 1,
                 );
 
@@ -259,7 +259,7 @@
 
                             <div class="product_action">
                                 <a href="javascript:void(0);" class="btn btn_yellow <?php echo !isset($_SESSION['CLIENT']) ? "disabled" : ""; ?>" 
-                                data-cart="add" data-id="<?php echo $product['idProducto']; ?>" data-name="<?php echo $product['nombre']; ?>" data-price="<?php echo $product['precio']; ?>"> <i class="fa-solid fa-plus"></i> Agregar</a>
+                                data-cart="add" data-id="<?php echo $product['idProducto']; ?>" data-name="<?php echo $product['nombre']; ?>" data-price="<?php echo round(floatval($product['precio']), 2); ?>"> <i class="fa-solid fa-plus"></i> Agregar</a>
                             </div>
                         </div>
                     </div>

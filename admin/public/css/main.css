@@ -203,6 +203,25 @@ div.modal_employee div.calculate_paid{
     text-align: center;
     font-weight: bold;
 }
+/* historial d pago */
+div.modal_employee div.paids_container{
+    padding: 1rem;
+    margin-top: 1rem;
+}
+div.modal_employee div.paids_list{
+    border-radius: var(--radius);
+    border: 1px solid var(--black);
+}
+div.modal_employee div.paids_list div.paid{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--black);
+    padding: .5rem 1rem;
+}
+div.modal_employee div.paids_list div.paid:last-child{
+    border-bottom: none;
+}
 
 /* ------------------------------- SERVICIO AL CLIENTE ------------------------------------ */
 div.add_call_form_container{

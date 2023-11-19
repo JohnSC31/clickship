@@ -6,17 +6,25 @@
         <form action="" method="post" id="add_employee">
             <div class="col_2">
                 <div class="form_column">
-                    <div class="field">
-                        <label for="name">Nombre</label>
-                        <input type="text" name="name" id="employee_name" require>
+                    <div class="col_2">
+                        <div class="field">
+                            <label for="name">Nombre</label>
+                            <input type="text" name="name" id="employee_name" require>
+                        </div>
+                        <div class="field">
+                            <label for="lastname">Apellidos</label>
+                            <input type="text" name="lastname" id="lastname" require>
+                        </div>
                     </div>
-                    <div class="field">
-                        <label for="lastname">Apellidos</label>
-                        <input type="text" name="lastname" id="lastname" require>
-                    </div>
+
+                    
                     <div class="field">
                         <label for="email">Correo electronico</label>
                         <input type="email" name="email" id="email" require>
+                    </div>
+                    <div class="field">
+                        <label for="pass">Constraseña</label>
+                        <input type="password" name="pass" id="pass">
                     </div>
 
                     <div class="field">

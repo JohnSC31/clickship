@@ -101,8 +101,8 @@ function openModal(e){
     $('body').css('overflow', 'hidden');
 
     // acciones para los modals
-    if(modalName === "product"){
-      // loadSelectOptions('catProduct');
+    if(modalName === "employee"){
+      loadModalEmployeePaids();
     }
   });
 }
@@ -465,6 +465,7 @@ async function editProduct(e){
   const input_price = $('form#edit_product input#price');
   const textarea_detail = $('form#edit_product textarea#detail');
 
+  const input_weight = $('form#edit_product input#weight');
   const input_AmountStore1 = $('form#edit_product input#amountStore1');
   const input_AmountStore2 = $('form#edit_product input#amountStore2');
   const input_AmountStore3 = $('form#edit_product input#amountStore3');
@@ -477,12 +478,16 @@ async function editProduct(e){
   if(!validInput(input_price.val(), false, "Ingrese un precio")) return false;
   if(!validInput(textarea_detail.val(), false, "Ingrese un detalle")) return false;
 
+  if(!validInput(input_weight.val(), false, "Ingrese un peso")) return false;
   if(!validInput(input_AmountStore1.val(), false, "Ingrese una cantidad para bodega 1")) return false;
   if(!validInput(input_AmountStore2.val(), false, "Ingrese una cantidad para bodega 2")) return false;
   if(!validInput(input_AmountStore3.val(), false, "Ingrese una cantidad para bodega 3")) return false;
 
   // validacion de archivos si no hay no hace nada
-  if(!validFiles(input_images) && input_images[0].files.length > 0) return false;
+  if(input_images[0].files.length > 0){
+    if(!validFiles(input_images)) return false;
+  }
+  
   
 
   const productFormData = new FormData();
@@ -492,10 +497,11 @@ async function editProduct(e){
   productFormData.append('price', input_price.val());
   productFormData.append('detail', textarea_detail.val());
 
+  productFormData.append('weight', input_weight.val());
   productFormData.append('amountStore1', input_AmountStore1.val());
   productFormData.append('amountStore2', input_AmountStore2.val());
   productFormData.append('amountStore3', input_AmountStore3.val());
-
+  
   for (var i = 0; i < input_images[0].files.length; i++){
     productFormData.append("image_"+ i, input_images[0].files[i]);
   }
@@ -558,6 +564,7 @@ async function addEmployee(e){
   const input_name = $('input#employee_name');
   const input_lastname = $('input#lastname');
   const input_email = $('input#email');
+  const input_pass = $('input#pass');
   const select_country = $('select#country');
   const select_rol = $('select#rol');
   const select_department = $('select#department');
@@ -569,6 +576,7 @@ async function addEmployee(e){
   if(!validInput(input_name.val(), false, "Ingrese un nombre")) return false;
   if(!validInput(input_lastname.val(), false, "Ingrese un apellido")) return false;
   if(!validEmail(input_email.val())) return false;
+  if(!validPassword(input_pass.val())) return false;
 
   if(!validInput(select_country.val(), false, "Escoga un pais")) return false;
   if(!validInput(select_rol.val(), false, "Escoga un rol")) return false;
@@ -580,8 +588,9 @@ async function addEmployee(e){
 
   const employeeFormData = new FormData();
   employeeFormData.append('name', input_name.val());
-  employeeFormData.append('lastname', input_lastname.val());
+  employeeFormData.append('lastnames', input_lastname.val());
   employeeFormData.append('email', input_email.val());
+  employeeFormData.append('pass', input_pass.val());
 
   employeeFormData.append('idCountry', select_country.val());
   employeeFormData.append('idRol', select_rol.val());
@@ -645,6 +654,19 @@ async function calcEmployeePaid(e){
     $("span#calc_paid").text(result.Data);
   }
 }
+
+// funcion para cargar en el modal el historial de pago
+async function loadModalEmployeePaids(){
+  
+  const idEmployee = $('input[data-id-employee]').attr('data-id-employee');
+
+  const employeeFormData = new FormData();
+
+  employeeFormData.append('idEmployee', idEmployee);
+  employeeFormData.append('ajaxMethod', "loadModalEmployeePaids");
+
+  ajaxHTMLRequest(employeeFormData, "div#employee_history_paids");
+}
 // -------------------------------------------------- SECCION DE SERVICIO AL CLIENTE ---------------------------------------------------
 async function addCall(e){
   e.preventDefault();
@@ -702,6 +724,8 @@ function loadEditConfig(e){
 // para eliminar una configuracion
 async function deleteConfig(e){
   e.preventDefault();
+  if(!confirm('La eliminación de esta configuración es permanente ¿desea continuar?')) return false;
+
   const configType = $(this).attr('data-delete-config');
   const configData = JSON.parse($(this).attr('data-config'));
 

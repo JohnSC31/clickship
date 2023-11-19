@@ -413,6 +413,8 @@ async function makeOrder(e){
   orderFormData.append('location', orderShippingLocation);
   orderFormData.append('ajaxMethod', 'clientMakeOrder');
 
+  console.log(...orderFormData);
+  return;
   result = await ajaxRequest(orderFormData);
 
   showNotification(result.Message, result.Success, true);

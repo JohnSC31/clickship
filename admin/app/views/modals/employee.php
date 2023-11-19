@@ -21,7 +21,7 @@
                 <i class="fa-solid fa-user"></i>
             </div>
             <p class="name_and_email"><?php echo $employee['nombre']." ".$employee['apellidos']; ?> - <span><?php echo $employee['correo']; ?></span></p>
-            <p class="country">Salario: <?php echo $employee['salario']; ?></p>
+            <p class="country">Salario: <?php echo round(floatval($employee['salario']) ,2); ?></p>
             <p class="department"><?php echo $employee['departamento']." - ".$employee['rol']; ?></p>
             <p class="hours">Horas Trabajadas en quincena: <span id="worked_hours"></span></p>
        </div>
@@ -36,29 +36,28 @@
                     </div>
                     <div class="field">
                         <label for="Day">Día</label>
-                        <select name="Day" id="day" require>
-                            <option value="">Días</option>
-                            <option value="1">Lunes</option>
-                            <option value="2">Martes</option>
-                            <option value="3">Miercoles</option>
-                            <option value="4">Jueves</option>
-                            <option value="5">Viernes</option>
-                            <option value="6">Sábado</option>
-                            <option value="7">Domingo</option>
-                        </select>
+                        <input type="date" name="workedHours" id="date" require>
                     </div>
 
                 </div>
                 <div class="submit">
                     <input type="submit" class="btn btn_yellow" value="Agregar">
-                    <input type="hidden" data-id-employee="" value="<?php echo $idEmployee; ?>">
+                    <input type="hidden" data-id-employee="" value="<?php echo $employee['empleadoID']; ?>">
                 </div>
             </form>
        </div>
 
        <div class="calculate_paid">
             <p>Pago: <span id="calc_paid">120000</span></p>
-            <button class="btn btn_blue" data-calc-paid="<?php echo $idEmployee; ?>">Calcular Pago</button>
+            <button class="btn btn_blue" data-calc-paid="<?php echo $employee['empleadoID']; ?>">Calcular Pago</button>
+       </div>
+
+       <div class="paids_container">
+        <p>Historial de pagos</p>
+
+        <div class="paids_list" id="employee_history_paids">
+
+        </div>
        </div>
         
     </div><!-- .modal-content -->
