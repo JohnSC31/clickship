@@ -134,12 +134,19 @@
                         $this->ajaxRequestResult(false, "Ya esta en el carrito");
                         return;
                     }
+
+                    if($cartItem['idCurrency'] !== intval($product['idCurrency'])){
+                        $this->ajaxRequestResult(false, "Escoge productos de la misma moneda");
+                        return;
+                    }
                 }
                 // si no esta se agrega
                 $_SESSION['CLIENT']['CART'][] = array(
                     'id' => $product['id'],
                     'name' => $product['name'],
                     'price' => floatval($product['price']),
+                    'symbol' => $product['symbol'],
+                    'idCurrency' => intval($product['idCurrency']),
                     'amount' => 1,
                 );
 
@@ -197,7 +204,7 @@
                                 <p><?php echo $cartItem['name']; ?></p>
                             </div>
                             <div class="price_product_detail">
-                                <p class="product_price">$ <?php echo $cartItem['price']; ?></p>
+                                <p class="product_price"> <?php echo $cartItem['symbol'] ." ". $cartItem['price']; ?></p>
                                 <button class="btn_detele_product" data-cart="delete" data-id="<?php echo $cartItem['id']; ?>"><i class="fa-solid fa-xmark"></i></button>
                             </div>
                         </div>
@@ -217,7 +224,7 @@
                 $total += $_SESSION['CLIENT']['CART'][$key]['amount'] * $_SESSION['CLIENT']['CART'][$key]['price'];
             }
 
-            echo $total;
+            echo count($_SESSION['CLIENT']['CART']) > 0 ? $_SESSION['CLIENT']['CART'][0]['symbol'] ." ". $total : $total;
 
         }
 
@@ -259,7 +266,9 @@
 
                             <div class="product_action">
                                 <a href="javascript:void(0);" class="btn btn_yellow <?php echo !isset($_SESSION['CLIENT']) ? "disabled" : ""; ?>" 
-                                data-cart="add" data-id="<?php echo $product['idProducto']; ?>" data-name="<?php echo $product['nombre']; ?>" data-price="<?php echo round(floatval($product['precio']), 2); ?>"> <i class="fa-solid fa-plus"></i> Agregar</a>
+                                data-cart="add" data-id="<?php echo $product['idProducto']; ?>" data-name="<?php echo $product['nombre']; ?>" data-price="<?php echo round(floatval($product['precio']), 2); ?>" 
+                                data-symbol="<?php echo $product['simbolo']; ?>" data-id-currency="<?php echo $product['monedaid']; ?>"> 
+                                <i class="fa-solid fa-plus"></i> Agregar</a>
                             </div>
                         </div>
                     </div>

@@ -56,24 +56,36 @@
         private function adminLogin($admin){
 
             // se validan las credenciales
-            // obtener el nombre, apellido, id, role, departamento
+            $this->db->query("{ CALL Clickship_loginEmployee(?, ?) }");
 
-            // se inicia sesion de administrador
-            $adminSession = array(
-                'SESSION' => TRUE,
-                'ID' => "0",
-                'EMIAL' => $admin['email'],
-                'NAME' => "John Sanchez",
-                'ROLE' => "Admin",
-            );
+            $this->db->bind(1, $admin['email']);
+            $this->db->bind(2, $admin['pass']);
 
-            $_SESSION['ADMIN'] = $adminSession;
+            $loggedEmployee = $this->db->result();
 
-            if(isset($_SESSION['ADMIN'])){
-                $this->ajaxRequestResult(true, "Inicia sesion ". $admin['email']);
+            if($this->isErrorInResult($loggedEmployee)){
+                $this->ajaxRequestResult(false, $loggedEmployee['Error']);
+
             }else{
-                $this->ajaxRequestResult(false, "Error al iniciar sesion");
+
+                // se inicia sesion de administrador
+                $adminSession = array(
+                    'SESSION' => TRUE,
+                    'ID' => $loggedEmployee['empleadoID'],
+                    'EMIAL' => $loggedEmployee['correo'],
+                    'NAME' => $loggedEmployee['apellidos'],
+                    'ROLE' => $loggedEmployee['rol'],
+                );
+
+                $_SESSION['ADMIN'] = $adminSession;
+
+                if(isset($_SESSION['ADMIN'])){
+                    $this->ajaxRequestResult(true, "Se ha iniciados sesion");
+                }else{
+                    $this->ajaxRequestResult(false, "Error al iniciar sesion");
+                }
             }
+
         }
 
         private function adminLogout($admin){

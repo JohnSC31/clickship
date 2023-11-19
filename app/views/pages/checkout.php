@@ -24,7 +24,7 @@
             </div>
             <div class="bill_total">
                     <h4>Total</h4>
-                    <h4>$ <span id="total_bill">45</span></h4>
+                    <h4><span id="total_bill">45</span></h4>
             </div>
         </div>
         <div class="payment">

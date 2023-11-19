@@ -364,6 +364,8 @@ async function clientCart(button){
     cartFormData.append('id', $(button).attr('data-id'));
     cartFormData.append('name', $(button).attr('data-name'));
     cartFormData.append('price', $(button).attr('data-price'));
+    cartFormData.append('symbol', $(button).attr('data-symbol'));
+    cartFormData.append('idCurrency', $(button).attr('data-id-currency'));
   }else{
     // para aumenta y disminuir y para eliminar
     cartFormData.append('id', $(button).attr('data-id'));
