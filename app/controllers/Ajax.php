@@ -219,12 +219,15 @@
         // METODO PARA CALCULAR Y MOSTRAR EL TOTAL DEL CARRITO
         private function getTotalClientCart($data){
             $total = 0;
+            $symbolCart = NULL;
+            
             foreach ($_SESSION['CLIENT']['CART'] as $key => $cartItem) {
 
                 $total += $_SESSION['CLIENT']['CART'][$key]['amount'] * $_SESSION['CLIENT']['CART'][$key]['price'];
+                $symbolCart = $_SESSION['CLIENT']['CART'][$key]['symbol'];
             }
 
-            echo count($_SESSION['CLIENT']['CART']) > 0 ? $_SESSION['CLIENT']['CART'][0]['symbol'] ." ". $total : $total;
+            echo (!is_null($symbolCart)) ? $symbolCart ." ". $total : $total;
 
         }
 
