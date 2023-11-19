@@ -79,7 +79,7 @@
         private function adminLogout($admin){
             unset($_SESSION['ADMIN']); 
 
-            if(session_destroy()){
+            if(!isset($_SESSION['ADMIN'])){
               
                 $this->ajaxRequestResult(true, "Se ha cerrado sesion");
             }else{ 
@@ -151,7 +151,7 @@
                 $sub_array['id'] = $row['idProducto'];
                 $sub_array['name'] = $row['nombre'];
                 $sub_array['categorie'] = $row['tipoProducto'];
-                $sub_array['price'] = $row['precio'];
+                $sub_array['price'] = $row['simbolo']." ".round(floatval($row['precio']), 2);
                 $sub_array['amount'] = $row['cantidad'];
                 $sub_array['actions'] = $btnDetail . $btnDelete;
                 $dataTableArray[] = $sub_array;
@@ -164,38 +164,94 @@
         
         private function adminProducts($product){
 
-            if($product['action'] === "add" || $product['action'] === "edit"){
-                $msj = "";
-                $product['name'];
-                $product['idCategorie'];
-                $product['price'];
-                $product['detail'];
-                $product['amountStore1'];
-                $product['amountStore2'];
-                $product['amountStore3'];
-
-                if($product['action'] === "add"){
-                    // se agrega a la base de datos
-                    $msj = "Se ha agregado un producto";
-                }else{
-                    // se actualiza en la base de datos
-                    $msj = "Se ha editado un producto";
-                }
-
-                // se agregan o se actualizan las imagenes
-                $imagesName = "";
-                if(count($_FILES) > 0){
-                    foreach($_FILES as $key => $image){
-                        // se agregan las imagenes a la base de datos
-                        $imagesName .= $image["tmp_name"];
-                        $imagesName .= ", ";
-                    }
-                }else{
-                    $imagesName = "No images";
-                }
-
+            if($product['action'] === "add"){
+                    
+                $this->db->query("{ CALL Clickship_postProduct(?,?,?,?,?,?,?,?)}");
+                $this->db->bind(1, $product['name']);
+                $this->db->bind(2, intval($product['amountStore1']));
+                $this->db->bind(3, intval($product['amountStore2']));
+                $this->db->bind(4, intval($product['amountStore3']));
+                $this->db->bind(5, $product['detail']);
+                $this->db->bind(6, floatval($product['weight']));
+                $this->db->bind(7, intval($product['idCategorie']));
+                $this->db->bind(8, floatval($product['price']));
                 
-                $this->ajaxRequestResult(true, $msj);
+
+                $addedProductResult = $this->db->result();
+
+                if($this->isErrorInResult($addedProductResult)){
+                    $this->ajaxRequestResult(false, "Error al agregar: ". $addedProductResult['Error']);
+                    return;
+                }else{
+                    // se insertan las imagenes
+
+                    if(count($_FILES) > 0){
+                        foreach($_FILES as $key => $image){
+
+                            $this->db->query("{ CALL Clickship_postProductImage(?,?)}");
+                            $this->db->bind(1, $addedProductResult['productoID']);
+                            $this->db->bind(2, base64_encode(file_get_contents($_FILES[$key]['tmp_name'])));
+                            // $this->db->bind(2, iconv('','UTF-8', $fp), PDO::PARAM_LOB);
+                            $imageResult = $this->db->result();
+                            if($this->isErrorInResult($imageResult)){
+                                $this->ajaxRequestResult(false, "Agregado img " . $imageResult['Error']);
+                                return;
+                            }
+                        }
+                        $this->ajaxRequestResult(true, "Se ha creado el producto correctamente");
+                        
+                    }else{
+                        // no hay imagenes para insertar
+                        $this->ajaxRequestResult(true, "Se ha creado producto");
+                    }
+                    
+                }
+
+            }
+
+            if($product['action'] === "edit"){
+
+                $this->db->query("{ CALL Clickship_patchProduct(?,?,?,?,?,?,?,?)}");
+                $this->db->bind(1, $product["id"]);
+                $this->db->bind(2, $product['name']);
+                $this->db->bind(3, intval($product['amountStore1']));
+                $this->db->bind(4, intval($product['amountStore2']));
+                $this->db->bind(5, intval($product['amountStore3']));
+                $this->db->bind(6, $product['detail']);
+                $this->db->bind(7, floatval($product['weight']));
+                $this->db->bind(8, intval($product['idCategorie']));
+                $this->db->bind(9, floatval($product['price']));
+
+                $editedProductResult = $this->db->result();
+
+                if($this->isErrorInResult($editedProductResult)){
+                    $this->ajaxRequestResult(false, "Error al editar: ". $editedProductResult['Error']);
+                    return;
+                }else{
+
+                    if(count($_FILES) > 0){
+                        // se eliminan las imagenes que existen para insertar las nuevas
+
+                        foreach($_FILES as $key => $image){
+
+                            $this->db->query("{ CALL Clickship_postProductImage(?,?)}");
+                            $this->db->bind(1, $product["id"]);
+                            $this->db->bind(2, base64_encode(file_get_contents($_FILES[$key]['tmp_name'])));
+    
+                            $imageResult = $this->db->result();
+                            if($this->isErrorInResult($imageResult)){
+                                $this->ajaxRequestResult(false, "Agregado img " . $imageResult['Error']);
+                                return;
+                            }
+                        }
+                        $this->ajaxRequestResult(true, "Se ha creado el producto correctamente");
+                        
+                    }else{
+                        // no hay imagenes para insertar
+                        $this->ajaxRequestResult(true, "Se ha editado el producto");
+                    }
+                }
+                
             }
 
             if($product['action'] === "delete"){
@@ -238,15 +294,24 @@
 
         // se agrega un empleado a la base de datos
         private function addEmployee($employee){
-            $employee['name'];
-            $employee['lastname'];
-            $employee['email'];
-            $employee['idCountry'];
-            $employee['idRol'];
-            $employee['idDepartment'];
-            $employee['salary'];
-            $employee['idCurrency'];
 
+            $this->db->query("{ CALL Clickship_agregarEmpleado(?,?,?,?,?,?,?,?,?)}");
+            $this->db->bind(1, $employee['name']);
+            $this->db->bind(2, $employee['lastnames']);
+            $this->db->bind(3, $employee['email']);
+            $this->db->bind(4, $employee['pass']);
+            $this->db->bind(5, intval($employee['idRol']));
+            $this->db->bind(6, intval($employee['idCountry']));
+            $this->db->bind(7, intval($employee['idDepartment']));
+            $this->db->bind(8, intval($employee['salary']));
+            $this->db->bind(9, intval($employee['idCurrency']));
+
+            $addEmployeeResult = $this->db->result();
+
+            if($this->isErrorInResult($addEmployeeResult)){
+                $this->ajaxRequestResult(false, $addEmployeeResult['Error']);
+                return;
+            }
             // se agrega el empleado a la base de datos
             $this->ajaxRequestResult(true, "Se ha agregado un empleado");
 
@@ -269,6 +334,20 @@
             $employee['idEmployee'];
 
             $this->ajaxRequestResult(true, "Se ha calculado el pago", 250000);
+        }
+
+        // se carga el historial de pagos de un empleado
+        private function loadModalEmployeePaids($employee){
+            $employee['idEmployee'];
+
+            for($i = 0; $i < 4; $i++){ ?>
+                <div class="paid">
+                    <p>ID: <?php echo $i; ?></p>
+                    <p>Fecha: 12-2-23</p>
+                    <p>Pago: 5000</p>
+                </div>
+
+            <?php }
         }
 
 
@@ -336,7 +415,7 @@
                 if(count($countries) > 0){ ?>
                     <option value="" selected >Paises</option>
                     <?php foreach($countries as $country) { ?>
-                        <option value="<?php echo $country->id ?>"> <?php echo $country->nombre; ?> </option>
+                        <option value="<?php echo $country->paisID ?>"> <?php echo $country->nombre; ?> </option>
                     <?php }
                 }else{ ?>
                     <option value="">No hay Paises</option>
@@ -353,7 +432,7 @@
                 if(count($rols) > 0){ ?>
                     <option value="" selected >Roles</option>
                     <?php foreach($rols as $rol) { ?>
-                        <option value="<?php echo $rol->id ?>"> <?php echo $rol->rol; ?> </option>
+                        <option value="<?php echo $rol->rolID ?>"> <?php echo $rol->rol; ?> </option>
                     <?php }
                 }else{ ?>
                     <option value="">No hay Roles</option>
@@ -378,7 +457,7 @@
             }
 
             // se cargan las monedas
-            if($select['idSelect'] ===  "currency"){
+            if($select['idSelect'] ===  "currency" || $select['idSelect'] ===  "currency_country"){
                 
                 $this->db->query("{ CALL Clickship_getMonedas()}");
                 $currencies = $this->db->results(); // se obtienen de la base de datos
@@ -387,7 +466,7 @@
                 if(count($currencies) > 0){ ?>
                     <option value="" selected >Monedas</option>
                     <?php foreach($currencies as $currency) { ?>
-                        <option value="<?php echo $currency->id ?>"> <?php echo $currency->simbolo." ".$currency->nombre; ?> </option>
+                        <option value="<?php echo $currency->monedaID ?>"> <?php echo $currency->simbolo." ".$currency->nombre; ?> </option>
                     <?php }
                 }else{ ?>
                     <option value="">No hay Monedas</option>
@@ -409,6 +488,204 @@
                 }else{ ?>
                     <option value="">No hay Tipos de preguntas</option>
                 <?php }
+            }
+        }
+
+        // --------------------------- SECCION DE CONFIGURACIONES -------------------------------------------
+        private function loadConfigs($data){
+            // se cargan los roles para las configuraciones
+            if($data['config'] === 'roll'){
+                // se cargan los roles
+                $this->db->query("{ CALL Clickship_getRoles()}");
+                $rolls = $this->db->results(); // se obtienen de la base de datos
+
+                foreach($rolls as $key => $rol){ ?>
+                    <div class="config_item">
+                        <p><?php echo $rol->rolID ?></p>
+                        <p><?php echo $rol->rol; ?></p>
+                        <div class="config_actions">
+                            <button class="btn btn_edit_config" data-edit-config="roll" data-config='{"rolID":<?php echo $rol->rolID?>, "roll": "<?php echo $rol->rol; ?>"}'><i class="fa-solid fa-pen"></i></button>
+                            <button class="btn btn_delete_config" data-delete-config="roll" data-config='{"idConfig":<?php echo $rol->rolID?>}'><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    </div>
+                <?php }
+            }
+
+            if($data['config'] === 'currency'){
+                // se cargan las monedas
+                $this->db->query("{ CALL Clickship_getMonedas()}");
+                $currencies = $this->db->results(); // se obtienen de la base de datos
+
+                foreach($currencies as $key => $currency){ ?>
+                    <div class="config_item">
+                        <p><?php echo $currency->monedaID; ?></p>
+                        <p><?php echo $currency->simbolo ." ".$currency->nombre ." (".$currency->acronimo .")"; ?></p>
+                        <div class="config_actions">
+                            <button class="btn btn_edit_config" data-edit-config="currency" data-config='<?php echo json_encode($currency); ?>'>
+                            <i class="fa-solid fa-pen"></i></button>
+                            <button class="btn btn_delete_config" data-delete-config="currency" data-config='{"idConfig":<?php echo $currency->monedaID; ?>}'><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    </div>
+                <?php }
+            }
+
+            if($data['config'] === 'country'){
+                // se cargan las monedas
+                $this->db->query("{ CALL Clickship_getPaises()}");
+                $countries = $this->db->results(); // se obtienen de la base de datos
+
+                foreach($countries as $key => $country){ ?>
+                    <div class="config_item">
+                        <p><?php echo $country->paisID; ?></p>
+                        <p><?php echo $country->nombre ?></p>
+                        <p><?php echo $country->simbolo ." ".$country->moneda; ?></p>
+                        <div class="config_actions">
+                            <button class="btn btn_edit_config" data-edit-config="country" data-config='<?php echo json_encode($country); ?>'>
+                            <i class="fa-solid fa-pen"></i></button>
+                            <button class="btn btn_delete_config" data-delete-config="country" data-config='{"idConfig":<?php echo $country->paisID; ?>}'><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    </div>
+                <?php }
+            }
+
+            if($data['config'] === 'categorie'){
+                // se cargan las monedas
+                $this->db->query("{ CALL Clickship_getCategories()}");
+                $categories = $this->db->results(); // se obtienen de la base de datos
+
+                foreach($categories as $key => $categorie){ ?>
+                    <div class="config_item">
+                        <p><?php echo $categorie->idTipoProducto; ?></p>
+                        <p><?php echo $categorie->tipoProducto; ?></p>
+                        <div class="config_actions">
+                            <button class="btn btn_edit_config" data-edit-config="categorie" data-config='<?php echo json_encode($categorie); ?>'>
+                            <i class="fa-solid fa-pen"></i></button>
+                            <button class="btn btn_delete_config" data-delete-config="categorie" data-config='{"idConfig":<?php echo $categorie->idTipoProducto; ?>}'><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    </div>
+                <?php }
+            }
+        }
+
+        // Metodo para adminitrar las configuraciones, eliminar, editar o agregar
+        private function adminConfigs($config){
+            // adminsitracion de roles
+            if($config['config'] === 'roll'){
+                if($config['action'] === 'add'){
+                    
+                    $this->db->query("{ CALL Clickship_addRol(?)}");
+                    $this->db->bind(1, $config['rol']);
+
+                    if(!$this->db->execute()){
+                        $this->ajaxRequestResult(false, "Error al insertar un rol");
+                    }else{
+                        $this->ajaxRequestResult(true, "Se ha agregado un rol");
+                    }
+
+                    
+                }
+                if($config['action'] === 'edit'){
+
+                    $this->db->query("{ CALL Clickship_editRol(?, ?)}");
+                    $this->db->bind(1, $config['rolID']);
+                    $this->db->bind(2, $config['rol']);
+
+                    if(!$this->db->execute()){
+                        $this->ajaxRequestResult(false, "Error al editar el rol");
+                    }else{
+                        $this->ajaxRequestResult(true, "Se ha editado el rol");
+                    }
+
+                }
+                if($config['action'] === 'delete'){
+
+                    $this->db->query("{ CALL Clickship_deleteRol(?)}");
+                    $this->db->bind(1, $config['idConfig']);
+
+                    if(!$this->db->execute()){
+                        $this->ajaxRequestResult(false, "Error al eliminar el rol");
+                    }else{
+                        $this->ajaxRequestResult(true, "Se ha eliminado el rol");
+                    }
+                }
+                
+            }
+
+            // adminsitracion de monedas
+            if($config['config'] === 'currency'){
+                if($config['action'] === 'add'){
+
+                    $this->ajaxRequestResult(true, "Se ha agregado una moneda");
+                }
+                if($config['action'] === 'edit'){
+                    $this->ajaxRequestResult(true, "Se ha editado una moneda");
+
+                }
+                if($config['action'] === 'delete'){
+                    $this->ajaxRequestResult(true, "Se ha eliminado una moneda");
+
+                }
+                
+            }
+
+            // adminsitracion de paises
+            if($config['config'] === 'country'){
+                if($config['action'] === 'add'){
+
+                    $this->db->query("{ CALL Clickship_addPais(?, ?)}");
+                    $this->db->bind(1, $config['country']);
+                    $this->db->bind(2, $config['idCurrency']);
+
+                    if(!$this->db->execute()){
+                        $this->ajaxRequestResult(false, "Error al insertar un pais");
+                    }else{
+                        $this->ajaxRequestResult(true, "Se ha agregado el pais");
+                    }
+                }
+                if($config['action'] === 'edit'){
+
+                    $this->db->query("{ CALL Clickship_editPais(?, ?, ?)}");
+                    $this->db->bind(1, $config['countryID']);
+                    $this->db->bind(2, $config['country']);
+                    $this->db->bind(3, $config['idCurrency']);
+
+                    if(!$this->db->execute()){
+                        $this->ajaxRequestResult(false, "Error al editar el pais");
+                    }else{
+                        $this->ajaxRequestResult(true, "Se ha editado el pais");
+                    }
+
+                }
+                if($config['action'] === 'delete'){
+
+                    $this->db->query("{ CALL Clickship_deletePais(?)}");
+                    $this->db->bind(1, $config['idConfig']);
+
+                    if(!$this->db->execute()){
+                        $this->ajaxRequestResult(false, "Error al eliminar un pais");
+                    }else{
+                        $this->ajaxRequestResult(true, "Se ha eliminado un pais");
+                    }
+
+                }
+                
+            }
+
+            // adminsitracion de categorias
+            if($config['config'] === 'categorie'){
+                if($config['action'] === 'add'){
+
+                    $this->ajaxRequestResult(true, "Se ha agregado una categoria");
+                }
+                if($config['action'] === 'edit'){
+                    $this->ajaxRequestResult(true, "Se ha editado una categoria");
+
+                }
+                if($config['action'] === 'delete'){
+                    $this->ajaxRequestResult(true, "Se ha eliminado una categoria");
+
+                }
+                
             }
         }
 

@@ -203,6 +203,25 @@ div.modal_employee div.calculate_paid{
     text-align: center;
     font-weight: bold;
 }
+/* historial d pago */
+div.modal_employee div.paids_container{
+    padding: 1rem;
+    margin-top: 1rem;
+}
+div.modal_employee div.paids_list{
+    border-radius: var(--radius);
+    border: 1px solid var(--black);
+}
+div.modal_employee div.paids_list div.paid{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--black);
+    padding: .5rem 1rem;
+}
+div.modal_employee div.paids_list div.paid:last-child{
+    border-bottom: none;
+}
 
 /* ------------------------------- SERVICIO AL CLIENTE ------------------------------------ */
 div.add_call_form_container{
@@ -276,4 +295,67 @@ form#admin_login textarea{
     color: var(--black);
     background-color: var(--white);
     border: 1px solid var(--black);
+}
+
+/* ------------------------------- CONFIGURACIONES ------------------------------------ */
+div.config_container{
+    background-color: var(--grey);
+    padding: 1rem;
+    border-radius: var(--radius);
+    margin: 1rem 0;
+}
+
+div.config_container form{
+    background-color: var(--blue);
+    padding: 1rem;
+    border-radius: var(--radius);
+}
+div.config_container form label{
+    color: var(--white);
+}
+div.config_container form .field input,
+div.config_container form select,
+div.config_container form textarea{
+    color: var(--black);
+    background-color: var(--white);
+}
+
+div.config_container div.config_list_container{
+    border-radius: var(--radius);
+    border: 1px solid var(--black);
+    padding: .5rem;
+}
+div.config_list_container div.config_item{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--black);
+}
+
+div.config_list_container div.config_item:last-child{
+    border-bottom: none;
+}
+div.config_item div.config_actions{
+    display: flex;
+    align-items: center;
+}
+div.config_item div.config_actions button{
+    border: 2px solid transparent;
+    margin: .5rem;
+}
+div.config_item div.config_actions button.btn_edit_config{
+    background-color: var(--yellow);
+    border-color: var(--yellow);
+}
+div.config_item div.config_actions button.btn_edit_config:hover{
+    background-color: transparent;
+    color: var(--yellow);
+}
+div.config_item div.config_actions button.btn_delete_config{
+    background-color: var(--red);
+    border-color: var(--red);
+}
+div.config_item div.config_actions button.btn_delete_config:hover{
+    background-color: transparent;
+    color: var(--red);
 }

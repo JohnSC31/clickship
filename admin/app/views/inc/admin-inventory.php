@@ -31,15 +31,19 @@
                 </div>
                 <div class="form_column">
                     <div class="field">
-                        <label for="store1">Cantidad bodega 1</label>
+                        <label for="weight">Peso (Kg)</label>
+                        <input type="text" name="weight" id="weight" require>
+                    </div>
+                    <div class="field">
+                        <label for="store1">Bodega Norte</label>
                         <input type="text" name="store1" id="amountStore1" data-mask="00000000" require>
                     </div>
                     <div class="field">
-                        <label for="store2">Cantidad bodega 2</label>
+                        <label for="store2">Bodega Caribe</label>
                         <input type="text" name="store2" id="amountStore2" data-mask="00000000" require>
                     </div>
                     <div class="field">
-                        <label for="store3">Cantidad bodega 3</label>
+                        <label for="store3">Bodega Sur</label>
                         <input type="text" name="store3" id="amountStore3" data-mask="00000000" require>
                     </div>
 

@@ -15,9 +15,12 @@
     <div class="filters_container">
         <select name="categories" id="select_categorie">
             <!-- se cargan las categorias de la base de datos -->
-            <option value="">Categorias</option>
-            <option value="1">Categoria 1</option>
-            <option value="2">Categoria 2</option>
+            <option value="" selected>Categorias</option>
+        </select>
+
+        <select name="currencies" id="select_currency">
+            <!-- se cargan las monedas de la base de datos -->
+            <option value="" selected >Monedas</option>
         </select>
     </div>
 

@@ -26,6 +26,7 @@
             //instancia del PDO
             try {
                 $this->dbh = new PDO($dsn, $this->user, $this->pass);
+                // $this->dbh->setAttribute(PDO::SQLSRV_ATTR_ENCODING, PDO::SQLSRV_ENCODING_BINARY);
                 // $this->dbh->exec('set names utf8'); // soluciona problemas de caracteres especiales
             } catch (PDOException $e) {
                 $this->error = $e->getMessage();
