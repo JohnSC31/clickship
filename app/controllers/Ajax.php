@@ -220,7 +220,7 @@
         private function getTotalClientCart($data){
             $total = 0;
             $symbolCart = NULL;
-            
+
             foreach ($_SESSION['CLIENT']['CART'] as $key => $cartItem) {
 
                 $total += $_SESSION['CLIENT']['CART'][$key]['amount'] * $_SESSION['CLIENT']['CART'][$key]['price'];
@@ -229,6 +229,32 @@
 
             echo (!is_null($symbolCart)) ? $symbolCart ." ". $total : $total;
 
+        }
+
+        // retorna el numero del total del carrito
+        private function calcTotalCostCart(){
+            $total = 0;
+
+            if($_SESSION['CLIENT']){
+
+                foreach ($_SESSION['CLIENT']['CART'] as $key => $cartItem) {
+
+                    $total += $_SESSION['CLIENT']['CART'][$key]['amount'] * $_SESSION['CLIENT']['CART'][$key]['price'];
+                }
+            }
+
+            return $total;
+        }
+
+        // retorna el id de la moneda del carrito
+        private function getCartIdCurrency(){
+
+            foreach ($_SESSION['CLIENT']['CART'] as $key => $cartItem) {
+
+                return $_SESSION['CLIENT']['CART'][$key]['idCurrency'];
+            }
+
+            return NULL;
         }
 
 
@@ -288,15 +314,57 @@
         
         // METODO PARA CREAR UNA ORDEN DEL CLIENTE CON LO QUE TIENE EN EL CARRITO
         private function clientMakeOrder($order){
-            // obtiene los detalles de la orden
-            // se crea la order
-            // se le agregan los productos a la orden
 
-            // limpiar el carrito
-            $_SESSION['CLIENT']['CART'] = array();
+            // se valida la sesion
+            if(!isset($_SESSION['CLIENT'])){
+                $this->ajaxRequestResult(false, "Debe iniciar sesion");
+            }else{
+                // se crea la orden
+                $this->db->query("{ CALL Clickship_postOrder(?, ?, ?, ?, ?, ?) }");
+
+                $this->db->bind(1, $_SESSION['CLIENT']['CID']);
+                $this->db->bind(2, $this->calcTotalCostCart());
+                $this->db->bind(3, $order['lat']);
+                $this->db->bind(4, $order['lng']);
+                $this->db->bind(5, $order['address']);
+                $this->db->bind(6, intval($this->getCartIdCurrency()));
+
+                $orderResult = $this->db->result();
+
+                if($this->isErrorInResult($orderResult)){
+                    $this->ajaxRequestResult(false, "Orden: ".$orderResult['Error']);
+                
+                }else{
+
+                    // procesar los productos del carrito
+                    foreach ($_SESSION['CLIENT']['CART'] as $key => $cartItem) {
+                        
+                        $this->db->query("{ CALL Clickship_postOrderProduct(?, ?, ?) }");
+
+                        $this->db->bind(1, $orderResult['ordenid']);
+                        $this->db->bind(2, $_SESSION['CLIENT']['CART'][$key]['id']);
+                        $this->db->bind(3, $_SESSION['CLIENT']['CART'][$key]['amount']);
+
+                        $orderProductResult = $this->db->result();
+
+                        if($this->isErrorInResult($orderProductResult)){
+                            $this->ajaxRequestResult(false, "Producto:". $orderProductResult['Error']);
+                            return;
+                        }
+
+                                
+                    }
+                    
+                    
+                    // limpiar el carrito
+                    $_SESSION['CLIENT']['CART'] = array();
+                    
+                    // retorna el mensaje
+                    $this->ajaxRequestResult(true, "Se ha realizado la orden");
+                }
+
+            }
             
-            // retorna el mensaje
-            $this->ajaxRequestResult(true, "Se ha realizado la orden");
         }
 
         // METODO PARA CARGAR LOS SELECT DEL FRONTEND
@@ -338,23 +406,24 @@
         // METODO PARA CARGAR LAS ORDENES DE UN CLIENTE EN EL PERFIL
         private function loadClientOrders($data){
             
-            $this->db->query("{ CALL Clickship_getProductos(?) }");
+            $this->db->query("{ CALL Clickship_getCLientOrders(?) }");
             $this->db->bind(1, $_SESSION['CLIENT']['CID']);
             $orders = $this->db->results(); //obtienen en base de datos con el id del cliente 
 
             if(count($orders) > 0){
-                foreach($orders as $key => $order){ ?>
+                foreach($orders as $key => $order){
+                    $order = get_object_vars($order); ?>
                     <div class="order">
                         <p><?php echo $order['estado']; ?></p>
-                        <p><?php echo $order['fecha']; ?></p>
-                        <p><?php echo $order['simbolo'] ." ".$order['montoTotal']; ?> </p>
-                        <a href="javascript:void(0);" class="btn btn_blue" data-modal="order">Ver</a>
+                        <p><?php echo date('j-n-Y', strtotime($order['fecha'])); ?></p>
+                        <p><?php echo $order['simbolo'] ." ". round(floatval($order['costoTotal']), 2); ?> </p>
+                        <a href="javascript:void(0);" class="btn btn_blue" data-modal="order" data-modal-data='{"idOrder": <?php echo $order['ordenID']; ?>}' >Ver</a>
                         
                     </div>
                 <?php } 
             }else{ ?>
                 <div class="no_items_in_list">
-                    <p>No hay ordenes aun</p>
+                    <p>No hay ordenes qún</p>
                 </div>
             <?php }
             
