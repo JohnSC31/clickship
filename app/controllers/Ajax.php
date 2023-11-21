@@ -341,14 +341,14 @@
                         
                         $this->db->query("{ CALL Clickship_postOrderProduct(?, ?, ?) }");
 
-                        $this->db->bind(1, $orderResult['ordenid']);
-                        $this->db->bind(2, $_SESSION['CLIENT']['CART'][$key]['id']);
-                        $this->db->bind(3, $_SESSION['CLIENT']['CART'][$key]['amount']);
+                        $this->db->bind(1, intval($orderResult['ordenid']));
+                        $this->db->bind(2, intval($_SESSION['CLIENT']['CART'][$key]['id']));
+                        $this->db->bind(3, intval($_SESSION['CLIENT']['CART'][$key]['amount']));
 
                         $orderProductResult = $this->db->result();
 
                         if($this->isErrorInResult($orderProductResult)){
-                            $this->ajaxRequestResult(false, "Producto:". $orderProductResult['Error']);
+                            $this->ajaxRequestResult(false, "Producto:". $orderProductResult['Error'], $orderResult);
                             return;
                         }
 
@@ -423,7 +423,7 @@
                 <?php } 
             }else{ ?>
                 <div class="no_items_in_list">
-                    <p>No hay ordenes qún</p>
+                    <p>No hay ordenes aún</p>
                 </div>
             <?php }
             

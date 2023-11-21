@@ -1,7 +1,7 @@
 <?php
     $sellsRollsAccess = ['Admin', 'Jefe Ventas', 'Manager de Ventas','Jefe Servicio al Cliente', 'Asistente Callcenter', 'Gerente General'];
     $inventoryRollsAccess = ['Gerente General', 'Admin', 'Jefe Inventario', 'Bodeguista'];
-    $rrhhRollsAccess = ['Gerente General', 'Admin', 'Jefe RRHH', 'Trabajador RRHH'];
+    $rrhhRollsAccess = ['Gerente General', 'Admin', 'Jefe RRHH', 'Trabajador RRHH', 'Entrevistador de RRHH'];
     $servicesRollsAccess = ['Gerente General', 'Admin', 'Jefe Servicio al Cliente', 'Asistente Callcenter'];
     $configRollsAccess = ['Gerente General', 'Admin'];
 ?>
