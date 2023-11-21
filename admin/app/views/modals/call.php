@@ -31,7 +31,7 @@
             <p>Recibido</p>
         </div>
         <div class="detail_call_container">
-            <p class="tags"><span><?php echo $call['tipoPregunta']; ?></span> -  <span><?php echo $call['fecha']; ?></span></p>
+            <p class="tags"><span><?php echo $call['tipoPregunta']; ?></span> -  <span><?php echo date('j-n-Y', strtotime($call['fecha'])); ?></span></p>
             <p class="description"><?php echo $call['descripcion']; ?></p>
         </div>
         

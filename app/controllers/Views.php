@@ -1,6 +1,11 @@
 <?php
 
+    require_once '../app/config.php';
+
+    require_once '../app/lib/Db.php';
+
     class Views{
+        private $db;
         
         public function __construct(){
 
@@ -64,7 +69,7 @@
 
         // CARGA DEL PRODUCT
         public function product($idProduct){
-            // $this->validUserSession('signup');
+            $this->db = new Db; // se realiza la conn con la db
             $data = $this->getPageData('product','Producto');
             $data['idProduct'] = $idProduct;
             

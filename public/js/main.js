@@ -37,11 +37,13 @@ const AJAX_URL = URL_PATH + 'app/controllers/Ajax.php';
 
         // carga las categorias del select
         loadSelectOptions('select_categorie');
+        loadSelectOptions('select_currency');
 
         // carga al ingresar en el input
         $("input#product_search").on("change", loadProducts);
         // carga productos al cambiar el select
         $("select#select_categorie").on("change", loadProducts);
+        $("select#select_currency").on("change", loadProducts);
       }
 
       // PAGINA DE CHECKOUT
@@ -287,8 +289,10 @@ async function loadProducts(){
 
   const input_search_product = $('input#product_search');
   const select_categorie = $('select#select_categorie');
+  const select_currency = $('select#select_currency');
 
   const filtersProduct = new FormData();
+
   if($(input_search_product).val() !== ""){
     filtersProduct.append('search', input_search_product.val());
   }
@@ -296,9 +300,12 @@ async function loadProducts(){
   if($(select_categorie).val() !== ""){
     filtersProduct.append('idCategorie', select_categorie.val());
   }
+
+  if($(select_currency).val() !== ""){
+    filtersProduct.append('idCurrency', select_currency.val());
+  }
   
   filtersProduct.append('ajaxMethod', "loadProducts");  
-
   ajaxHTMLRequest(filtersProduct, "#product_list");
 
 }
@@ -314,11 +321,11 @@ function changeCarrouselImage(button){
   var current_image = parseInt($('input#input-'+carrousel_id).attr('data-current-image'));
 
   if($(button).attr('data-carrousel-pass') === 'left'){
-    current_image = current_image - 1 < 0 ? max_image: current_image -= 1;
+    current_image = (current_image - 1) < 1 ? max_image : (current_image -= 1);
   }
 
   if($(button).attr('data-carrousel-pass') === 'right'){
-    current_image = current_image + 1 > max_image ? 0 : current_image += 1;
+    current_image = (current_image + 1) > max_image ? 1 : (current_image += 1);
   }
   // se actualiza la imagen actual
   $('input#input-'+carrousel_id).attr('data-current-image', current_image);
@@ -406,6 +413,8 @@ async function makeOrder(e){
   orderFormData.append('location', orderShippingLocation);
   orderFormData.append('ajaxMethod', 'clientMakeOrder');
 
+  console.log(...orderFormData);
+  return;
   result = await ajaxRequest(orderFormData);
 
   showNotification(result.Message, result.Success, true);
