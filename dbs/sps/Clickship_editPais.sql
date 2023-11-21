@@ -41,7 +41,10 @@ BEGIN
 
     BEGIN TRY
 		--Update country RRHH
-        UPDATE [RRHH]...paises SET nombre = @pNewPais, monedaID = @pNewMoneda WHERE paisID = @pPais
+		DECLARE @idnuevo int = 15;
+		DECLARE @rolnuevo VARCHAR(40) = 'Gerente'
+		DECLARE @query NVARCHAR(90) = CONCAT('CALL updatePais(', @pPais, ', "', @pNewPais, '", ', @pNewMoneda,')')
+		EXEC(@query) AT [RRHH]
 
         --Update country Ventas
         UPDATE [25.36.158.76,1400].DepartamentoVentas.dbo.Paises SET Nombre = @pNewPais WHERE PaisID = @pPais
