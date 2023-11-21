@@ -1,4 +1,4 @@
-CREATE OR ALTER PROCEDURE dbo.Clickship_editRol
+CREATE OR ALTER PROCEDURE dbo.Clickship_editMoneda
     @pMoneda INT = NULL,
     @pNuevaMoneda VARCHAR(30) = NULL,
     @pNuevoAcronimo VARCHAR(5) = NULL,
