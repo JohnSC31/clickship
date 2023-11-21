@@ -22,31 +22,34 @@ BEGIN
         DECLARE @moneda INT
         DECLARE @salario DECIMAL(18,6)
         DECLARE @horas DECIMAL(18,6)
-        DECLARE @final DATETIME2(7)
+        DECLARE @final DATETIME
+        DECLARE @inicio DATETIME
+        DECLARE @cantidad DECIMAL(18,6)
+        DECLARE @montoBruto DECIMAL(18,6)
+        DECLARE @cargos DECIMAL(18,6)
+        DECLARE @montoNeto DECIMAL(18,6)
+        DECLARE @fecha DATETIME
+        DECLARE @fechaInicio DATETIME
 
-		SELECT MAX(inicioVigencia), @moneda = moneda, @salario = salario, @final = finalVigencia FROM [RRHH]...salarioslogs
+		SELECT @inicio = MAX(inicioVigencia), @moneda = monedaID, @salario = salario FROM [RRHH]...salarioslogs
         WHERE  empleadoID = @pEmpleado
         GROUP BY moneda, salario, finalVigencia
+
+        SELECT @final = MAX(finalQuincena) FROM [RRHH]...quincenaslogs
+        WHERE empleadoID = @pEmpleado
 
         SELECT @horas = SUM(horas) FROM [RRHH]...salidasempleadoslogs
         WHERE empleadoID = @pEmpleado
 
-        SELECT @cantidad = cantidad FROM [RRHH]...cargosxpaises as cxp
-        INNER JOIN Empleados as e ON e.paisID = cxp.paisID
+        SELECT @cantidad = cxp.cantidad FROM [RRHH]...cargosxpaises as cxp
+        INNER JOIN [RRHH]...empleados as e ON e.paisID = cxp.paisID
         WHERE empleadoID = @pEmpleado
-
-        DECLARE @montoBruto DECIMAL(18,6)
-        DECLARE @cargos DECIMAL(18,6)
-        DECLARE @montoNeto DECIMAL(18,6)
 
         SET @montoBruto = (@salario/8*20)*@horas
         SET @cargos = @montoBruto*@cantidad
         SET @montoNeto = @montoBruto - @cargos
 
-        DECLARE @fecha DATE
         SET @fecha = CURRENT_TIMESTAMP
-
-        DECLARE @fechaInicio DATE
         SET @fechaInicio = DATEADD(DAY, 1, @final)
 
         INSERT INTO [RRHH]...quincenaslogs (empleadoID, fecha, inicioQuincena, finalQuincena, montoBruto, cargos, montoNeto, horasTrabajadas, monedaID)

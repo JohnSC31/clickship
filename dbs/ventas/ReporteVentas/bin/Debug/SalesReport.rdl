@@ -1279,7 +1279,7 @@ GROUP BY o.OrdenID, c.nombre, p.Nombre, i.nombre, o.Fecha, prod.nombre, prod.tip
           <ParameterName>tipoProducto</ParameterName>
         </CellDefinition>
         <CellDefinition>
-          <ColumnIndex>3</ColumnIndex>
+          <ColumnIndex>2</ColumnIndex>
           <RowIndex>0</RowIndex>
           <ParameterName>pais</ParameterName>
         </CellDefinition>
