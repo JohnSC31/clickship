@@ -120,7 +120,7 @@ BEGIN
 
 		SET IDENTITY_INSERT Empleados ON
 
-		DECLARE @date INT
+		DECLARE @date DATETIME
 		SET @date = GETDATE()
 
 		INSERT INTO [RRHH]...salarioslogs (empleadoID, inicioVigencia, salario, monedaID, rolID)
