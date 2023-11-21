@@ -21,9 +21,9 @@
                 <i class="fa-solid fa-user"></i>
             </div>
             <p class="name_and_email"><?php echo $employee['nombre']." ".$employee['apellidos']; ?> - <span><?php echo $employee['correo']; ?></span></p>
-            <p class="country">Salario: <?php echo round(floatval($employee['salario']) ,2); ?></p>
+            <p class="country">Salario: <?php echo $employee['simbolo'] ." ". round(floatval($employee['salario']) ,2); ?></p>
             <p class="department"><?php echo $employee['departamento']." - ".$employee['rol']; ?></p>
-            <p class="hours">Horas Trabajadas en quincena: <span id="worked_hours"></span></p>
+            <!-- <p class="hours">Horas Trabajadas en quincena: <span id="worked_hours"></span></p> -->
        </div>
 
         <div class="employee_salary_container">
@@ -38,7 +38,10 @@
                         <label for="Day">Día</label>
                         <input type="date" name="workedHours" id="date" require>
                     </div>
-
+                </div>
+                <div class="field checkbox">
+                    <input type="checkbox" id="training" name="training" value="Bike">
+                    <label for="training"> Esta en entrenamiento</label><br>
                 </div>
                 <div class="submit">
                     <input type="submit" class="btn btn_yellow" value="Agregar">
@@ -48,8 +51,8 @@
        </div>
 
        <div class="calculate_paid">
-            <p>Pago: <span id="calc_paid">120000</span></p>
-            <button class="btn btn_blue" data-calc-paid="<?php echo $employee['empleadoID']; ?>">Calcular Pago</button>
+            <!-- <p>Pago: <span id="calc_paid">120000</span></p> -->
+            <button class="btn btn_blue" data-calc-paid="<?php echo $employee['empleadoID']; ?>">Realizar Pago</button>
        </div>
 
        <div class="paids_container">

@@ -379,8 +379,8 @@ async function changeOrderStatus(e){
   const idOrder = $(this).attr('data-id-order');
 
   const orderFormData = new FormData();
-  orderFormData.append('status', status);
-  orderFormData.append('idOrder', idOrder);
+  orderFormData.append('idStatus', status);
+  orderFormData.append('id', idOrder);
 
   orderFormData.append('ajaxMethod', "changeOrderStatus");  
 
@@ -390,6 +390,7 @@ async function changeOrderStatus(e){
 
   if(result.Success){
     refreshDataTables('sells'); // recarga la tabla
+    closeModal(); // se cierra el modal
   }
 
 }
@@ -487,8 +488,6 @@ async function editProduct(e){
   if(input_images[0].files.length > 0){
     if(!validFiles(input_images)) return false;
   }
-  
-  
 
   const productFormData = new FormData();
   productFormData.append('id', $("form#edit_product input#idProduct").attr('data-id'));
@@ -520,16 +519,21 @@ async function editProduct(e){
 }
 async function deleteProduct(e){
   e.preventDefault();
+  if(!confirm('La eliminación de este producto es permanente ¿desea continuar?')) return false;
 
   const idProduct = $(this).attr('data-delete-product');
 
   const deleteProductFormData = new FormData();
-  deleteProductFormData.append('idProduct', idProduct);  
+  deleteProductFormData.append('id', idProduct);  
   deleteProductFormData.append('action', "delete");  
   deleteProductFormData.append('ajaxMethod', "adminProducts");  
 
   result = await ajaxRequest(deleteProductFormData);
   showNotification(result.Message, result.Success);
+
+  if(result.Success){
+    refreshDataTables('inventory');
+  }
 }
 
 function changeCarrouselImage(button){
@@ -616,24 +620,26 @@ async function addEmployeeHours(e){
   e.preventDefault();
 
   const input_workedHours = $('input#workedHours');
-  const select_day = $('select#day');
+  const input_date = $('input#date');
+  const input_training = $('input#training');
 
   if(!validInput(input_workedHours.val(), false, "Ingrese horas")) return false;
-  if(!validInput(select_day.val(), false, "Escoga un dia")) return false;
+  if(!validInput(input_date.val(), false, "Ingrese una fecha")) return false;
 
   const employeeFormData = new FormData();
   employeeFormData.append('hours', input_workedHours.val());
-  employeeFormData.append('idDay', select_day.val());
+  employeeFormData.append('date', input_date.val());
+  employeeFormData.append('training', input_training.prop('checked'))
   employeeFormData.append('idEmployee', $('input[data-id-employee]').val());
 
   employeeFormData.append('ajaxMethod', "addHoursEmployee"); 
+
 
   result = await ajaxRequest(employeeFormData);
 
   showNotification(result.Message, result.Success);
   if(result.Success){
     $(this)[0].reset();// se resetea al formulario
-    refreshDataTables('rrhh'); // recarga la tabla
   }
   
 }
@@ -651,14 +657,14 @@ async function calcEmployeePaid(e){
   result = await ajaxRequest(employeeFormData);
   showNotification(result.Message, result.Success);
   if(result.Success){
-    $("span#calc_paid").text(result.Data);
+    loadModalEmployeePaids();
   }
 }
 
 // funcion para cargar en el modal el historial de pago
 async function loadModalEmployeePaids(){
   
-  const idEmployee = $('input[data-id-employee]').attr('data-id-employee');
+  const idEmployee = $('input[data-id-employee]').val();
 
   const employeeFormData = new FormData();
 
@@ -691,7 +697,7 @@ async function addCall(e){
   showNotification(result.Message, result.Success);
   if(result.Success){
     $(this)[0].reset();// se resetea al formulario
-    refreshDataTables('services'); // recarga la tabla
+    refreshDataTables('service'); // recarga la tabla
   }
   
 }
@@ -775,7 +781,6 @@ async function validRollForm(e){
   }
 
   configFormData.append('ajaxMethod', "adminConfigs");  
-
   result = await ajaxRequest(configFormData);
 
   showNotification(result.Message, result.Success);
@@ -794,6 +799,7 @@ function loadEditCurrency(currency){
   $("form#config_currency input#acronym").val(currency.acronimo); 
   $("form#config_currency input#symbol").val(currency.simbolo); 
   $("form#config_currency input#currencyID").val(currency.monedaID); 
+  $("form#config_currency input#changeDolar").val(currency.precioCambio); 
 
   $("form#config_currency input#action").val("edit"); // seteamos la action
   $("form#config_currency input[type=submit]").val("Editar"); // seteamos la action
@@ -803,6 +809,8 @@ async function validCurrencyForm(e){
   e.preventDefault();
 
   const input_currency = $('input#currency');
+  const input_changeDolar = $('input#changeDolar');
+  
   const input_acronym = $('input#acronym');
   const input_symbol = $('input#symbol ');
 
@@ -810,12 +818,20 @@ async function validCurrencyForm(e){
   const currencyID = $("form#config_currency input#currencyID").val();
 
   if(!validInput(input_currency.val(), false, "Ingrese un nombre")) return false;
+  if(!validInput(input_changeDolar.val(), false, "Ingrese un cambio")) return false;
   if(!validInput(input_acronym.val(), false, "Ingrese un acronimo")) return false;
   if(!validInput(input_symbol.val(), false, "Ingrese un simbolo")) return false;
+
+  // validacion del cambio
+  if (!(!isNaN(input_changeDolar.val()) || input_changeDolar.val().toString().indexOf('.') != -1)){
+    showNotification("Cambio invalido", false);
+    return false;
+  }
 
   const configFormData = new FormData();
 
   configFormData.append('currency', input_currency.val());
+  configFormData.append('changeDolar', input_changeDolar.val());
   configFormData.append('acronym', input_acronym.val());
   configFormData.append('symbol', input_symbol.val());
 
@@ -827,7 +843,6 @@ async function validCurrencyForm(e){
   }
 
   configFormData.append('ajaxMethod', "adminConfigs");  
-
   result = await ajaxRequest(configFormData);
 
   showNotification(result.Message, result.Success);
@@ -903,7 +918,7 @@ async function validCategorieForm(e){
   const input_categorie = $('input#categorie');
 
   const action = $("form#config_categorie input#action").val();
-  const categorieID = $("form#config_currency input#categorieID").val();
+  const categorieID = $("form#config_categorie input#categorieID").val();
 
   if(!validInput(input_categorie.val(), false, "Ingrese una categoria")) return false;
 

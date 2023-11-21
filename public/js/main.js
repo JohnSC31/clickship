@@ -81,7 +81,7 @@ const AJAX_URL = URL_PATH + 'app/controllers/Ajax.php';
 function openModal(e){
   e.preventDefault();
   const modalName = $(this).attr('data-modal');
-  const modalData = $(this).attr('data-modal-data') !== undefined ? $(this).attr('data-modal-data') : '{}';
+  const modalData = $(this).attr('data-modal-data') !== undefined ? JSON.parse($(this).attr('data-modal-data')) : {};
 
   const myData = {
     'ajaxMethod': 'loadModal',
@@ -364,6 +364,8 @@ async function clientCart(button){
     cartFormData.append('id', $(button).attr('data-id'));
     cartFormData.append('name', $(button).attr('data-name'));
     cartFormData.append('price', $(button).attr('data-price'));
+    cartFormData.append('symbol', $(button).attr('data-symbol'));
+    cartFormData.append('idCurrency', $(button).attr('data-id-currency'));
   }else{
     // para aumenta y disminuir y para eliminar
     cartFormData.append('id', $(button).attr('data-id'));
@@ -410,11 +412,13 @@ async function makeOrder(e){
   orderFormData.append('cardNum', input_cardNum.val());
   orderFormData.append('expireDate', input_expireDate.val());
   orderFormData.append('cvc', input_cvc.val());
-  orderFormData.append('location', orderShippingLocation);
+  orderFormData.append('address', input_shippingAddress.val());
+  // latitud y longitud
+  orderFormData.append('lat', orderShippingLocation.lat);
+  orderFormData.append('lng', orderShippingLocation.lng);
+
   orderFormData.append('ajaxMethod', 'clientMakeOrder');
 
-  console.log(...orderFormData);
-  return;
   result = await ajaxRequest(orderFormData);
 
   showNotification(result.Message, result.Success, true);
@@ -440,7 +444,7 @@ function getGeoLocation(address){
     }).done(function(data){
 
       if(data.results.length > 0){
-        resolve(JSON.stringify(data.results[0].geometry.location));
+        resolve(data.results[0].geometry.location);
       }else{
         resolve(false);
       }

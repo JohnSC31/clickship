@@ -40,7 +40,11 @@
         </div>
         <div class="order_detail_container">
             <p>Orden: <?php echo $order['ordenID']; ?></p>
-
+            <?php if(intval($order['estadoID']) === 3) { ?>
+                <div class="in_shipping">
+                    <p>En camino</p>
+                </div>
+            <?php } ?>
             <div class="bill_detail_container">
                 <?php for($i = 0; $i < count($details); $i++) { ?>
                     <div class="bill_detail">
@@ -78,7 +82,12 @@
                     3 => [4, "Revisar"],
                 );
             ?>
-            <button class="btn btn_blue" data-update-order-status="<?php echo $btnActionData[$order['estadoID']][0]; ?>" data-id-order="<?php echo $order['ordenID']; ?>"> <?php echo $btnActionData[$order['estadoID']][1];  ?></button>
+            <?php if(intval($order['estadoID']) < 4 ) { ?>
+                <button class="btn btn_blue" data-update-order-status="<?php echo $btnActionData[$order['estadoID']][0]; ?>" data-id-order="<?php echo $order['ordenID']; ?>"> <?php echo $btnActionData[$order['estadoID']][1];  ?></button>
+            <?php }else { ?>
+                <!-- Esta en revision y el boton para ponerlo como finalizado -->
+                <button class="btn btn_blue" data-update-order-status="<?php echo $btnActionData[2][0]; ?>" data-id-order="<?php echo $order['ordenID']; ?>"> <?php echo $btnActionData[2][1];  ?></button>
+            <?php } ?>
         </div>
         
     </div><!-- .modal-content -->

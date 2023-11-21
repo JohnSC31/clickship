@@ -1,9 +1,9 @@
 <?php
-    $sellsRollsAccess = ['Admin', 'Jefe Ventas', 'Manager de Ventas','Jefe Servicio al Cliente', 'Asistente Callcenter'];
-    $inventoryRollsAccess = ['Admin', 'Jefe Inventario', 'Bodeguista'];
-    $rrhhRollsAccess = ['Admin', 'Jefe RRHH', 'Trabajador RRHH'];
-    $servicesRollsAccess = ['Admin', 'Jefe Servicio al Cliente', 'Asistente Callcenter'];
-    $configRollsAccess = ['Admin'];
+    $sellsRollsAccess = ['Admin', 'Jefe Ventas', 'Manager de Ventas','Jefe Servicio al Cliente', 'Asistente Callcenter', 'Gerente General'];
+    $inventoryRollsAccess = ['Gerente General', 'Admin', 'Jefe Inventario', 'Bodeguista'];
+    $rrhhRollsAccess = ['Gerente General', 'Admin', 'Jefe RRHH', 'Trabajador RRHH', 'Entrevistador de RRHH'];
+    $servicesRollsAccess = ['Gerente General', 'Admin', 'Jefe Servicio al Cliente', 'Asistente Callcenter'];
+    $configRollsAccess = ['Gerente General', 'Admin'];
 ?>
 <div class="admin_container">
     <div class="header_container">

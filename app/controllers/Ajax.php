@@ -134,12 +134,19 @@
                         $this->ajaxRequestResult(false, "Ya esta en el carrito");
                         return;
                     }
+
+                    if($cartItem['idCurrency'] !== intval($product['idCurrency'])){
+                        $this->ajaxRequestResult(false, "Escoge productos de la misma moneda");
+                        return;
+                    }
                 }
                 // si no esta se agrega
                 $_SESSION['CLIENT']['CART'][] = array(
                     'id' => $product['id'],
                     'name' => $product['name'],
                     'price' => floatval($product['price']),
+                    'symbol' => $product['symbol'],
+                    'idCurrency' => intval($product['idCurrency']),
                     'amount' => 1,
                 );
 
@@ -197,7 +204,7 @@
                                 <p><?php echo $cartItem['name']; ?></p>
                             </div>
                             <div class="price_product_detail">
-                                <p class="product_price">$ <?php echo $cartItem['price']; ?></p>
+                                <p class="product_price"> <?php echo $cartItem['symbol'] ." ". $cartItem['price']; ?></p>
                                 <button class="btn_detele_product" data-cart="delete" data-id="<?php echo $cartItem['id']; ?>"><i class="fa-solid fa-xmark"></i></button>
                             </div>
                         </div>
@@ -212,13 +219,42 @@
         // METODO PARA CALCULAR Y MOSTRAR EL TOTAL DEL CARRITO
         private function getTotalClientCart($data){
             $total = 0;
+            $symbolCart = NULL;
+
             foreach ($_SESSION['CLIENT']['CART'] as $key => $cartItem) {
 
                 $total += $_SESSION['CLIENT']['CART'][$key]['amount'] * $_SESSION['CLIENT']['CART'][$key]['price'];
+                $symbolCart = $_SESSION['CLIENT']['CART'][$key]['symbol'];
             }
 
-            echo $total;
+            echo (!is_null($symbolCart)) ? $symbolCart ." ". $total : $total;
 
+        }
+
+        // retorna el numero del total del carrito
+        private function calcTotalCostCart(){
+            $total = 0;
+
+            if($_SESSION['CLIENT']){
+
+                foreach ($_SESSION['CLIENT']['CART'] as $key => $cartItem) {
+
+                    $total += $_SESSION['CLIENT']['CART'][$key]['amount'] * $_SESSION['CLIENT']['CART'][$key]['price'];
+                }
+            }
+
+            return $total;
+        }
+
+        // retorna el id de la moneda del carrito
+        private function getCartIdCurrency(){
+
+            foreach ($_SESSION['CLIENT']['CART'] as $key => $cartItem) {
+
+                return $_SESSION['CLIENT']['CART'][$key]['idCurrency'];
+            }
+
+            return NULL;
         }
 
 
@@ -259,7 +295,9 @@
 
                             <div class="product_action">
                                 <a href="javascript:void(0);" class="btn btn_yellow <?php echo !isset($_SESSION['CLIENT']) ? "disabled" : ""; ?>" 
-                                data-cart="add" data-id="<?php echo $product['idProducto']; ?>" data-name="<?php echo $product['nombre']; ?>" data-price="<?php echo round(floatval($product['precio']), 2); ?>"> <i class="fa-solid fa-plus"></i> Agregar</a>
+                                data-cart="add" data-id="<?php echo $product['idProducto']; ?>" data-name="<?php echo $product['nombre']; ?>" data-price="<?php echo round(floatval($product['precio']), 2); ?>" 
+                                data-symbol="<?php echo $product['simbolo']; ?>" data-id-currency="<?php echo $product['monedaid']; ?>"> 
+                                <i class="fa-solid fa-plus"></i> Agregar</a>
                             </div>
                         </div>
                     </div>
@@ -276,15 +314,57 @@
         
         // METODO PARA CREAR UNA ORDEN DEL CLIENTE CON LO QUE TIENE EN EL CARRITO
         private function clientMakeOrder($order){
-            // obtiene los detalles de la orden
-            // se crea la order
-            // se le agregan los productos a la orden
 
-            // limpiar el carrito
-            $_SESSION['CLIENT']['CART'] = array();
+            // se valida la sesion
+            if(!isset($_SESSION['CLIENT'])){
+                $this->ajaxRequestResult(false, "Debe iniciar sesion");
+            }else{
+                // se crea la orden
+                $this->db->query("{ CALL Clickship_postOrder(?, ?, ?, ?, ?, ?) }");
+
+                $this->db->bind(1, $_SESSION['CLIENT']['CID']);
+                $this->db->bind(2, $this->calcTotalCostCart());
+                $this->db->bind(3, $order['lat']);
+                $this->db->bind(4, $order['lng']);
+                $this->db->bind(5, $order['address']);
+                $this->db->bind(6, intval($this->getCartIdCurrency()));
+
+                $orderResult = $this->db->result();
+
+                if($this->isErrorInResult($orderResult)){
+                    $this->ajaxRequestResult(false, "Orden: ".$orderResult['Error']);
+                
+                }else{
+
+                    // procesar los productos del carrito
+                    foreach ($_SESSION['CLIENT']['CART'] as $key => $cartItem) {
+                        
+                        $this->db->query("{ CALL Clickship_postOrderProduct(?, ?, ?) }");
+
+                        $this->db->bind(1, intval($orderResult['ordenid']));
+                        $this->db->bind(2, intval($_SESSION['CLIENT']['CART'][$key]['id']));
+                        $this->db->bind(3, intval($_SESSION['CLIENT']['CART'][$key]['amount']));
+
+                        $orderProductResult = $this->db->result();
+
+                        if($this->isErrorInResult($orderProductResult)){
+                            $this->ajaxRequestResult(false, "Producto:". $orderProductResult['Error'], $orderResult);
+                            return;
+                        }
+
+                                
+                    }
+                    
+                    
+                    // limpiar el carrito
+                    $_SESSION['CLIENT']['CART'] = array();
+                    
+                    // retorna el mensaje
+                    $this->ajaxRequestResult(true, "Se ha realizado la orden");
+                }
+
+            }
             
-            // retorna el mensaje
-            $this->ajaxRequestResult(true, "Se ha realizado la orden");
         }
 
         // METODO PARA CARGAR LOS SELECT DEL FRONTEND
@@ -326,23 +406,24 @@
         // METODO PARA CARGAR LAS ORDENES DE UN CLIENTE EN EL PERFIL
         private function loadClientOrders($data){
             
-            $this->db->query("{ CALL Clickship_getProductos(?) }");
+            $this->db->query("{ CALL Clickship_getCLientOrders(?) }");
             $this->db->bind(1, $_SESSION['CLIENT']['CID']);
             $orders = $this->db->results(); //obtienen en base de datos con el id del cliente 
 
             if(count($orders) > 0){
-                foreach($orders as $key => $order){ ?>
+                foreach($orders as $key => $order){
+                    $order = get_object_vars($order); ?>
                     <div class="order">
                         <p><?php echo $order['estado']; ?></p>
-                        <p><?php echo $order['fecha']; ?></p>
-                        <p><?php echo $order['simbolo'] ." ".$order['montoTotal']; ?> </p>
-                        <a href="javascript:void(0);" class="btn btn_blue" data-modal="order">Ver</a>
+                        <p><?php echo date('j-n-Y', strtotime($order['fecha'])); ?></p>
+                        <p><?php echo $order['simbolo'] ." ". round(floatval($order['costoTotal']), 2); ?> </p>
+                        <a href="javascript:void(0);" class="btn btn_blue" data-modal="order" data-modal-data='{"idOrder": <?php echo $order['ordenID']; ?>}' >Ver</a>
                         
                     </div>
                 <?php } 
             }else{ ?>
                 <div class="no_items_in_list">
-                    <p>No hay ordenes aun</p>
+                    <p>No hay ordenes aún</p>
                 </div>
             <?php }
             
