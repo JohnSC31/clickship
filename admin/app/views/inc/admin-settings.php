@@ -30,10 +30,17 @@
         <h3>Monedas</h3>
         
         <form action="" method="post" id="config_currency">
-            <div class="field">
-                <label for="rol">Nombre</label>
-                <input type="text" name="rol" id="currency" require>
+            <div class="col_2">
+                <div class="field">
+                    <label for="rol">Nombre</label>
+                    <input type="text" name="rol" id="currency" require>
+                </div>
+                <div class="field">
+                    <label for="rol">Cambio a dolar</label>
+                    <input type="text" name="rol" id="changeDolar" require>
+                </div>
             </div>
+
             <div class="col_2">
                 <div class="field">
                     <label for="rol">Acronimo</label>

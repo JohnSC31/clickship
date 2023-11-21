@@ -76,6 +76,10 @@ div.datatable-container table{
     font-size: 1.8rem;
 }
 
+div.datatable-container table button{
+    margin: 0 .5rem;
+}
+
 /* ------------------------------- VENTAS ------------------------------------ */
 /* div.sells_container{
     /* display: flex;
@@ -223,6 +227,9 @@ div.modal_employee div.paids_list div.paid:last-child{
     border-bottom: none;
 }
 
+div.modal_employee div.paids_list div.no_paids{
+    justify-content: center;
+}
 /* ------------------------------- SERVICIO AL CLIENTE ------------------------------------ */
 div.add_call_form_container{
     padding: .5rem;

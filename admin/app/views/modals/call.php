@@ -22,13 +22,13 @@
             </div>
             <div>
                 <p><?php echo $call['cliente']; ?></p>
-                <!-- <P>jostsace05@gmail.com</P> -->
+                <p><?php echo $call['correo']; ?></p>
             </div>
         </div>
 
-        <div class="order_call_summary order_status_4">
+        <div class="order_call_summary order_status_<?php echo $call['EstadoActualID']; ?>">
             <p>Orden: <?php echo $call['idOrden']; ?></p>
-            <p>Recibido</p>
+            <p><?php echo $call['Estado']; ?></p>
         </div>
         <div class="detail_call_container">
             <p class="tags"><span><?php echo $call['tipoPregunta']; ?></span> -  <span><?php echo date('j-n-Y', strtotime($call['fecha'])); ?></span></p>
